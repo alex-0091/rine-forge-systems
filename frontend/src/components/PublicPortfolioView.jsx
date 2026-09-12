@@ -97,6 +97,54 @@ const TECH_PARTNERS = [
   'Stripe Payments', 'Vercel Edge', 'Twilio Voice', 'Redis Global'
 ];
 
+const EXECUTIVE_TEAM = [
+  {
+    name: 'Alex Rine',
+    role: 'Founder & Principal Systems Architect',
+    credentials: 'M.S. Computer Engineering (Distributed Systems)',
+    focus: 'High-Throughput Agentic Automation, Real-Time Ingest & Quant Microstructure',
+    initials: 'AR',
+    gradient: 'from-cyan-500 to-teal-500',
+    experience: 'Ex-Lead Systems Architect, 9+ yrs enterprise infrastructure'
+  },
+  {
+    name: 'Dr. Elena Rostova',
+    role: 'Lead AI Quant & Research Scientist',
+    credentials: 'Ph.D. Computational Intelligence & Neural Dynamics (Imperial)',
+    focus: 'Microstructure Alpha Modeling, Statistical Arbitrage & Predictive Timeseries',
+    initials: 'ER',
+    gradient: 'from-indigo-500 to-purple-600',
+    experience: 'Ex-Senior Quantitative Researcher, High-Frequency Orderbook Dynamics'
+  },
+  {
+    name: 'Marcus Thorne',
+    role: 'VP of Infrastructure & Cloud Reliability',
+    credentials: 'B.S. Software Engineering (MIT) • AWS Solutions Architect Pro',
+    focus: 'Fault-Tolerant Microservices, Sub-50ms Execution & Global Edge Routing',
+    initials: 'MT',
+    gradient: 'from-blue-500 to-cyan-500',
+    experience: '12+ yrs scaling enterprise Kubernetes & real-time event brokers'
+  },
+  {
+    name: 'Sofia Chen',
+    role: 'Head of Conversational AI & Voice NLP',
+    credentials: 'M.Sc. Natural Language Processing (Stanford AI Lab)',
+    focus: 'Zero-Latency Voice Streaming, Multi-Turn Intent Triage & Gemini Integration',
+    initials: 'SC',
+    gradient: 'from-emerald-500 to-teal-600',
+    experience: 'Lead architect for autonomous healthcare & commercial voice triage'
+  },
+  {
+    name: 'Tariq Al-Mansoor',
+    role: 'Head of Cybersecurity & Compliance',
+    credentials: 'CISSP • Certified Information Security Manager • Oxford M.Sc.',
+    focus: 'SOC-2 Type II Alignment, Zero-Trust Cryptography & GDPR Verification',
+    initials: 'TM',
+    gradient: 'from-amber-500 to-orange-600',
+    experience: 'Ex-Lead Security Auditor for FinTech and HealthTech API ecosystems'
+  }
+];
+
 const CASE_STUDIES = [
   {
     id: 'oracle-ai',
@@ -574,6 +622,7 @@ export function PublicPortfolioView() {
 
         <div className="hidden md:flex items-center gap-4 text-xs font-semibold">
           <a href="#showcase" className="text-slate-300 hover:text-white transition-colors">Working Projects</a>
+          <a href="#team" className="text-slate-300 hover:text-white transition-colors">Engineering Team</a>
           <a href="#accreditations" className="text-slate-300 hover:text-white transition-colors">Accreditations & Trust</a>
           <a href="#payment-terms" className="text-slate-300 hover:text-white transition-colors">Milestone Terms</a>
           <a href="#case-studies" className="text-slate-300 hover:text-white transition-colors">Case Studies</a>
@@ -1316,6 +1365,54 @@ export function PublicPortfolioView() {
               <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
                 <span>Cert ID: <strong className="text-slate-200">{item.cert_id}</strong></span>
                 <span>{item.year}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* EXECUTIVE ENGINEERING & RESEARCH LEADERSHIP */}
+      <section id="team" className="space-y-8">
+        <div className="text-center space-y-2">
+          <div className="text-xs font-mono text-teal-400 font-bold uppercase tracking-wider">TECHNICAL LEADERSHIP</div>
+          <h2 className="text-3xl font-black text-white">Executive Engineering & Quantitative Research</h2>
+          <p className="text-xs sm:text-sm text-slate-400 max-w-2xl mx-auto">
+            Our multi-disciplinary team brings senior pedigree across distributed systems, algorithmic microstructure research, conversational speech pipelines, and enterprise cybersecurity.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {EXECUTIVE_TEAM.map((member, idx) => (
+            <div 
+              key={idx} 
+              className="bg-dark-900 border border-slate-800 hover:border-teal-500/40 rounded-2xl p-6 space-y-5 transition-all flex flex-col justify-between group shadow-xl"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-tr ${member.gradient} flex items-center justify-center font-black text-dark-950 text-base shadow-md font-mono shrink-0`}>
+                    {member.initials}
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-white group-hover:text-teal-300 transition-colors">
+                      {member.name}
+                    </h3>
+                    <div className="text-xs text-teal-400 font-mono font-medium">{member.role}</div>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-dark-950/80 border border-slate-800/80 rounded-xl space-y-1">
+                  <div className="text-[10px] uppercase font-mono text-slate-400 font-bold">Academic & Technical Credential</div>
+                  <div className="text-xs text-slate-200 font-medium">{member.credentials}</div>
+                </div>
+
+                <p className="text-xs text-slate-300 leading-relaxed">
+                  <strong className="text-slate-100">Domain Focus:</strong> {member.focus}
+                </p>
+              </div>
+
+              <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
+                <span>{member.experience}</span>
+                <span className="text-teal-400">RFS CORE</span>
               </div>
             </div>
           ))}

@@ -16,7 +16,7 @@ import { ComplianceView } from './components/ComplianceView';
 import { PublicPortfolioView } from './components/PublicPortfolioView';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('public_website');
   const [killSwitchStatus, setKillSwitchStatus] = useState({ kill_switch_active: false });
   const [togglingKillSwitch, setTogglingKillSwitch] = useState(false);
 
