@@ -1,0 +1,23 @@
+# Python & Virtualenv
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Node & Frontend
+frontend/node_modules/
+node_modules/
+frontend/.vite/
+
+# Database & Sensitive Data
+outreach_ai.db
+*.db
+*.sqlite3
+.env
+
+# System & OS files
+.DS_Store
+Thumbs.db

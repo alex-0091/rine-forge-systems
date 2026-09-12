@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: rine-forge-api
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port 
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SENDER_NAME
+        value: Alex Rine
+      - key: SENDER_EMAIL
+        value: alexrine691@gmail.com
+      - key: SENDER_COMPANY
+        value: Rine Forge Systems
+      - key: DRY_RUN
+        value: 'True'
