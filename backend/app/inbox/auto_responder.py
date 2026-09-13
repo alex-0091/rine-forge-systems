@@ -20,8 +20,8 @@ class InboundAIAutoResponder:
         "beneficiary": "Owais ahmed",
         "bank_name": "Albaraka Türk (Istanbul, Turkey)",
         "crypto_usdt_bep20": "0x3102200218a860c5057270afa3504ee4dc318f8f",
-        "demo_hub_url": "https://rine-forge-systems-19pm-eight.vercel.app/#showcase",
-        "tools_forge_url": "https://rine-forge-systems-19pm-eight.vercel.app/#tools-forge"
+        "demo_hub_url": "https://rine-forge-systems.vercel.app/#showcase",
+        "tools_forge_url": "https://rine-forge-systems.vercel.app/#tools-forge"
     }
 
     async def generate_auto_response(

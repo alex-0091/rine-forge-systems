@@ -222,7 +222,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
   const [seoLoading, setSeoLoading] = useState(false);
 
   // 14. QR Code State
-  const [qrUrl, setQrUrl] = useState('https://rine-forge-systems-19pm-eight.vercel.app/');
+  const [qrUrl, setQrUrl] = useState('https://rine-forge-systems.vercel.app/');
   const [qrColor, setQrColor] = useState('#14B8A6');
 
   // 15. Multi-Model State
@@ -366,7 +366,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
         target: outreachTarget,
         step1: {
           subject: 'Quick question regarding after-hours client intake at {{Company}}',
-          body: 'Hi {{First_Name}},\n\nI noticed that prospective clients reaching out to {{Company}} after 6 PM or over the weekend typically hit a general voicemail box.\n\nWe built a lightweight 24/7 AI intake concierge specifically for law firms that qualifies incoming inquiries and books priority consultations in under 60 seconds.\n\nI actually put together a free 48-hour working prototype for {{Company}} here: [https://rine-forge-systems-19pm-eight.vercel.app/#showcase]\n\nWorth a 3-minute look?\n\nBest,\nAlex Rine\nPrincipal Systems Architect, Rine Forge Systems'
+          body: 'Hi {{First_Name}},\n\nI noticed that prospective clients reaching out to {{Company}} after 6 PM or over the weekend typically hit a general voicemail box.\n\nWe built a lightweight 24/7 AI intake concierge specifically for law firms that qualifies incoming inquiries and books priority consultations in under 60 seconds.\n\nI actually put together a free 48-hour working prototype for {{Company}} here: [https://rine-forge-systems.vercel.app/#showcase]\n\nWorth a 3-minute look?\n\nBest,\nAlex Rine\nPrincipal Systems Architect, Rine Forge Systems'
         },
         step2: {
           subject: 're: after-hours intake prototype for {{Company}}',
@@ -469,7 +469,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
         metaDescription: 'Rine Forge Systems engineers production-grade autonomous AI receptionists, quantitative prediction engines, bespoke web platforms, and automated speed-to-lead pipelines.',
         keywords: 'autonomous AI, speed to lead, quant trading bot, AI receptionist, bespoke web development, algorithmic automation',
         ogTitle: 'Rine Forge Systems | High-Performance Autonomous AI Engines',
-        ogImage: 'https://rine-forge-systems-19pm-eight.vercel.app/og-banner.png',
+        ogImage: 'https://rine-forge-systems.vercel.app/og-banner.png',
         schemaJsonLd: `<script type="application/ld+json">\n{\n  "@context": "https://schema.org",\n  "@type": "Organization",\n  "name": "Rine Forge Systems",\n  "founder": "Alex Rine",\n  "email": "alexrine691@gmail.com"\n}\n</script>`
       });
       setSeoLoading(false);
@@ -1109,7 +1109,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
                   <div className="text-[10px] text-slate-400 uppercase font-bold">Google SERP Snippet Preview:</div>
                   <div className="p-3 bg-dark-900 border border-slate-800 rounded-xl space-y-1">
                     <div className="text-cyan-400 text-sm font-sans font-bold hover:underline cursor-pointer">{seoResult.title}</div>
-                    <div className="text-emerald-400 text-[10px]">https://rine-forge-systems-19pm-eight.vercel.app/</div>
+                    <div className="text-emerald-400 text-[10px]">https://rine-forge-systems.vercel.app/</div>
                     <div className="text-slate-300 font-sans text-xs">{seoResult.metaDescription}</div>
                   </div>
                 </div>
