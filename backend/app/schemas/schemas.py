@@ -56,6 +56,13 @@ class SendReplyRequest(BaseModel):
     conversation_id: str
     reply_body: str
 
+class AutoRespondRequest(BaseModel):
+    sender_email: str
+    subject: str = "Inquiry regarding AI automation prototype"
+    body_text: str
+    business_name: Optional[str] = None
+    auto_send: bool = False
+
 # Compliance & Kill Switch
 class KillSwitchRequest(BaseModel):
     activate: bool

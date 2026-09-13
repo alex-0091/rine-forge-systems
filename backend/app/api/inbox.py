@@ -5,12 +5,13 @@ from sqlalchemy import select, desc
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 from backend.app.database import get_db
-from backend.app.config import settings
+from backend.app.schemas.schemas import SimulateReplyRequest, SendReplyRequest, AutoRespondRequest
 from backend.app.models.inbox import Conversation, Reply, SystemAlert
 from backend.app.models.business import Business
 from backend.app.models.compliance import AuditLog
 from backend.app.inbox.reply_monitor import reply_monitor
 from backend.app.inbox.learning_loop import human_correction_store
+from backend.app.inbox.auto_responder import inbound_auto_responder
 from backend.app.outreach.email_provider import get_email_provider
 
 router = APIRouter(prefix="/api/inbox", tags=["Inbox & Replies"])
@@ -90,6 +91,34 @@ async def get_conversation_thread(conversation_id: str, session: AsyncSession = 
             "human_approved": r.human_approved,
             "created_at": r.created_at.isoformat()
         } for r in conv.replies]
+    }
+
+@router.post("/auto-respond")
+async def auto_respond_to_inquiry(req: AutoRespondRequest, session: AsyncSession = Depends(get_db)):
+    """Autonomous email responder that delivers tailored working prototype links and milestone payment settlement info."""
+    response_data = await inbound_auto_responder.generate_auto_response(
+        sender_email=req.sender_email,
+        subject=req.subject,
+        body_text=req.body_text,
+        business_name=req.business_name
+    )
+
+    if req.auto_send:
+        provider = get_email_provider()
+        await provider.send_email(
+            to_email=req.sender_email,
+            to_name=req.sender_email.split("@")[0],
+            subject=response_data["reply_subject"],
+            body_text=response_data["reply_body"]
+        )
+
+    return {
+        "status": "AUTO_RESPONDED" if req.auto_send else "DRAFTED_AND_READY",
+        "sender_email": req.sender_email,
+        "reply_subject": response_data["reply_subject"],
+        "reply_body": response_data["reply_body"],
+        "demo_link": response_data["demo_link"],
+        "settlement_info": response_data["settlement_info"]
     }
 
 @router.post("/simulate-reply")

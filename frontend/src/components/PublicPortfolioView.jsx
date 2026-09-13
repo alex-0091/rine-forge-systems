@@ -9,6 +9,10 @@ import {
   CreditCard, Wallet, Lock, Landmark, CheckCheck
 } from 'lucide-react';
 
+import { PaymentPortalModal } from './PaymentPortalModal';
+import { AIToolsForgeView } from './AIToolsForgeView';
+import { FloatingAIAssistant } from './FloatingAIAssistant';
+
 const SHOWCASE_TABS = [
   { id: 'oracle-ai', name: 'Oracle AI Terminal', badge: 'Quant Microstructure', icon: Activity },
   { id: 'fact-fuel', name: 'Fact Fuel AI', badge: 'Fact-Check & Script Synth', icon: Flame },
@@ -328,6 +332,10 @@ export function PublicPortfolioView() {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [submittingBooking, setSubmittingBooking] = useState(false);
 
+  // --- 50% MILESTONE PAYMENT MODAL STATE ---
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [selectedPackageForModal, setSelectedPackageForModal] = useState('ai-receptionist');
+
   // ROI Computed
   const missedInquiries = Math.round(calcMonthlyLeads * (calcMissedRate / 100));
   const recoverableConversions = Math.round(missedInquiries * 0.35);
@@ -620,16 +628,23 @@ export function PublicPortfolioView() {
           </div>
         </div>
 
-        <div className="hidden md:flex items-center gap-4 text-xs font-semibold">
-          <a href="#showcase" className="text-slate-300 hover:text-white transition-colors">Working Projects</a>
-          <a href="#team" className="text-slate-300 hover:text-white transition-colors">Engineering Team</a>
-          <a href="#accreditations" className="text-slate-300 hover:text-white transition-colors">Accreditations & Trust</a>
-          <a href="#payment-terms" className="text-slate-300 hover:text-white transition-colors">Milestone Terms</a>
-          <a href="#case-studies" className="text-slate-300 hover:text-white transition-colors">Case Studies</a>
-          <a href="#roi-calculator" className="text-slate-300 hover:text-white transition-colors">ROI Matrix</a>
-          <a href="#contact" className="px-4 py-2 bg-teal-500 hover:bg-teal-400 text-dark-950 rounded-xl font-bold transition-all shadow-md shadow-teal-500/20">
-            Book Architecture Call
+        <div className="hidden md:flex items-center gap-3 text-xs font-semibold">
+          <a href="#tools-forge" className="text-teal-400 hover:text-teal-300 font-bold flex items-center gap-1 transition-colors">
+            <Sparkles className="w-3.5 h-3.5" /> Free AI Super-Suite
           </a>
+          <a href="#showcase" className="text-slate-300 hover:text-white transition-colors">Live Projects</a>
+          <a href="#team" className="text-slate-300 hover:text-white transition-colors">Engineering Team</a>
+          <a href="#accreditations" className="text-slate-300 hover:text-white transition-colors">Accreditations</a>
+          <a href="#payment-terms" className="text-slate-300 hover:text-white transition-colors">Milestones</a>
+          <button
+            onClick={() => {
+              setSelectedPackageForModal('ai-receptionist');
+              setIsPaymentModalOpen(true);
+            }}
+            className="px-4 py-2 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-dark-950 rounded-xl font-extrabold transition-all shadow-md shadow-teal-500/20 flex items-center gap-1.5"
+          >
+            <Landmark className="w-3.5 h-3.5" /> 50% Deposit Portal
+          </button>
         </div>
       </div>
 
@@ -644,7 +659,7 @@ export function PublicPortfolioView() {
         </h1>
         
         <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto">
-          From algorithmic microstructure predictive engines to sub-60-second speed-to-lead pipelines and 24/7 autonomous voice & web receptionists. We build custom, production-grade solutions with zero upfront risk.
+          From algorithmic microstructure quant bots and free utility AI generators to sub-60-second speed-to-lead pipelines and 24/7 voice triage concierges. We build production-grade solutions with zero upfront risk.
         </p>
 
         {/* Commercial Trust Micro-Bar */}
@@ -656,17 +671,26 @@ export function PublicPortfolioView() {
 
         <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
           <a
-            href="#showcase"
-            className="px-7 py-3.5 bg-teal-500 hover:bg-teal-400 text-dark-950 font-extrabold rounded-xl text-sm transition-all shadow-xl shadow-teal-500/25 flex items-center gap-2"
+            href="#tools-forge"
+            className="px-7 py-3.5 bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-dark-950 font-black rounded-xl text-sm transition-all shadow-xl shadow-teal-500/25 flex items-center gap-2"
           >
-            <Activity className="w-4 h-4" /> Test Interactive Projects
+            <Sparkles className="w-4 h-4" /> Use 9 Free AI Tools
           </a>
           <a
-            href="#accreditations"
+            href="#showcase"
             className="px-7 py-3.5 bg-dark-900 hover:bg-dark-850 text-slate-200 border border-slate-700 font-bold rounded-xl text-sm transition-all flex items-center gap-2"
           >
-            <Award className="w-4 h-4 text-teal-400" /> Accreditations & Trust
+            <Activity className="w-4 h-4 text-teal-400" /> 8 Live Production Demos
           </a>
+          <button
+            onClick={() => {
+              setSelectedPackageForModal('ai-receptionist');
+              setIsPaymentModalOpen(true);
+            }}
+            className="px-7 py-3.5 bg-dark-850 hover:bg-dark-800 text-teal-300 border border-teal-500/40 font-bold rounded-xl text-sm transition-all flex items-center gap-2"
+          >
+            <Landmark className="w-4 h-4" /> 50% Deposit & Settlement
+          </button>
         </div>
       </section>
 
@@ -697,6 +721,16 @@ export function PublicPortfolioView() {
             </span>
           ))}
         </div>
+      </section>
+
+      {/* AI SUPER-SUITE & FREE TOOLS FORGE */}
+      <section id="tools-forge">
+        <AIToolsForgeView
+          onOpenPaymentModal={(pkgId) => {
+            setSelectedPackageForModal(pkgId);
+            setIsPaymentModalOpen(true);
+          }}
+        />
       </section>
 
       {/* INTERACTIVE SHOWCASE HUB */}
@@ -1480,31 +1514,43 @@ export function PublicPortfolioView() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             <div className="p-4 bg-dark-900 rounded-xl border border-slate-800 space-y-2">
               <div className="flex items-center gap-2 text-white font-bold text-xs">
-                <Landmark className="w-4 h-4 text-teal-400" /> International Wire
+                <Landmark className="w-4 h-4 text-teal-400" /> Albaraka Bank (Euro)
               </div>
-              <p className="text-[11px] text-slate-400">USD, EUR, GBP, CAD via SWIFT, Fedwire, and SEPA with formal corporate invoices.</p>
+              <p className="text-[11px] text-slate-400 font-mono">IBAN: TR61 0020... (Owais ahmed, Istanbul Turkey) with corporate invoices.</p>
             </div>
 
             <div className="p-4 bg-dark-900 rounded-xl border border-slate-800 space-y-2">
               <div className="flex items-center gap-2 text-white font-bold text-xs">
-                <CreditCard className="w-4 h-4 text-cyan-400" /> Stripe Invoicing
+                <Landmark className="w-4 h-4 text-cyan-400" /> Albaraka Bank (USD)
               </div>
-              <p className="text-[11px] text-slate-400">Major Credit / Debit cards (Visa, Mastercard, Amex) with 1-click corporate billing receipts.</p>
+              <p className="text-[11px] text-slate-400 font-mono">IBAN: TR88 0020... (Owais ahmed, Istanbul Turkey) with Fedwire/SWIFT.</p>
             </div>
 
             <div className="p-4 bg-dark-900 rounded-xl border border-slate-800 space-y-2">
               <div className="flex items-center gap-2 text-white font-bold text-xs">
-                <DollarSign className="w-4 h-4 text-indigo-400" /> PayPal Business
+                <Wallet className="w-4 h-4 text-emerald-400" /> USDT (BEP20)
               </div>
-              <p className="text-[11px] text-slate-400">Instant commercial PayPal invoice checkout with comprehensive buyer/merchant protection.</p>
+              <p className="text-[11px] text-slate-400 font-mono">BNB Smart Chain (0x31022002...) with instantaneous on-chain credit.</p>
             </div>
 
             <div className="p-4 bg-dark-900 rounded-xl border border-slate-800 space-y-2">
               <div className="flex items-center gap-2 text-white font-bold text-xs">
-                <Wallet className="w-4 h-4 text-emerald-400" /> Cryptocurrency
+                <CreditCard className="w-4 h-4 text-indigo-400" /> Stripe / Cards
               </div>
-              <p className="text-[11px] text-slate-400">USDT (TRC20/ERC20), USDC, BTC, and ETH with instantaneous on-chain transaction hash verification.</p>
+              <p className="text-[11px] text-slate-400">Major corporate Visa, Mastercard, and Amex with 1-click billing receipts.</p>
             </div>
+          </div>
+
+          <div className="pt-2 text-center">
+            <button
+              onClick={() => {
+                setSelectedPackageForModal('ai-receptionist');
+                setIsPaymentModalOpen(true);
+              }}
+              className="px-8 py-4 bg-gradient-to-r from-teal-500 via-cyan-400 to-emerald-400 hover:from-teal-400 hover:to-cyan-300 text-dark-950 font-black rounded-2xl text-sm transition-all shadow-xl shadow-teal-500/25 inline-flex items-center gap-2"
+            >
+              <Landmark className="w-5 h-5" /> Open 50% Milestone Settlement & Payment Portal →
+            </button>
           </div>
         </div>
       </section>
@@ -1747,6 +1793,21 @@ export function PublicPortfolioView() {
         <div className="font-mono text-slate-400">© 2026 RINE FORGE SYSTEMS • Engineering Autonomous Commercial AI</div>
         <div>Alex Rine, Principal Systems Architect • Direct: <a href="mailto:alexrine691@gmail.com" className="text-teal-400 hover:underline">alexrine691@gmail.com</a></div>
       </footer>
+
+      {/* 50% Milestone Settlement & Payment Modal */}
+      <PaymentPortalModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        defaultPackageId={selectedPackageForModal}
+      />
+
+      {/* 24/7 Floating AI Architecture Agent */}
+      <FloatingAIAssistant
+        onOpenPaymentModal={(pkgId) => {
+          setSelectedPackageForModal(pkgId);
+          setIsPaymentModalOpen(true);
+        }}
+      />
     </div>
   );
 }
