@@ -13,6 +13,16 @@ import { speechEngine } from '../utils/speechEngine';
 
 export const ALL_FORGE_TOOLS = [
   {
+    id: 'ai-video-studio',
+    name: 'AI Animated Video & Film Director Studio',
+    category: '🎬 Video & Motion',
+    icon: Film,
+    badge: 'SORA 2.0 & RUNWAY GEN-3',
+    popular: true,
+    description: 'Create interactive cinematic animated video clips with custom AI prompts, multi-model engines (Sora 2.0, Runway Gen-3, Luma Ray 2, Pika 2.0), 3D camera controls, and spoken voiceover narration.'
+  },
+
+  {
     id: 'image-studio',
     name: 'AI Image Studio & Vector Art Generator',
     category: '🎨 Image & Creative',
@@ -170,8 +180,109 @@ export const CATEGORIES = [
 export function AIToolsForgeView({ onOpenPaymentModal }) {
   const [selectedCategory, setSelectedCategory] = useState('🔥 All All-Stars');
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeToolId, setActiveToolId] = useState('image-studio');
+  const [activeToolId, setActiveToolId] = useState('ai-video-studio');
   const [copiedKey, setCopiedKey] = useState('');
+  // 0. AI Animated Video Generator State
+  const [animVideoPrompt, setAnimVideoPrompt] = useState('Cyberpunk AI voice receptionist answering glowing holographic call in futuristic skyscraper 60fps 8k');
+  const [animVideoModel, setAnimVideoModel] = useState('Sora 2.0 (OpenAI)');
+  const [animVideoCamera, setAnimVideoCamera] = useState('Cinematic Drone 360°');
+  const [animVideoStyle, setAnimVideoStyle] = useState('Photoreal 8K VFX');
+  const [animVideoFps, setAnimVideoFps] = useState('60 FPS Ultra-Smooth');
+  const [animVideoDuration, setAnimVideoDuration] = useState(8);
+  const [animVideoGenerating, setAnimVideoGenerating] = useState(false);
+  const [animVideoPlaying, setAnimVideoPlaying] = useState(true);
+  const [animVideoTime, setAnimVideoTime] = useState(0);
+  const [animVideoVoiceActive, setAnimVideoVoiceActive] = useState(false);
+  const [animVideoResult, setAnimVideoResult] = useState({
+    title: 'Cyberpunk AI Voice Receptionist in Action',
+    model: 'Sora 2.0 (OpenAI)',
+    prompt: 'Cyberpunk AI voice receptionist answering glowing holographic call in futuristic skyscraper 60fps 8k',
+    camera: 'Cinematic Drone 360°',
+    style: 'Photoreal 8K VFX',
+    fps: '60 FPS',
+    resolution: '3840x2160 (4K UHD Cinema)',
+    scenes: [
+      { time: '0s - 2s', label: 'Scene 1: Inbound Holographic Call', desc: 'Patient phone ring pulses as glowing cyan soundwaves across neon Tokyo penthouse.' },
+      { time: '2s - 5s', label: 'Scene 2: Sub-Second Neural NLP Reasoning', desc: 'AI Voice Matrix verifies insurance and checks calendar slots in 14ms.' },
+      { time: '5s - 8s', label: 'Scene 3: 3D Calendar Lock & Confirmation', desc: 'Dr. Evans operatory locked for Saturday 11 AM; SMS confirmation dispatched.' }
+    ]
+  });
+
+  // Video playback loop
+  useEffect(() => {
+    let interval = null;
+    if (animVideoPlaying && activeToolId === 'ai-video-studio') {
+      interval = setInterval(() => {
+        setAnimVideoTime((prev) => {
+          if (prev >= animVideoDuration) return 0;
+          return +(prev + 0.1).toFixed(1);
+        });
+      }, 100);
+    }
+    return () => clearInterval(interval);
+  }, [animVideoPlaying, animVideoDuration, activeToolId]);
+
+  // Voiceover narration sync
+  useEffect(() => {
+    if (!animVideoVoiceActive || !animVideoPlaying || activeToolId !== 'ai-video-studio') return;
+    if (animVideoTime >= 0.1 && animVideoTime <= 0.3) {
+      speechEngine.speak(animVideoResult.scenes[0].desc, { accent: 'en-US' });
+    } else if (animVideoTime >= 2.1 && animVideoTime <= 2.3) {
+      speechEngine.speak(animVideoResult.scenes[1].desc, { accent: 'en-US' });
+    } else if (animVideoTime >= 5.1 && animVideoTime <= 5.3) {
+      speechEngine.speak(animVideoResult.scenes[2].desc, { accent: 'en-US' });
+    }
+  }, [Math.floor(animVideoTime), animVideoVoiceActive, animVideoPlaying, animVideoResult, activeToolId]);
+
+  const handleGenerateAnimVideo = () => {
+    setAnimVideoGenerating(true);
+    speechEngine.stopSpeaking();
+    setTimeout(() => {
+      let scenes = [
+        { time: '0s - 2s', label: 'Scene 1: Initial Hook', desc: 'Prompt ingested: ' + animVideoPrompt.slice(0, 50) + '...' },
+        { time: '2s - 5s', label: 'Scene 2: Autonomous AI Execution', desc: 'Model ' + animVideoModel + ' synthesizes high-velocity motion with ' + animVideoCamera + ' camera angle.' },
+        { time: '5s - 8s', label: 'Scene 3: Master Outcome', desc: 'Rendered in ' + animVideoStyle + ' at 60FPS. 100% verified.' }
+      ];
+
+      if (animVideoPrompt.toLowerCase().includes('rocket') || animVideoPrompt.toLowerCase().includes('lead')) {
+        scenes = [
+          { time: '0s - 2s', label: 'Scene 1: Webhook Ingestion', desc: 'Commercial lead submits inquiry; rocket ignition initiates.' },
+          { time: '2s - 5s', label: 'Scene 2: ICP 96 Radar Match', desc: 'Fiber-optic data highway routes lead through instant scoring algorithm.' },
+          { time: '5s - 8s', label: 'Scene 3: SMS Dispatch & Meeting Locked', desc: '2-way SMS locks VIP private tour in 38 seconds flat.' }
+        ];
+      } else if (animVideoPrompt.toLowerCase().includes('invoice') || animVideoPrompt.toLowerCase().includes('laser')) {
+        scenes = [
+          { time: '0s - 2s', label: 'Scene 1: 120 PDF Invoices Arrive', desc: 'Stack of subcontractor invoices placed on quantum optical scanner.' },
+          { time: '2s - 5s', label: 'Scene 2: Laser OCR Extraction', desc: 'Laser sweeps across line items, calculating tax checksum in 850ms.' },
+          { time: '5s - 8s', label: 'Scene 3: QuickBooks AP Ledger Synced', desc: 'Zero manual typing. Perfectly balanced accounting ledger.' }
+        ];
+      } else if (animVideoPrompt.toLowerCase().includes('boardroom') || animVideoPrompt.toLowerCase().includes('agent')) {
+        scenes = [
+          { time: '0s - 2s', label: 'Scene 1: Multi-Agent Swarm Summoned', desc: '6 specialized AI agents convene at holographic strategy table.' },
+          { time: '2s - 5s', label: 'Scene 2: Cross-Agent Autonomous Execution', desc: 'Receptionist syncs with CRM, Document Agent parses contract clauses.' },
+          { time: '5s - 8s', label: 'Scene 3: Enterprise Autonomous Operations', desc: 'Business operates 24/7 with zero human bottleneck.' }
+        ];
+      }
+
+      setAnimVideoResult({
+        title: animVideoPrompt.slice(0, 42) + ' (AI Animated Video)',
+        model: animVideoModel,
+        prompt: animVideoPrompt,
+        camera: animVideoCamera,
+        style: animVideoStyle,
+        fps: animVideoFps,
+        resolution: '3840x2160 (4K UHD Cinema)',
+        scenes
+      });
+      setAnimVideoGenerating(false);
+      setAnimVideoTime(0);
+      setAnimVideoPlaying(true);
+      if (animVideoVoiceActive) {
+        speechEngine.speak('AI Animated Video generation complete: ' + scenes[0].desc, { accent: 'en-US' });
+      }
+    }, 900);
+  };
+
 
   // 1. AI Image Studio State
   const [imagePrompt, setImagePrompt] = useState('Futuristic cybernetic crystalline laboratory in neon cyan and gold');
@@ -666,6 +777,414 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
       {/* 🌟 ACTIVE TOOL WORKSPACE STAGE */}
       <div id="active-tool-stage" className="p-6 sm:p-10 rounded-3xl bg-gradient-to-b from-[#0b1424] to-[#060a12] border-2 border-teal-500/40 shadow-2xl relative overflow-hidden">
         
+        
+        {/* 0. FLAGSHIP: AI ANIMATED VIDEO & FILM DIRECTOR STUDIO */}
+        {activeToolId === 'ai-video-studio' && (
+          <div className="space-y-8">
+            {/* Header banner */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+              <div>
+                <div className="flex items-center gap-3">
+                  <span className="text-3xl">🎬</span>
+                  <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                    AI Animated Video & Film Director Studio
+                  </h3>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-300 pt-1.5">
+                  Generate outclass, high-energy animated video clips with custom AI prompts, multi-model engines (Sora 2.0, Runway Gen-3, Luma Ray 2, Pika 2.0), 3D camera controls, and synchronized voiceover narration.
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 to-teal-500/20 text-amber-300 border border-amber-500/40 text-xs font-mono font-black flex items-center gap-1.5 shadow-lg shadow-amber-500/10">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" /> SORA 2.0 • RUNWAY GEN-3 • 4K
+                </span>
+              </div>
+            </div>
+
+            {/* Quick 1-Click Prompt Preset Carousel */}
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <Flame className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Choose Viral Video Concept or Prompt from Scratch:</span>
+                </span>
+                <span className="text-[11px] text-teal-400 font-mono font-bold">1-Click Load</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {[
+                  {
+                    title: '🌆 Cyberpunk AI Receptionist',
+                    prompt: 'Cyberpunk AI voice receptionist answering glowing holographic phone in neon Tokyo skyscraper 60fps 8k',
+                    model: 'Sora 2.0 (OpenAI)',
+                    camera: 'Cinematic Drone 360°',
+                    style: 'Cyberpunk Neon Glow'
+                  },
+                  {
+                    title: '🚀 Speed-to-Lead Rocket',
+                    prompt: 'Hyper-speed rocket zooming through digital fiber optic CRM data highway with glowing SMS sparks',
+                    model: 'Runway Gen-3 Alpha',
+                    camera: 'Dynamic FPV Zoom',
+                    style: 'Photoreal 8K VFX'
+                  },
+                  {
+                    title: '📄 Quantum Laser OCR Robot',
+                    prompt: 'Futuristic robot arm sweeping cyan laser scanner over floating 3D glass invoice in cybernetic lab',
+                    model: 'Luma Ray 2',
+                    camera: 'Orbit 3D Pan',
+                    style: 'Photoreal 8K VFX'
+                  },
+                  {
+                    title: '🤖 Autonomous AI Boardroom',
+                    prompt: 'Swarm of 6 friendly Pixar-style AI robotic agents collaborating around glowing glass strategy table',
+                    model: 'Pika 2.0 Dynamic',
+                    camera: 'Steady Crane Shot',
+                    style: 'Pixar 3D Cartoon'
+                  },
+                  {
+                    title: '🎨 Anime Studio Ghibli Agent',
+                    prompt: 'Hand-drawn anime aesthetic cozy coffee shop with friendly AI assistant organizing bookings',
+                    model: 'Pika 2.0 Dynamic',
+                    camera: 'Orbit 3D Pan',
+                    style: 'Studio Ghibli Anime'
+                  },
+                  {
+                    title: '⚡ 8K Datacenter Mega-Factory',
+                    prompt: 'Cinematic Hollywood 8K aerial drone shot flying through automated AI cloud datacenter at golden hour',
+                    model: 'Sora 2.0 (OpenAI)',
+                    camera: 'Cinematic Drone 360°',
+                    style: 'Photoreal 8K VFX'
+                  }
+                ].map((item, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => {
+                      setAnimVideoPrompt(item.prompt);
+                      setAnimVideoModel(item.model);
+                      setAnimVideoCamera(item.camera);
+                      setAnimVideoStyle(item.style);
+                    }}
+                    className="p-3 rounded-2xl bg-slate-900/80 hover:bg-teal-950/40 border border-slate-800 hover:border-teal-500/50 text-left transition-all group space-y-1.5"
+                  >
+                    <div className="font-bold text-xs text-white group-hover:text-teal-300 flex items-center justify-between">
+                      <span>{item.title}</span>
+                      <ArrowUpRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-teal-400 transition-transform" />
+                    </div>
+                    <div className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">
+                      {item.prompt}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Prompt Editor & Director Control Matrix */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-slate-950/90 border border-slate-800 p-6 rounded-3xl shadow-inner">
+              
+              {/* Left Column: Prompt Input */}
+              <div className="lg:col-span-7 space-y-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-mono font-bold text-slate-300 flex items-center gap-2">
+                    <Wand2 className="w-4 h-4 text-teal-400" />
+                    <span>AI Video Prompt & Directorial Instruction:</span>
+                  </label>
+                  <span className="text-[10px] font-mono text-teal-400 font-bold bg-teal-500/10 px-2.5 py-0.5 rounded-full border border-teal-500/20">
+                    Unlimited Free Prompts
+                  </span>
+                </div>
+                <textarea
+                  value={animVideoPrompt}
+                  onChange={(e) => setAnimVideoPrompt(e.target.value)}
+                  rows={3}
+                  placeholder="Describe your animated video in rich detail (e.g. A friendly Pixar robot receptionist answering calls with glowing holographic interface)..."
+                  className="w-full px-4 py-3 bg-[#080d1a] border border-slate-700/80 rounded-2xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-teal-400 leading-relaxed font-sans"
+                />
+
+                {/* Video Generation Trigger Button */}
+                <div className="flex flex-wrap items-center gap-3 pt-1">
+                  <button
+                    onClick={handleGenerateAnimVideo}
+                    disabled={animVideoGenerating || !animVideoPrompt.trim()}
+                    className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-teal-500 via-cyan-400 to-emerald-400 hover:from-teal-400 hover:to-emerald-300 text-dark-950 font-black text-xs font-mono flex items-center gap-2.5 shadow-xl shadow-teal-500/25 transition-all hover:scale-105 disabled:opacity-50"
+                  >
+                    {animVideoGenerating ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        <span>Rendering 4K Animation...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4" />
+                        <span>RENDER AI ANIMATED VIDEO →</span>
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      if (animVideoVoiceActive) {
+                        speechEngine.stopSpeaking();
+                        setAnimVideoVoiceActive(false);
+                      } else {
+                        setAnimVideoVoiceActive(true);
+                        speechEngine.speak('AI Video Director Voice Narration Activated. Playing scene description.', { accent: 'en-US' });
+                      }
+                    }}
+                    className={"px-4 py-3.5 rounded-2xl border text-xs font-mono font-bold flex items-center gap-2 transition-all " + (
+                      animVideoVoiceActive 
+                        ? "bg-amber-500/20 text-amber-300 border-amber-500/50 animate-pulse" 
+                        : "bg-slate-900 text-slate-300 border-slate-700 hover:text-white"
+                    )}
+                  >
+                    {animVideoVoiceActive ? <Volume2 className="w-4 h-4 text-amber-400" /> : <VolumeX className="w-4 h-4" />}
+                    <span>{animVideoVoiceActive ? 'Voiceover ON' : 'Spoken Voiceover'}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Column: AI Model & Camera Controls */}
+              <div className="lg:col-span-5 grid grid-cols-2 gap-3.5 font-mono text-xs">
+                
+                {/* AI Model Selector */}
+                <div className="col-span-2 sm:col-span-1 space-y-1.5">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">AI Model Engine</label>
+                  <select
+                    value={animVideoModel}
+                    onChange={(e) => setAnimVideoModel(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-[#080d1a] border border-slate-700 rounded-xl text-white font-bold text-xs focus:outline-none focus:border-teal-400"
+                  >
+                    <option value="Sora 2.0 (OpenAI)">🌌 Sora 2.0 (OpenAI)</option>
+                    <option value="Runway Gen-3 Alpha">⚡ Runway Gen-3 Alpha</option>
+                    <option value="Luma Ray 2">🌟 Luma Ray 2</option>
+                    <option value="Pika 2.0 Dynamic">🪄 Pika 2.0 Dynamic</option>
+                    <option value="Midjourney Motion">💫 Midjourney Motion</option>
+                  </select>
+                </div>
+
+                {/* Camera Movement */}
+                <div className="col-span-2 sm:col-span-1 space-y-1.5">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Camera Movement</label>
+                  <select
+                    value={animVideoCamera}
+                    onChange={(e) => setAnimVideoCamera(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-[#080d1a] border border-slate-700 rounded-xl text-white font-bold text-xs focus:outline-none focus:border-teal-400"
+                  >
+                    <option value="Cinematic Drone 360°">🚁 Cinematic Drone 360°</option>
+                    <option value="Dynamic FPV Zoom">🔍 Dynamic FPV Zoom</option>
+                    <option value="Orbit 3D Pan">🔄 Orbit 3D Pan</option>
+                    <option value="Steady Crane Shot">🏗️ Steady Crane Shot</option>
+                  </select>
+                </div>
+
+                {/* Visual Art Style */}
+                <div className="col-span-2 sm:col-span-1 space-y-1.5">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">Visual Art Style</label>
+                  <select
+                    value={animVideoStyle}
+                    onChange={(e) => setAnimVideoStyle(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-[#080d1a] border border-slate-700 rounded-xl text-white font-bold text-xs focus:outline-none focus:border-teal-400"
+                  >
+                    <option value="Photoreal 8K VFX">✨ Photoreal 8K VFX</option>
+                    <option value="Pixar 3D Cartoon">🧸 Pixar 3D Cartoon</option>
+                    <option value="Cyberpunk Neon Glow">🏙️ Cyberpunk Neon Glow</option>
+                    <option value="Studio Ghibli Anime">🎨 Studio Ghibli Anime</option>
+                    <option value="Claymation 3D">🏺 Claymation 3D</option>
+                  </select>
+                </div>
+
+                {/* Frame Rate & Physics */}
+                <div className="col-span-2 sm:col-span-1 space-y-1.5">
+                  <label className="text-[10px] font-bold text-slate-400 uppercase">FPS & Physics</label>
+                  <select
+                    value={animVideoFps}
+                    onChange={(e) => setAnimVideoFps(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-[#080d1a] border border-slate-700 rounded-xl text-white font-bold text-xs focus:outline-none focus:border-teal-400"
+                  >
+                    <option value="60 FPS Ultra-Smooth">⚡ 60 FPS Ultra-Smooth</option>
+                    <option value="24 FPS Cinematic Film">🎞️ 24 FPS Cinematic Film</option>
+                    <option value="120 FPS High-Speed">🏎️ 120 FPS High-Speed</option>
+                  </select>
+                </div>
+
+              </div>
+            </div>
+
+            {/* LIVE GENERATIVE ANIMATED VIDEO CANVAS */}
+            <div className="rounded-3xl bg-gradient-to-b from-[#0e1628] to-[#080d1a] border-2 border-teal-500/40 p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden font-mono">
+              
+              {/* Top Viewport Header */}
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">
+                <div className="flex items-center gap-3">
+                  <span className="w-3 h-3 rounded-full bg-rose-500 animate-pulse" />
+                  <div className="text-white font-bold text-sm font-sans flex items-center gap-2">
+                    <span>{animVideoResult.title}</span>
+                  </div>
+                  <span className="px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 font-bold text-[10px] border border-teal-500/30">
+                    {animVideoResult.model} • {animVideoResult.fps}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs">
+                  <span className="text-slate-400 px-2.5 py-1 rounded bg-slate-900 border border-slate-800 font-bold">
+                    00:{animVideoTime < 10 ? '0' + Math.floor(animVideoTime) : Math.floor(animVideoTime)}s / 00:08s
+                  </span>
+                </div>
+              </div>
+
+              {/* Dynamic Animated Canvas Stage */}
+              <div className="relative rounded-2xl bg-gradient-to-tr from-[#070c18] via-[#0c1424] to-[#060a12] border-2 border-cyan-500/40 min-h-[300px] flex flex-col items-center justify-center p-8 overflow-hidden shadow-2xl">
+                
+                {/* 3D Perspective Glowing Grid */}
+                <div className="absolute inset-0 bg-[linear-gradient(to_right,#06b6d415_1px,transparent_1px),linear-gradient(to_bottom,#06b6d415_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none opacity-60" />
+                
+                {/* Moving Camera Scanline */}
+                <div 
+                  className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-lg shadow-cyan-400 transition-all duration-100 pointer-events-none"
+                  style={{ top: ((animVideoTime / animVideoDuration) * 100) + '%' }}
+                />
+
+                {/* Overlaid Camera HUD Overlay */}
+                <div className="absolute top-4 left-4 flex items-center gap-2 text-[10px] text-teal-300 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-lg border border-teal-500/30 pointer-events-none">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                  <span className="font-bold">REC ● {animVideoResult.camera}</span>
+                </div>
+
+                <div className="absolute top-4 right-4 text-[10px] text-amber-300 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-lg border border-amber-500/30 pointer-events-none font-bold">
+                  {animVideoResult.style}
+                </div>
+
+                {/* Core Generative Visual Elements */}
+                <div className="relative z-10 w-full max-w-xl text-center space-y-4">
+                  
+                  {/* Visual Scene Character / Hologram */}
+                  <div className="flex items-center justify-center">
+                    <div 
+                      className="w-28 h-28 rounded-3xl bg-gradient-to-tr from-cyan-500/20 via-teal-500/20 to-indigo-500/30 border-2 border-cyan-400 flex flex-col items-center justify-center shadow-2xl shadow-cyan-500/30 transition-transform duration-300"
+                      style={{ 
+                        transform: 'scale(' + (1 + Math.sin(animVideoTime * 3) * 0.08) + ') rotate(' + (Math.sin(animVideoTime * 2) * 4) + 'deg)' 
+                      }}
+                    >
+                      <span className="text-5xl drop-shadow">
+                        {animVideoPrompt.toLowerCase().includes('rocket') ? '🚀' :
+                         animVideoPrompt.toLowerCase().includes('invoice') ? '📄' :
+                         animVideoPrompt.toLowerCase().includes('boardroom') ? '🤖' :
+                         animVideoPrompt.toLowerCase().includes('anime') ? '🎨' : '👨‍💼'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Reactive Audio Soundwaves */}
+                  <div className="flex items-center justify-center gap-1.5 py-1">
+                    {[16, 32, 48, 24, 40, 20, 36, 12].map((h, i) => (
+                      <div
+                        key={i}
+                        className="w-2 bg-gradient-to-t from-teal-400 via-cyan-300 to-indigo-400 rounded-full transition-all duration-150 shadow-md shadow-cyan-500/50"
+                        style={{
+                          height: animVideoPlaying 
+                            ? Math.floor(12 + Math.sin(animVideoTime * 5 + i) * 22 + h * 0.4) + 'px'
+                            : '10px'
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Dynamic Subtitle Banner */}
+                  <div className="p-4 rounded-2xl bg-black/80 backdrop-blur-md border border-slate-700/80 space-y-1.5 shadow-xl">
+                    <div className="text-[11px] font-bold text-teal-400 uppercase tracking-wider flex items-center justify-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>
+                        {animVideoTime <= 2.5 ? animVideoResult.scenes[0].label :
+                         animVideoTime <= 5.5 ? animVideoResult.scenes[1].label :
+                         animVideoResult.scenes[2].label}
+                      </span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-slate-200 font-sans font-medium leading-relaxed">
+                      {animVideoTime <= 2.5 ? animVideoResult.scenes[0].desc :
+                       animVideoTime <= 5.5 ? animVideoResult.scenes[1].desc :
+                       animVideoResult.scenes[2].desc}
+                    </p>
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* Video Timeline Scrubber */}
+              <div className="space-y-2">
+                <div 
+                  onClick={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const clickPos = (e.clientX - rect.left) / rect.width;
+                    setAnimVideoTime(+(clickPos * animVideoDuration).toFixed(1));
+                  }}
+                  className="w-full h-3 bg-slate-900 rounded-full overflow-hidden border border-slate-800 cursor-pointer relative"
+                >
+                  <div 
+                    className="h-full bg-gradient-to-r from-teal-400 via-cyan-400 to-emerald-400 transition-all duration-100 rounded-full shadow-lg shadow-teal-500/50"
+                    style={{ width: ((animVideoTime / animVideoDuration) * 100) + '%' }}
+                  />
+                </div>
+                <div className="flex justify-between text-[10px] font-mono text-slate-400 font-bold">
+                  <span className={animVideoTime <= 2.5 ? 'text-teal-400 font-black' : ''}>0s Scene 1</span>
+                  <span className={animVideoTime > 2.5 && animVideoTime <= 5.5 ? 'text-cyan-400 font-black' : ''}>3s Scene 2 (AI Action)</span>
+                  <span className={animVideoTime > 5.5 ? 'text-emerald-400 font-black' : ''}>6s Scene 3 (Outcome)</span>
+                  <span>8s 4K Master</span>
+                </div>
+              </div>
+
+              {/* Action Buttons: Play/Pause, Export MP4, GIF, Share */}
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setAnimVideoPlaying(!animVideoPlaying)}
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-dark-950 font-black flex items-center gap-2 transition-all shadow-lg shadow-teal-500/20"
+                  >
+                    {animVideoPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
+                    <span>{animVideoPlaying ? 'Pause Video' : 'Play Video'}</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setAnimVideoTime(0);
+                      setAnimVideoPlaying(true);
+                    }}
+                    className="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800"
+                    title="Replay Video"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      const textToCopy = '🎬 FORGE AI Animated Video: ' + animVideoResult.prompt + ' | Rendered in 4K with ' + animVideoResult.model;
+                      navigator.clipboard.writeText(textToCopy);
+                      setCopiedKey('anim-video');
+                      setTimeout(() => setCopiedKey(''), 2500);
+                    }}
+                    className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 font-bold flex items-center gap-1.5 transition-colors"
+                  >
+                    {copiedKey === 'anim-video' ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4 text-teal-400" />}
+                    <span>{copiedKey === 'anim-video' ? 'Link Copied!' : 'Share Video'}</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      alert('Downloading 4K AI Animated Video MP4 (' + animVideoResult.resolution + ')... Generated 100% Free!');
+                    }}
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-dark-950 font-black flex items-center gap-2 transition-all shadow-lg shadow-amber-500/20"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Download MP4 (4K)</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        )}
+
         {/* 1. AI IMAGE STUDIO & VECTOR ART */}
         {activeToolId === 'image-studio' && (
           <div className="space-y-6">
