@@ -147,30 +147,42 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
           </p>
 
           {/* Primary High-Converting CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-3 font-mono text-xs">
-            <button
-              onClick={() => {
-                forgeAudioSynth.playClick();
-                const el = document.getElementById('v3-video-experience') || document.getElementById('watch-demos');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-                else if (onNavigate) onNavigate('watch-demos');
-              }}
-              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-dark-950 font-black rounded-2xl transition-all shadow-xl shadow-teal-500/20 flex items-center justify-center gap-2.5 hover:scale-105"
-            >
-              <span>SEE HOW IT WORKS</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+          <div className="flex flex-col items-center justify-center gap-3 pt-3">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto font-mono text-xs">
+              {/* Primary CTA: Visually Dominant */}
+              <button
+                onClick={() => {
+                  forgeAudioSynth.playSuccess();
+                  if (onNavigate) onNavigate('audit');
+                  else {
+                    const el = document.getElementById('automation-calculator');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                className="w-full sm:w-auto px-9 py-4 bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-300 hover:from-teal-300 hover:to-cyan-200 text-slate-950 font-black rounded-2xl transition-all shadow-2xl shadow-teal-500/30 flex items-center justify-center gap-2.5 hover:scale-105 active:scale-95 ring-2 ring-teal-300/60"
+              >
+                <span className="text-sm font-black tracking-wide">GET YOUR FREE AI AUDIT</span>
+                <ArrowRight className="w-4 h-4 text-slate-950 stroke-[3]" />
+              </button>
 
-            <button
-              onClick={() => {
-                forgeAudioSynth.playSuccess();
-                if (onNavigate) onNavigate('audit');
-              }}
-              className="w-full sm:w-auto px-7 py-4 bg-slate-900 hover:bg-slate-855 text-teal-300 border-2 border-teal-500/50 hover:border-teal-400 font-bold rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 hover:scale-105"
-            >
-              <Sparkles className="w-4 h-4 text-teal-400" />
-              <span>GET FREE AI AUDIT</span>
-            </button>
+              {/* Secondary CTA */}
+              <button
+                onClick={() => {
+                  forgeAudioSynth.playClick();
+                  const el = document.getElementById('v3-video-experience') || document.getElementById('watch-demos');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  else if (onNavigate) onNavigate('watch-demos');
+                }}
+                className="w-full sm:w-auto px-7 py-4 bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white border-2 border-slate-700/80 hover:border-slate-500 font-bold rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 hover:scale-105 active:scale-95"
+              >
+                <span>WATCH HOW IT WORKS</span>
+              </button>
+            </div>
+
+            {/* Small text underneath primary CTA */}
+            <p className="text-xs font-mono text-teal-300/90 font-medium">
+              We'll find repetitive tasks your business could automate.
+            </p>
           </div>
 
           <div className="text-[11px] text-slate-400 flex flex-wrap items-center justify-center gap-4 pt-1 font-mono">

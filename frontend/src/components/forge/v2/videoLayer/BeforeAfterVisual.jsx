@@ -181,13 +181,13 @@ export function BeforeAfterVisual({ onCtaClick }) {
             if (onCtaClick) {
               onCtaClick();
             } else {
-              const el = document.getElementById('consultation') || document.getElementById('contact');
+              const el = document.getElementById('automation-calculator') || document.getElementById('consultation');
               if (el) el.scrollIntoView({ behavior: 'smooth' });
             }
           }}
-          className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 text-slate-950 font-black text-xs tracking-wider uppercase transition-all shadow-xl shadow-emerald-500/20 hover:scale-105 flex items-center justify-center gap-2 shrink-0"
+          className="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 text-slate-950 font-black text-xs font-mono tracking-wider uppercase transition-all shadow-xl shadow-emerald-500/20 hover:scale-105 flex items-center justify-center gap-2 shrink-0"
         >
-          <span>Deploy FORGE For Your Business</span>
+          <span>AUTOMATE THIS FOR MY BUSINESS</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

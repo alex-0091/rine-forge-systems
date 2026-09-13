@@ -399,7 +399,7 @@ const INDUSTRIES = [
   }
 ];
 
-export function WhatCouldYourBusinessAutomate({ onWatchServiceDemo }) {
+export function WhatCouldYourBusinessAutomate({ onWatchServiceDemo, onSeeWhatWeCouldAutomate }) {
   const [selectedIndustryId, setSelectedIndustryId] = useState('hotels');
 
   const selectedIndustry = INDUSTRIES.find(ind => ind.id === selectedIndustryId) || INDUSTRIES[0];
@@ -521,6 +521,23 @@ export function WhatCouldYourBusinessAutomate({ onWatchServiceDemo }) {
               </button>
             </div>
           ))}
+        </div>
+
+        {/* Subtle Section CTA: SEE WHAT WE COULD AUTOMATE → */}
+        <div className="pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs sm:text-sm text-slate-300 font-sans">
+            Want to see how these automated workflows map to your specific business tools?
+          </p>
+          <button
+            onClick={() => {
+              forgeAudioSynth.playClick();
+              if (onSeeWhatWeCouldAutomate) onSeeWhatWeCouldAutomate(selectedIndustry.name);
+            }}
+            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 hover:border-cyan-400 font-mono font-bold text-xs flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-sm"
+          >
+            <span>SEE WHAT WE COULD AUTOMATE</span>
+            <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
+          </button>
         </div>
 
       </div>

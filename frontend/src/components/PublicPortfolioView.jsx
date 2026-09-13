@@ -54,6 +54,9 @@ import { ForgeVideoExperienceLayer } from './forge/v2/videoLayer/ForgeVideoExper
 import { MeetAiEmployeesSection } from './forge/v2/MeetAiEmployeesSection';
 import { WhatCouldYourBusinessAutomate } from './forge/v2/WhatCouldYourBusinessAutomate';
 import { WatchItHappenModal } from './forge/v2/WatchItHappenModal';
+import { HowMuchCouldYouAutomate } from './forge/v2/HowMuchCouldYouAutomate';
+import { BuiltForRealBusinessWork } from './forge/v2/BuiltForRealBusinessWork';
+import { SimpleAuditContactModal } from './forge/v2/SimpleAuditContactModal';
 
 // Interactive Human Interface & 10s Demo Modals
 import { ForgeHumanControl } from './forge/ForgeHumanControl';
@@ -88,6 +91,13 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
   const [isGlobalTryModalOpen, setIsGlobalTryModalOpen] = useState(false);
   const [trialCreditsUsed, setTrialCreditsUsed] = useState(32);
   const [activeWatchItHappenData, setActiveWatchItHappenData] = useState(null);
+  const [isSimpleAuditModalOpen, setIsSimpleAuditModalOpen] = useState(false);
+  const [simpleAuditPreFill, setSimpleAuditPreFill] = useState({});
+
+  const handleOpenSimpleAudit = (preFill = {}) => {
+    setSimpleAuditPreFill(preFill);
+    setIsSimpleAuditModalOpen(true);
+  };
 
   // Check URL pathname, search params or hash on load
   useEffect(() => {
@@ -248,22 +258,26 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
           <>
             {/* 1. HERO: AI Employees for Small Businesses + Animated Scenario */}
             <ForgeV2HeroScene 
-              onNavigate={handleNavigate} 
+              onNavigate={(target) => target === 'audit' ? handleOpenSimpleAudit() : handleNavigate(target)} 
               onLaunchSystemDemo={handleLaunchSystemSandbox}
               onWatchTenSecDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
             />
 
             {/* V3 PHASE 1: 6-STAGE CINEMATIC VIDEO & VISUAL STORYTELLING LAYER */}
-            <ForgeVideoExperienceLayer onNavigate={handleNavigate} />
+            <ForgeVideoExperienceLayer 
+              onNavigate={(target) => target === 'audit' ? handleOpenSimpleAudit() : handleNavigate(target)} 
+            />
 
             {/* V3 PHASE 2: MEET YOUR NEW AI EMPLOYEES */}
             <MeetAiEmployeesSection 
               onWatchEmployeeDemo={(demoData) => setActiveWatchItHappenData(demoData)} 
+              onBuildAiEmployee={() => handleOpenSimpleAudit({ whatToAutomate: 'Custom AI Employee for business operations' })}
             />
 
             {/* V3 PHASE 2: WHAT COULD YOUR BUSINESS AUTOMATE? (INDUSTRY SWITCHER) */}
             <WhatCouldYourBusinessAutomate 
               onWatchServiceDemo={(demoData) => setActiveWatchItHappenData(demoData)} 
+              onSeeWhatWeCouldAutomate={(indName) => handleOpenSimpleAudit({ businessType: indName, whatToAutomate: `Automating ${indName} customer communication and workflows` })}
             />
 
             {/* 2. LIVE SYSTEM TELEMETRY: FORGE AI Network Active Status & Live Counters */}
@@ -304,10 +318,12 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
               onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
             />
 
-            {/* 9. REAL SYSTEMS: NOT AI THEATER & Enterprise Tech Stack */}
-            <TrustAndTechStack 
-              onNavigate={handleNavigate}
-              onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
+            {/* V3 PHASE 3: BUILT FOR REAL BUSINESS WORK (HONEST TECH STACK) */}
+            <BuiltForRealBusinessWork />
+
+            {/* V3 PHASE 3: HOW MUCH COULD YOU AUTOMATE? (AI AUTOMATION AUDIT & FINAL CTA) */}
+            <HowMuchCouldYouAutomate 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)} 
             />
 
             {/* 10. AI OPPORTUNITY CALCULATOR: Calculate Your Business Hours & Labor Savings */}
@@ -469,6 +485,13 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
         isOpen={Boolean(activeWatchItHappenData)}
         onClose={() => setActiveWatchItHappenData(null)}
         demoData={activeWatchItHappenData}
+      />
+
+      {/* V3 Phase 3 Simple Audit Contact Modal */}
+      <SimpleAuditContactModal 
+        isOpen={isSimpleAuditModalOpen}
+        onClose={() => setIsSimpleAuditModalOpen(false)}
+        initialData={simpleAuditPreFill}
       />
 
     </div>

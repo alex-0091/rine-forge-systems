@@ -2,7 +2,7 @@ import React from 'react';
 import { Bot, Target, MessageSquare, Settings2, ArrowRight, Sparkles, CheckCircle2, Zap } from 'lucide-react';
 import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
 
-export function MeetAiEmployeesSection({ onWatchEmployeeDemo }) {
+export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee }) {
   const employees = [
     {
       id: 'receptionist',
@@ -237,6 +237,23 @@ export function MeetAiEmployeesSection({ onWatchEmployeeDemo }) {
               </div>
             );
           })}
+        </div>
+
+        {/* Subtle CTA: BUILD YOUR AI EMPLOYEE → */}
+        <div className="pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs sm:text-sm text-slate-300 font-sans">
+            Ready to integrate custom AI agents into your business operations?
+          </p>
+          <button
+            onClick={() => {
+              forgeAudioSynth.playClick();
+              if (onBuildAiEmployee) onBuildAiEmployee();
+            }}
+            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 border border-teal-500/30 hover:border-teal-400 font-mono font-bold text-xs flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-sm"
+          >
+            <span>BUILD YOUR AI EMPLOYEE</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </div>
 
       </div>
