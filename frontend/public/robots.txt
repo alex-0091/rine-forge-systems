@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rine-forge-systems-19pm-eight.vercel.app/sitemap.xml

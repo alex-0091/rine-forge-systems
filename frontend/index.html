@@ -3,13 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RINE FORGE SYSTEMS — Autonomous AI Infrastructure & Lead Engineering | Alex Rine</title>
-    <meta name="description" content="Rine Forge Systems engineers production-grade autonomous AI receptionists, algorithmic quant trading bots, bespoke web platforms, and speed-to-lead pipelines." />
+    <title>FORGE | AI Systems That Do The Work</title>
+    <meta name="description" content="FORGE engineers production-grade AI systems for B2B companies. We identify expensive manual bottlenecks and build custom autonomous systems that actually execute the work." />
+    <meta name="keywords" content="AI automation, autonomous agents, B2B workflow automation, AI sales systems, speed-to-lead, AI customer support, custom AI architecture" />
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="FORGE | AI Systems That Do The Work" />
+    <meta property="og:description" content="We don't sell AI hype. We identify expensive repetitive work and build autonomous systems that actually do it." />
+    <meta property="og:site_name" content="FORGE Systems" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="FORGE | AI Systems That Do The Work" />
+    <meta name="twitter:description" content="Production-grade AI automation systems for high-performing B2B operations." />
+
+    <!-- Structured Data (JSON-LD) for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "FORGE Systems",
+      "alternateName": "Rine Forge Systems",
+      "description": "Bespoke AI automation and autonomous systems engineering for B2B operations.",
+      "knowsAbout": ["Artificial Intelligence", "Business Process Automation", "Conversational AI", "Quant Microstructure"],
+      "founder": {
+        "@type": "Person",
+        "name": "Alex Rine",
+        "jobTitle": "Principal AI Architect"
+      }
+    }
+    </script>
+
     <!-- Tailwind via CDN for instant high-performance rendering -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         darkMode: 'class',
@@ -29,10 +57,10 @@
                 900: '#134e4a',
               },
               dark: {
-                950: '#090d16',
-                900: '#0f172a',
-                850: '#151f38',
-                800: '#1e293b',
+                950: '#060a10',
+                900: '#0b101a',
+                850: '#121a29',
+                800: '#1b2538',
                 700: '#334155'
               }
             }
@@ -50,18 +78,18 @@
         height: 6px;
       }
       ::-webkit-scrollbar-track {
-        background: #0f172a;
+        background: #080c14;
       }
       ::-webkit-scrollbar-thumb {
-        background: #334155;
+        background: #1e293b;
         border-radius: 3px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #475569;
+        background: #334155;
       }
     </style>
   </head>
-  <body class="bg-dark-950 text-slate-100 antialiased min-h-screen">
+  <body class="bg-[#070b12] text-slate-100 antialiased min-h-screen">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

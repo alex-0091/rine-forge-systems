@@ -153,23 +153,28 @@ export function App() {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'dashboard' && (
-          <DashboardView
-            onNavigate={(tab) => setActiveTab(tab)}
-            onTriggerKillSwitch={handleToggleKillSwitch}
-            killSwitchStatus={killSwitchStatus}
-          />
-        )}
-        {activeTab === 'leads' && <LeadsView />}
-        {activeTab === 'campaigns' && <CampaignsView onNavigate={(tab) => setActiveTab(tab)} />}
-        {activeTab === 'outreach' && <OutreachQueueView />}
-        {activeTab === 'inbox' && <InboxView />}
-        {activeTab === 'pipeline' && <PipelineView />}
-        {activeTab === 'analytics' && <AnalyticsView />}
-        {activeTab === 'compliance' && <ComplianceView />}
-        {activeTab === 'public_website' && <PublicPortfolioView />}
-      </main>
+      {activeTab === 'public_website' ? (
+        <div className="flex-1 w-full">
+          <PublicPortfolioView />
+        </div>
+      ) : (
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {activeTab === 'dashboard' && (
+            <DashboardView
+              onNavigate={(tab) => setActiveTab(tab)}
+              onTriggerKillSwitch={handleToggleKillSwitch}
+              killSwitchStatus={killSwitchStatus}
+            />
+          )}
+          {activeTab === 'leads' && <LeadsView />}
+          {activeTab === 'campaigns' && <CampaignsView onNavigate={(tab) => setActiveTab(tab)} />}
+          {activeTab === 'outreach' && <OutreachQueueView />}
+          {activeTab === 'inbox' && <InboxView />}
+          {activeTab === 'pipeline' && <PipelineView />}
+          {activeTab === 'analytics' && <AnalyticsView />}
+          {activeTab === 'compliance' && <ComplianceView />}
+        </main>
+      )}
     </div>
   );
 }
