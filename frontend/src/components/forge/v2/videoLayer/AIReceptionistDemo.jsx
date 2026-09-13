@@ -74,6 +74,7 @@ export function AIReceptionistDemo({ onNextStep }) {
       {!videoError && (
         <video
           src="/videos/v04-ai-receptionist.mp4"
+          preload="none"
           className={`absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-700 ${
             videoLoaded ? 'opacity-40' : 'opacity-0'
           }`}

@@ -229,7 +229,7 @@ export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee 
                 {/* Direct Action Trigger: WATCH DEMO → */}
                 <button
                   onClick={() => handleCardClick(emp)}
-                  className={`w-full py-2.5 px-3 rounded-xl bg-slate-900/90 group-hover:bg-slate-800 border border-slate-700/80 group-hover:${emp.border} text-xs font-mono font-bold ${emp.textColor} flex items-center justify-center gap-2 transition-all shadow-sm`}
+                  className={`w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-slate-900/90 group-hover:bg-slate-800 border border-slate-700/80 text-xs font-mono font-bold ${emp.textColor} flex items-center justify-center gap-2 transition-all shadow-sm`}
                 >
                   <span>WATCH DEMO</span>
                   <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
@@ -249,7 +249,7 @@ export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee 
               forgeAudioSynth.playClick();
               if (onBuildAiEmployee) onBuildAiEmployee();
             }}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 border border-teal-500/30 hover:border-teal-400 font-mono font-bold text-xs flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-sm"
+            className="w-full sm:w-auto min-h-[44px] px-6 py-3 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 border border-teal-500/30 hover:border-teal-400 font-mono font-bold text-xs flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-sm"
           >
             <span>BUILD YOUR AI EMPLOYEE</span>
             <ArrowRight className="w-3.5 h-3.5" />

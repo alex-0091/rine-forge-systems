@@ -37,7 +37,7 @@ export function FinalCtaSection({ onNavigate }) {
               forgeAudioSynth.playSuccess();
               if (onNavigate) onNavigate('audit');
             }}
-            className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-dark-950 font-black rounded-2xl transition-all shadow-xl shadow-teal-500/25 flex items-center justify-center gap-2 group hover:scale-105"
+            className="w-full sm:w-auto min-h-[48px] px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-dark-950 font-black rounded-2xl transition-all shadow-xl shadow-teal-500/25 flex items-center justify-center gap-2 group hover:scale-105"
           >
             <span>SEE WHAT YOUR BUSINESS COULD AUTOMATE</span>
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -46,11 +46,11 @@ export function FinalCtaSection({ onNavigate }) {
           <button
             onClick={() => {
               forgeAudioSynth.playClick();
-              const el = document.getElementById('watch-demos');
+              const el = document.getElementById('v3-video-experience') || document.getElementById('watch-demos');
               if (el) el.scrollIntoView({ behavior: 'smooth' });
               else if (onNavigate) onNavigate('watch-demos');
             }}
-            className="w-full sm:w-auto px-8 py-4 bg-slate-900 hover:bg-slate-850 text-slate-200 border border-slate-700 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 hover:scale-105"
+            className="w-full sm:w-auto min-h-[48px] px-8 py-4 bg-slate-900 hover:bg-slate-850 text-slate-200 border border-slate-700 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 hover:scale-105"
           >
             <span>WATCH HOW IT WORKS →</span>
           </button>

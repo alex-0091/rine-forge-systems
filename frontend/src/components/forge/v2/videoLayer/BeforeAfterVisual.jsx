@@ -28,6 +28,7 @@ export function BeforeAfterVisual({ onCtaClick }) {
       {!videoError && (
         <video
           src="/videos/v06-before-after.mp4"
+          preload="none"
           className={`absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-700 ${
             videoLoaded ? 'opacity-40' : 'opacity-0'
           }`}

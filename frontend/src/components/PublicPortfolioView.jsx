@@ -261,66 +261,31 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
       <main>
         {currentView === 'home' && (
           <>
-            {/* 1. HERO: AI Employees for Small Businesses + Animated Scenario */}
+            {/* 1. HERO: AI Employees for Small Businesses + Animated Scenario (PROBLEM → AI SOLUTION) */}
             <ForgeV2HeroScene 
               onNavigate={(target) => target === 'audit' ? handleOpenSimpleAudit() : handleNavigate(target)} 
               onLaunchSystemDemo={handleLaunchSystemSandbox}
               onWatchTenSecDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
             />
 
-            {/* V3 PHASE 1: 6-STAGE CINEMATIC VIDEO & VISUAL STORYTELLING LAYER */}
+            {/* 2. V3 PHASE 1: 6-STAGE CINEMATIC VIDEO & VISUAL STORYTELLING LAYER (WATCH IT WORK) */}
             <ForgeVideoExperienceLayer 
               onNavigate={(target) => target === 'audit' ? handleOpenSimpleAudit() : handleNavigate(target)} 
             />
 
-            {/* V3 PHASE 2: MEET YOUR NEW AI EMPLOYEES */}
+            {/* 3. V3 PHASE 2: MEET YOUR NEW AI EMPLOYEES (INTERACTIVE DIGITAL WORKERS) */}
             <MeetAiEmployeesSection 
               onWatchEmployeeDemo={(demoData) => setActiveWatchItHappenData(demoData)} 
               onBuildAiEmployee={() => handleOpenSimpleAudit({ whatToAutomate: 'Custom AI Employee for business operations' })}
             />
 
-            {/* V3 PHASE 2: WHAT COULD YOUR BUSINESS AUTOMATE? (INDUSTRY SWITCHER) */}
+            {/* 4. V3 PHASE 2: WHAT COULD YOUR BUSINESS AUTOMATE? (CHOOSE YOUR INDUSTRY) */}
             <WhatCouldYourBusinessAutomate 
               onWatchServiceDemo={(demoData) => setActiveWatchItHappenData(demoData)} 
               onSeeWhatWeCouldAutomate={(indName) => handleOpenSimpleAudit({ businessType: indName, whatToAutomate: `Automating ${indName} customer communication and workflows` })}
             />
 
-            {/* 2. LIVE SYSTEM TELEMETRY: FORGE AI Network Active Status & Live Counters */}
-            <LiveActivityStream onNavigate={handleNavigate} />
-
-            {/* 3. WATCH OUR AI WORK: 60FPS Bespoke Motion Demos & Video Cards */}
-            <DontReadJustWatch 
-              onNavigate={handleNavigate}
-              onLaunchSandbox={handleLaunchSystemSandbox}
-              onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
-            />
-
-            {/* 4. WHAT CAN FORGE DO? 3 Visual Digital Workers (Customer Service, Sales, Automation) */}
-            <WhatForgeCanDo 
-              onNavigate={handleNavigate}
-              onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
-            />
-
-            {/* 5. BEFORE FORGE vs. AFTER FORGE: Step-by-Step Flow & ROI Metrics */}
-            <BeforeAfterComparison onNavigate={handleNavigate} />
-
-            {/* 6. WHAT DO YOU RUN? 6 High-Wealth Small Business Verticals */}
-            <VisualIndustrySelector 
-              onNavigate={handleNavigate}
-              onLaunchSandbox={handleLaunchSystemSandbox}
-              onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
-            />
-
-            {/* 7. INTERACTIVE AI DEMO: "Tell Me What Your Business Does" (5 Automated Workflows) */}
-            <InteractiveAiDemoWidget 
-              onNavigate={handleNavigate}
-              onSelectSystem={handleLaunchSystemSandbox}
-            />
-
-            {/* V3 PHASE 4: THE AUTOMATION STACK ARCHITECTURE */}
-            <AutomationStackArchitecture />
-
-            {/* V3 PHASE 4: REAL SYSTEMS. REAL AUTOMATION. (ORACLE AI & PROTOTYPES) */}
+            {/* 5. V3 PHASE 4: REAL SYSTEMS. REAL AUTOMATION. (SEE REAL SYSTEMS) */}
             <RealSystemsProofSection 
               onViewSystem={(sysId) => {
                 if (sysId === 'oracle-ai') {
@@ -333,29 +298,32 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
 
-            {/* V3 PHASE 4: WHY FORGE? (4 CONCISE VISUAL POINTS) */}
+            {/* 6. V3 PHASE 4: THE AUTOMATION STACK ARCHITECTURE */}
+            <AutomationStackArchitecture />
+
+            {/* 7. V3 PHASE 4: FROM IDEA -> AI SYSTEM (UNDERSTAND PROCESS) */}
+            <ProcessTimelineSection />
+
+            {/* 8. V3 PHASE 4: WHY FORGE? (4 CONCISE VISUAL POINTS) */}
             <WhyForgeSection_v2 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
 
-            {/* V3 PHASE 4: FROM IDEA -> AI SYSTEM (PROCESS TIMELINE) */}
-            <ProcessTimelineSection />
-
-            {/* V3 PHASE 4: BUILT WITH MODERN TECHNOLOGY */}
-            <BuiltWithModernTechnology />
-
-            {/* V3 PHASE 3: BUILT FOR REAL BUSINESS WORK (HONEST TECH STACK) */}
-            <BuiltForRealBusinessWork />
-
-            {/* V3 PHASE 3: HOW MUCH COULD YOU AUTOMATE? (AI AUTOMATION AUDIT & FINAL CTA) */}
+            {/* 9. V3 PHASE 3: HOW MUCH COULD YOU AUTOMATE? (FREE AI AUDIT) */}
             <HowMuchCouldYouAutomate 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)} 
             />
 
-            {/* 10. AI OPPORTUNITY CALCULATOR: Calculate Your Business Hours & Labor Savings */}
-            <RoiCalculatorSection onNavigate={handleNavigate} />
+            {/* 10. V3 PHASE 3 & 4: TRANSPARENT TECH STACK & MODERN INFRASTRUCTURE */}
+            <BuiltForRealBusinessWork />
+            <BuiltWithModernTechnology />
 
-            {/* 11. TOUCH FORGE: Master Command Center Sandbox */}
+            {/* 11. DEEP DIVE: INTERACTIVE AI SANDBOX & COMMAND CENTER */}
+            <InteractiveAiDemoWidget 
+              onNavigate={handleNavigate}
+              onSelectSystem={handleLaunchSystemSandbox}
+            />
+
             <ForgeCommandCenter 
               onNavigate={handleNavigate}
               onLaunchSandbox={handleLaunchSystemSandbox}

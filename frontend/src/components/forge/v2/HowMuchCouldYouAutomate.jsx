@@ -111,7 +111,7 @@ export function HowMuchCouldYouAutomate({ onOpenAuditModal }) {
                       key={type}
                       type="button"
                       onClick={() => handleSelectOption(setBusinessType, type)}
-                      className={`py-2 px-3 rounded-xl text-xs font-mono font-bold transition-all border ${
+                      className={`min-h-[44px] flex items-center justify-center py-2 px-3 rounded-xl text-xs font-mono font-bold transition-all border ${
                         businessType === type
                           ? 'bg-teal-500 text-slate-950 border-teal-400 shadow-md shadow-teal-500/20 scale-[1.02]'
                           : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:text-white hover:border-slate-700'
@@ -135,7 +135,7 @@ export function HowMuchCouldYouAutomate({ onOpenAuditModal }) {
                       key={opt.label}
                       type="button"
                       onClick={() => handleSelectOption(setEmployees, opt)}
-                      className={`py-2 px-3 rounded-xl text-xs font-mono font-bold transition-all border ${
+                      className={`min-h-[44px] flex items-center justify-center py-2 px-3 rounded-xl text-xs font-mono font-bold transition-all border ${
                         employees.label === opt.label
                           ? 'bg-cyan-500 text-slate-950 border-cyan-400 shadow-md shadow-cyan-500/20 scale-[1.02]'
                           : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:text-white hover:border-slate-700'
@@ -159,7 +159,7 @@ export function HowMuchCouldYouAutomate({ onOpenAuditModal }) {
                       key={opt.label}
                       type="button"
                       onClick={() => handleSelectOption(setEnquiries, opt)}
-                      className={`py-2 px-3 rounded-xl text-xs font-mono font-bold transition-all border ${
+                      className={`min-h-[44px] flex items-center justify-center py-2 px-3 rounded-xl text-xs font-mono font-bold transition-all border ${
                         enquiries.label === opt.label
                           ? 'bg-indigo-500 text-white border-indigo-400 shadow-md shadow-indigo-500/20 scale-[1.02]'
                           : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:text-white hover:border-slate-700'
@@ -183,7 +183,7 @@ export function HowMuchCouldYouAutomate({ onOpenAuditModal }) {
                       key={opt.label}
                       type="button"
                       onClick={() => handleSelectOption(setTimeSpent, opt)}
-                      className={`py-2 px-3 rounded-xl text-xs font-mono font-bold transition-all border ${
+                      className={`min-h-[44px] flex items-center justify-center py-2 px-3 rounded-xl text-xs font-mono font-bold transition-all border ${
                         timeSpent.label === opt.label
                           ? 'bg-emerald-500 text-slate-950 border-emerald-400 shadow-md shadow-emerald-500/20 scale-[1.02]'
                           : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:text-white hover:border-slate-700'
@@ -257,7 +257,7 @@ export function HowMuchCouldYouAutomate({ onOpenAuditModal }) {
 
                 <button
                   onClick={handleGetAudit}
-                  className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-slate-950 font-black text-xs font-mono uppercase tracking-wider transition-all shadow-xl shadow-teal-500/20 flex items-center justify-center gap-2 hover:scale-105 active:scale-95"
+                  className="w-full min-h-[48px] py-3.5 px-4 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-slate-950 font-black text-xs font-mono uppercase tracking-wider transition-all shadow-xl shadow-teal-500/20 flex items-center justify-center gap-2 hover:scale-105 active:scale-95"
                 >
                   <span>GET MY FREE AI AUDIT</span>
                   <ArrowRight className="w-4 h-4" />
@@ -284,7 +284,7 @@ export function HowMuchCouldYouAutomate({ onOpenAuditModal }) {
           <div className="pt-2">
             <button
               onClick={handleGetAudit}
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-slate-950 font-black text-xs sm:text-sm font-mono tracking-wider uppercase transition-all shadow-2xl shadow-teal-500/25 hover:scale-105 active:scale-95"
+              className="inline-flex items-center justify-center gap-2 min-h-[48px] px-8 py-4 rounded-2xl bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-slate-950 font-black text-xs sm:text-sm font-mono tracking-wider uppercase transition-all shadow-2xl shadow-teal-500/25 hover:scale-105 active:scale-95"
             >
               <span>GET MY FREE AI AUDIT</span>
               <ArrowRight className="w-4 h-4" />

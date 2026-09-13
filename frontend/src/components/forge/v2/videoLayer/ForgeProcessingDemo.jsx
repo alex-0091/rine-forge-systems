@@ -77,6 +77,7 @@ export function ForgeProcessingDemo({ onNextStep }) {
       {!videoError && (
         <video
           src="/videos/v03-forge-processing.mp4"
+          preload="none"
           className={`absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-700 ${
             videoLoaded ? 'opacity-40' : 'opacity-0'
           }`}

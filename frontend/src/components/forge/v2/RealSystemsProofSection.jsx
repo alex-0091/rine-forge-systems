@@ -229,7 +229,7 @@ export function RealSystemsProofSection({ onViewSystem, onOpenAuditModal }) {
 
                 <button
                   onClick={() => handleViewSystem(proj)}
-                  className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono font-bold text-white hover:text-teal-300 flex items-center gap-1.5 transition-all hover:scale-105 active:scale-95"
+                  className="min-h-[44px] px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono font-bold text-white hover:text-teal-300 flex items-center justify-center gap-1.5 transition-all hover:scale-105 active:scale-95"
                 >
                   <span>VIEW SYSTEM</span>
                   <ArrowRight className="w-3.5 h-3.5 text-teal-400" />

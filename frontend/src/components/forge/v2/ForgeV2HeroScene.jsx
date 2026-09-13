@@ -128,7 +128,7 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
           
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 text-xs font-mono font-bold tracking-wider uppercase shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-teal-400" />
-            <span>AI EMPLOYEES FOR SMALL BUSINESSES</span>
+            <span>RINE FORGE</span>
           </div>
 
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.06] font-sans">
@@ -159,7 +159,7 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
-                className="w-full sm:w-auto px-9 py-4 bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-300 hover:from-teal-300 hover:to-cyan-200 text-slate-950 font-black rounded-2xl transition-all shadow-2xl shadow-teal-500/30 flex items-center justify-center gap-2.5 hover:scale-105 active:scale-95 ring-2 ring-teal-300/60"
+                className="w-full sm:w-auto min-h-[48px] px-9 py-4 bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-300 hover:from-teal-300 hover:to-cyan-200 text-slate-950 font-black rounded-2xl transition-all shadow-2xl shadow-teal-500/30 flex items-center justify-center gap-2.5 hover:scale-105 active:scale-95 ring-2 ring-teal-300/60"
               >
                 <span className="text-sm font-black tracking-wide">GET YOUR FREE AI AUDIT</span>
                 <ArrowRight className="w-4 h-4 text-slate-950 stroke-[3]" />
@@ -173,7 +173,7 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                   else if (onNavigate) onNavigate('watch-demos');
                 }}
-                className="w-full sm:w-auto px-7 py-4 bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white border-2 border-slate-700/80 hover:border-slate-500 font-bold rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 hover:scale-105 active:scale-95"
+                className="w-full sm:w-auto min-h-[48px] px-7 py-4 bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white border-2 border-slate-700/80 hover:border-slate-500 font-bold rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 hover:scale-105 active:scale-95"
               >
                 <span>WATCH HOW IT WORKS</span>
               </button>

@@ -418,6 +418,7 @@ export function WhatCouldYourBusinessAutomate({ onWatchServiceDemo, onSeeWhatWeC
 
   return (
     <section className="py-16 sm:py-24 border-b border-slate-800/80 bg-[#060a15] relative overflow-hidden" id="industry-automation">
+      <div id="industries" className="absolute -top-16 left-0" />
       {/* Background ambient lighting */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[750px] h-[380px] bg-gradient-to-r from-cyan-500/10 via-teal-500/10 to-blue-500/10 blur-[140px] pointer-events-none rounded-full" />
 
@@ -448,7 +449,7 @@ export function WhatCouldYourBusinessAutomate({ onWatchServiceDemo, onSeeWhatWeC
               <button
                 key={ind.id}
                 onClick={() => handleTabClick(ind.id)}
-                className={`px-4 py-2.5 rounded-xl font-mono text-xs font-bold transition-all duration-300 flex items-center gap-2 shrink-0 border ${
+                className={`min-h-[44px] px-4 py-2.5 rounded-xl font-mono text-xs font-bold transition-all duration-300 flex items-center gap-2 shrink-0 border ${
                   isActive
                     ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-slate-950 border-teal-400 shadow-md shadow-teal-500/20 scale-[1.03]'
                     : 'bg-transparent text-slate-400 hover:text-slate-200 border-transparent hover:bg-slate-900/60'
@@ -514,7 +515,7 @@ export function WhatCouldYourBusinessAutomate({ onWatchServiceDemo, onSeeWhatWeC
               {/* Requirement 5: WATCH IT HAPPEN → button on every service */}
               <button
                 onClick={() => handleWatchService(serv)}
-                className="w-full py-2.5 px-3 rounded-xl bg-slate-900/90 group-hover:bg-teal-500/10 border border-slate-700/80 group-hover:border-teal-500/50 text-xs font-mono font-bold text-teal-300 flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95"
+                className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-slate-900/90 group-hover:bg-teal-500/10 border border-slate-700/80 group-hover:border-teal-500/50 text-xs font-mono font-bold text-teal-300 flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95"
               >
                 <span>WATCH IT HAPPEN</span>
                 <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 text-teal-400" />
@@ -533,7 +534,7 @@ export function WhatCouldYourBusinessAutomate({ onWatchServiceDemo, onSeeWhatWeC
               forgeAudioSynth.playClick();
               if (onSeeWhatWeCouldAutomate) onSeeWhatWeCouldAutomate(selectedIndustry.name);
             }}
-            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 hover:border-cyan-400 font-mono font-bold text-xs flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-sm"
+            className="w-full sm:w-auto min-h-[44px] px-6 py-3 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 hover:border-cyan-400 font-mono font-bold text-xs flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-sm"
           >
             <span>SEE WHAT WE COULD AUTOMATE</span>
             <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />

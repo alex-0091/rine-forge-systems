@@ -54,7 +54,12 @@ export function WatchItHappenModal({ isOpen, onClose, demoData }) {
       {/* Background click to close */}
       <div className="absolute inset-0" onClick={onClose} />
 
-      <div className="relative z-10 w-full max-w-xl rounded-3xl bg-[#060b16] border-2 border-teal-500/40 p-6 sm:p-8 shadow-2xl shadow-teal-500/10 space-y-6 overflow-hidden max-h-[90vh] flex flex-col justify-between">
+      <div 
+        role="dialog" 
+        aria-modal="true" 
+        aria-label={demoData.title}
+        className="relative z-10 w-full max-w-xl rounded-3xl bg-[#060b16] border-2 border-teal-500/40 p-6 sm:p-8 shadow-2xl shadow-teal-500/10 space-y-6 overflow-hidden max-h-[90vh] flex flex-col justify-between"
+      >
         
         {/* Subtle Ambient Background Light */}
         <div className="absolute -top-16 -right-16 w-48 h-48 bg-teal-500/15 rounded-full blur-3xl pointer-events-none" />
@@ -83,7 +88,8 @@ export function WatchItHappenModal({ isOpen, onClose, demoData }) {
 
           <button
             onClick={onClose}
-            className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors"
+            aria-label="Close dialog"
+            className="w-11 h-11 min-h-[44px] min-w-[44px] rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors flex items-center justify-center"
           >
             <X className="w-4 h-4" />
           </button>
@@ -183,7 +189,7 @@ export function WatchItHappenModal({ isOpen, onClose, demoData }) {
         <div className="flex items-center justify-end gap-3 pt-2 border-t border-slate-800">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 font-mono text-xs font-bold transition-all"
+            className="min-h-[44px] px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 font-mono text-xs font-bold transition-all flex items-center justify-center"
           >
             Close Demo
           </button>

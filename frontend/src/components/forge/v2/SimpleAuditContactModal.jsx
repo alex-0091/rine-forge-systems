@@ -84,7 +84,12 @@ export function SimpleAuditContactModal({ isOpen, onClose, initialData = {} }) {
       {/* Background click to close */}
       <div className="absolute inset-0" onClick={handleResetAndClose} />
 
-      <div className="relative z-10 w-full max-w-lg rounded-3xl bg-[#060b16] border-2 border-teal-500/50 p-6 sm:p-8 shadow-2xl shadow-teal-500/15 space-y-6 overflow-hidden">
+      <div 
+        role="dialog" 
+        aria-modal="true" 
+        aria-labelledby="audit-modal-heading"
+        className="relative z-10 w-full max-w-lg rounded-3xl bg-[#060b16] border-2 border-teal-500/50 p-6 sm:p-8 shadow-2xl shadow-teal-500/15 space-y-6 overflow-hidden"
+      >
         
         {/* Subtle Ambient Light */}
         <div className="absolute -top-20 -right-20 w-44 h-44 bg-teal-500/15 rounded-full blur-3xl pointer-events-none" />
@@ -93,10 +98,10 @@ export function SimpleAuditContactModal({ isOpen, onClose, initialData = {} }) {
         <div className="flex items-start justify-between border-b border-slate-800 pb-4">
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-500/10 text-teal-300 text-[10px] font-mono font-bold uppercase mb-1.5">
-              <Sparkles className="w-3 h-3 text-teal-400" />
+              <Sparkles className="w-3.5 h-3.5 text-teal-400" />
               <span>FREE OPERATIONAL AUDIT</span>
             </div>
-            <h3 className="text-xl font-black text-white font-sans tracking-tight">
+            <h3 id="audit-modal-heading" className="text-xl font-black text-white font-sans tracking-tight">
               Get Your Free AI Audit
             </h3>
             <p className="text-xs text-slate-400 font-sans mt-0.5">
@@ -106,7 +111,8 @@ export function SimpleAuditContactModal({ isOpen, onClose, initialData = {} }) {
 
           <button
             onClick={handleResetAndClose}
-            className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors"
+            aria-label="Close dialog"
+            className="w-11 h-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -145,7 +151,7 @@ export function SimpleAuditContactModal({ isOpen, onClose, initialData = {} }) {
 
             <button
               onClick={handleResetAndClose}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 text-slate-950 font-black text-xs font-mono uppercase tracking-wider transition-all shadow-lg hover:scale-105"
+              className="w-full min-h-[44px] py-3 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 text-slate-950 font-black text-xs font-mono uppercase tracking-wider transition-all shadow-lg hover:scale-105 flex items-center justify-center"
             >
               Done
             </button>
@@ -156,64 +162,68 @@ export function SimpleAuditContactModal({ isOpen, onClose, initialData = {} }) {
             
             {/* 1. Name */}
             <div className="space-y-1">
-              <label className="text-[11px] font-mono font-bold text-slate-300 uppercase">
+              <label htmlFor="audit-name-input" className="text-[11px] font-mono font-bold text-slate-300 uppercase">
                 Your Name *
               </label>
               <div className="relative">
                 <input
+                  id="audit-name-input"
                   type="text"
                   name="name"
                   required
                   placeholder="Alex Rine"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white placeholder:text-slate-500 text-xs focus:outline-none focus:border-teal-400 transition-colors"
+                  className="w-full min-h-[44px] px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white placeholder:text-slate-500 text-xs focus:outline-none focus:border-teal-400 transition-colors"
                 />
               </div>
             </div>
 
             {/* 2. Business (Company Name) */}
             <div className="space-y-1">
-              <label className="text-[11px] font-mono font-bold text-slate-300 uppercase">
+              <label htmlFor="audit-business-input" className="text-[11px] font-mono font-bold text-slate-300 uppercase">
                 Business Name *
               </label>
               <input
+                id="audit-business-input"
                 type="text"
                 name="business"
                 required
                 placeholder="Jenkins Dental / Grand Hotel / etc."
                 value={formData.business}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white placeholder:text-slate-500 text-xs focus:outline-none focus:border-teal-400 transition-colors"
+                className="w-full min-h-[44px] px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white placeholder:text-slate-500 text-xs focus:outline-none focus:border-teal-400 transition-colors"
               />
             </div>
 
             {/* 3. Email */}
             <div className="space-y-1">
-              <label className="text-[11px] font-mono font-bold text-slate-300 uppercase">
+              <label htmlFor="audit-email-input" className="text-[11px] font-mono font-bold text-slate-300 uppercase">
                 Work Email *
               </label>
               <input
+                id="audit-email-input"
                 type="email"
                 name="email"
                 required
                 placeholder="alex@yourbusiness.com"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white placeholder:text-slate-500 text-xs focus:outline-none focus:border-teal-400 transition-colors"
+                className="w-full min-h-[44px] px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white placeholder:text-slate-500 text-xs focus:outline-none focus:border-teal-400 transition-colors"
               />
             </div>
 
             {/* 4. Business Type */}
             <div className="space-y-1">
-              <label className="text-[11px] font-mono font-bold text-slate-300 uppercase">
+              <label htmlFor="audit-biztype-select" className="text-[11px] font-mono font-bold text-slate-300 uppercase">
                 Business Type *
               </label>
               <select
+                id="audit-biztype-select"
                 name="businessType"
                 value={formData.businessType}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs focus:outline-none focus:border-teal-400 transition-colors font-mono"
+                className="w-full min-h-[44px] px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs focus:outline-none focus:border-teal-400 transition-colors font-mono"
               >
                 <option value="Hotel">Hotel</option>
                 <option value="Dental">Dental</option>
@@ -226,10 +236,11 @@ export function SimpleAuditContactModal({ isOpen, onClose, initialData = {} }) {
 
             {/* 5. What they want to automate */}
             <div className="space-y-1">
-              <label className="text-[11px] font-mono font-bold text-slate-300 uppercase">
+              <label htmlFor="audit-what-textarea" className="text-[11px] font-mono font-bold text-slate-300 uppercase">
                 What do you want to automate? *
               </label>
               <textarea
+                id="audit-what-textarea"
                 name="whatToAutomate"
                 required
                 rows={3}
@@ -244,7 +255,7 @@ export function SimpleAuditContactModal({ isOpen, onClose, initialData = {} }) {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-slate-950 font-black text-xs font-mono uppercase tracking-wider transition-all shadow-xl shadow-teal-500/20 flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 disabled:opacity-50"
+              className="w-full min-h-[48px] py-3.5 px-4 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-slate-950 font-black text-xs font-mono uppercase tracking-wider transition-all shadow-xl shadow-teal-500/20 flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-95 disabled:opacity-50"
             >
               {isSubmitting ? (
                 <>
