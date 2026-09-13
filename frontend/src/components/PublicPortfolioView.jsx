@@ -18,14 +18,78 @@ import {
 } from './TechLogos';
 
 const SHOWCASE_TABS = [
-  { id: 'oracle-ai', name: 'Oracle AI Terminal', badge: 'Quant Microstructure', icon: Activity },
-  { id: 'fact-fuel', name: 'Fact Fuel AI', badge: 'Fact-Check & Script Synth', icon: Flame },
-  { id: 'trading-bot', name: 'MEXC Quant Bot', badge: 'Live Order Execution', icon: TrendingUp },
-  { id: 'monopoly-pk', name: 'Monopoly PK', badge: 'RE Economy Simulator', icon: Building2 },
-  { id: 'school-portal', name: 'Bright Star Portal', badge: 'Admissions Automation', icon: School },
-  { id: 'ai-receptionist', name: '24/7 AI Receptionist', badge: 'Patient & Lead Triage', icon: Bot },
-  { id: 'speed-lead', name: 'Speed-to-Lead', badge: '< 60s Pipeline', icon: Zap },
-  { id: 'omnisync', name: 'OmniSync Dispatch', badge: 'Audio Triage & CRM', icon: PhoneCall },
+  { 
+    id: 'oracle-ai', 
+    name: 'Oracle AI Terminal', 
+    badge: 'Quant Microstructure', 
+    icon: Activity,
+    image: 'https://images.unsplash.com/photo-1642543492481-44e81e3914a7?auto=format&fit=crop&w=700&q=80',
+    videoLength: '0:12',
+    videoHighlight: 'Real-time orderbook imbalance streaming at 14ms latency with directional vector predictions.'
+  },
+  { 
+    id: 'fact-fuel', 
+    name: 'Fact Fuel AI', 
+    badge: 'Fact-Check & Script Synth', 
+    icon: Flame,
+    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=700&q=80',
+    videoLength: '0:15',
+    videoHighlight: 'Autonomous breaking news claim extraction and viral short-form video script generation.'
+  },
+  { 
+    id: 'trading-bot', 
+    name: 'MEXC Quant Bot', 
+    badge: 'Live Order Execution', 
+    icon: TrendingUp,
+    image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=700&q=80',
+    videoLength: '0:10',
+    videoHighlight: 'Sub-50ms Grid Arbitrage order fills with automated risk circuit breakers and live PnL.'
+  },
+  { 
+    id: 'monopoly-pk', 
+    name: 'Monopoly PK', 
+    badge: 'RE Economy Simulator', 
+    icon: Building2,
+    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=700&q=80',
+    videoLength: '0:14',
+    videoHighlight: 'Dynamic 5-year capital growth and rental yield forecasting across Islamabad, Lahore, and Karachi.'
+  },
+  { 
+    id: 'school-portal', 
+    name: 'Bright Star Portal', 
+    badge: 'Admissions Automation', 
+    icon: School,
+    image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=700&q=80',
+    videoLength: '0:11',
+    videoHighlight: 'Instant grade assessment, sibling discount calculations, and automatic SMS parent notifications.'
+  },
+  { 
+    id: 'ai-receptionist', 
+    name: '24/7 AI Receptionist', 
+    badge: 'Patient & Lead Triage', 
+    icon: Bot,
+    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=700&q=80',
+    videoLength: '0:16',
+    videoHighlight: 'Multi-turn emergency patient triage, insurance coverage checks, and calendar appointment locking.'
+  },
+  { 
+    id: 'speed-lead', 
+    name: 'Speed-to-Lead', 
+    badge: '< 60s Pipeline', 
+    icon: Zap,
+    image: 'https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?auto=format&fit=crop&w=700&q=80',
+    videoLength: '0:09',
+    videoHighlight: 'Inbound portal webhook qualification, buyer purchasing power scoring, and VIP tour dispatch in 38s.'
+  },
+  { 
+    id: 'omnisync', 
+    name: 'OmniSync Dispatch', 
+    badge: 'Audio Triage & CRM', 
+    icon: PhoneCall,
+    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=700&q=80',
+    videoLength: '0:12',
+    videoHighlight: 'Automated audio call breakdown transcription, fault urgency classification, and Jobber CRM sync.'
+  }
 ];
 
 const ACCREDITATIONS = [
@@ -112,6 +176,7 @@ const EXECUTIVE_TEAM = [
     credentials: 'M.S. Computer Engineering (Distributed Systems)',
     focus: 'High-Throughput Agentic Automation, Real-Time Ingest & Quant Microstructure',
     initials: 'AR',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
     gradient: 'from-cyan-500 to-teal-500',
     experience: 'Ex-Lead Systems Architect, 9+ yrs enterprise infrastructure'
   },
@@ -121,6 +186,7 @@ const EXECUTIVE_TEAM = [
     credentials: 'Ph.D. Computational Intelligence & Neural Dynamics (Imperial)',
     focus: 'Microstructure Alpha Modeling, Statistical Arbitrage & Predictive Timeseries',
     initials: 'ER',
+    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
     gradient: 'from-indigo-500 to-purple-600',
     experience: 'Ex-Senior Quantitative Researcher, High-Frequency Orderbook Dynamics'
   },
@@ -130,6 +196,7 @@ const EXECUTIVE_TEAM = [
     credentials: 'B.S. Software Engineering (MIT) • AWS Solutions Architect Pro',
     focus: 'Fault-Tolerant Microservices, Sub-50ms Execution & Global Edge Routing',
     initials: 'MT',
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
     gradient: 'from-blue-500 to-cyan-500',
     experience: '12+ yrs scaling enterprise Kubernetes & real-time event brokers'
   },
@@ -139,6 +206,7 @@ const EXECUTIVE_TEAM = [
     credentials: 'M.Sc. Natural Language Processing (Stanford AI Lab)',
     focus: 'Zero-Latency Voice Streaming, Multi-Turn Intent Triage & Gemini Integration',
     initials: 'SC',
+    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80',
     gradient: 'from-emerald-500 to-teal-600',
     experience: 'Lead architect for autonomous healthcare & commercial voice triage'
   },
@@ -148,8 +216,52 @@ const EXECUTIVE_TEAM = [
     credentials: 'CISSP • Certified Information Security Manager • Oxford M.Sc.',
     focus: 'SOC-2 Type II Alignment, Zero-Trust Cryptography & GDPR Verification',
     initials: 'TM',
+    image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80',
     gradient: 'from-amber-500 to-orange-600',
     experience: 'Ex-Lead Security Auditor for FinTech and HealthTech API ecosystems'
+  }
+];
+
+const TESTIMONIALS = [
+  {
+    name: 'Dr. Thomas Vance, D.D.S.',
+    role: 'Founder & Clinical Director',
+    company: 'Vance Dental Care',
+    image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=300&q=80',
+    quote: 'Rine Forge Systems deployed our 24/7 AI Receptionist in 48 hours. We recovered $24,000 in missed after-hours surgical appointments in the very first month. Our staff no longer drowns in voicemail.',
+    rating: 5,
+    metric: '+$24K / Month Recovered',
+    tag: 'Healthcare Voice AI'
+  },
+  {
+    name: 'Marcus Sterling',
+    role: 'Managing Principal Broker',
+    company: 'Prestige Realty Partners',
+    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&q=80',
+    quote: 'The Speed-to-Lead pipeline qualifies incoming Zillow portal leads in under 45 seconds and books private penthouse tours directly onto my broker calendar. Our tour conversion rate tripled.',
+    rating: 5,
+    metric: '3.4x Conversion Increase',
+    tag: 'Real Estate PropTech'
+  },
+  {
+    name: 'Sarah Jenkins',
+    role: 'Head of Content Operations',
+    company: 'Horizon Media Labs',
+    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=300&q=80',
+    quote: 'Fact Fuel autonomously cross-references breaking wire news and generates viral short-form scripts without a single hallucination. We 10xed our daily video publishing volume.',
+    rating: 5,
+    metric: '25,000+ Scripts Synthesized',
+    tag: 'Media & Script AI'
+  },
+  {
+    name: 'David Thorne',
+    role: 'VP of Commercial Operations',
+    company: 'Apex Climate Systems',
+    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+    quote: 'OmniSync transcribes emergency after-midnight breakdown calls, detects critical compressor fault codes, and alerts our on-call tech instantly. It eliminated emergency dispatcher bottlenecks.',
+    rating: 5,
+    metric: '14 Hours Saved / Week',
+    tag: 'Field Operations AI'
   }
 ];
 
@@ -339,6 +451,7 @@ export function PublicPortfolioView() {
   // --- 50% MILESTONE PAYMENT MODAL STATE ---
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [selectedPackageForModal, setSelectedPackageForModal] = useState('ai-receptionist');
+  const [activeVideoModal, setActiveVideoModal] = useState(null);
 
   // ROI Computed
   const missedInquiries = Math.round(calcMonthlyLeads * (calcMissedRate / 100));
@@ -793,14 +906,22 @@ export function PublicPortfolioView() {
                 </div>
                 <p className="text-xs text-slate-400">High-frequency orderbook imbalance & 5m candle predictive intelligence</p>
               </div>
-              <button
-                onClick={fetchOracleData}
-                disabled={oracleLoading}
-                className="px-4 py-2 bg-dark-850 hover:bg-dark-800 text-slate-200 border border-slate-700 rounded-xl text-xs font-mono font-bold flex items-center gap-2"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 ${oracleLoading ? 'animate-spin text-teal-400' : ''}`} />
-                {oracleLoading ? 'Streaming...' : 'Refresh Feed'}
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setActiveVideoModal(SHOWCASE_TABS.find(t => t.id === 'oracle-ai'))}
+                  className="px-3.5 py-2 bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 border border-teal-500/30 rounded-xl text-xs font-bold flex items-center gap-1.5"
+                >
+                  <Play className="w-3.5 h-3.5 fill-teal-400" /> Watch 10s Demo
+                </button>
+                <button
+                  onClick={fetchOracleData}
+                  disabled={oracleLoading}
+                  className="px-4 py-2 bg-dark-850 hover:bg-dark-800 text-slate-200 border border-slate-700 rounded-xl text-xs font-mono font-bold flex items-center gap-2"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${oracleLoading ? 'animate-spin text-teal-400' : ''}`} />
+                  {oracleLoading ? 'Streaming...' : 'Refresh Feed'}
+                </button>
+              </div>
             </div>
 
             {oracleData ? (
@@ -862,12 +983,20 @@ export function PublicPortfolioView() {
         {/* TAB 2: FACT FUEL */}
         {activeTab === 'fact-fuel' && (
           <div className="bg-dark-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-            <div className="border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2">
-                <h3 className="text-xl font-bold text-white">Fact Fuel • Autonomous News Verification & Script Engine</h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-md">GEMINI POWERED</span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-white">Fact Fuel • Autonomous News Verification & Script Engine</h3>
+                  <span className="text-[10px] font-mono px-2 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-md">GEMINI POWERED</span>
+                </div>
+                <p className="text-xs text-slate-400">Multi-source claim cross-referencing and viral short-form video synthesis</p>
               </div>
-              <p className="text-xs text-slate-400">Multi-source claim cross-referencing and viral short-form video synthesis</p>
+              <button
+                onClick={() => setActiveVideoModal(SHOWCASE_TABS.find(t => t.id === 'fact-fuel'))}
+                className="px-3.5 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-xl text-xs font-bold flex items-center gap-1.5 shrink-0"
+              >
+                <Play className="w-3.5 h-3.5 fill-amber-400" /> Watch 10s Demo
+              </button>
             </div>
 
             <form onSubmit={handleFactFuelGenerate} className="space-y-4">
@@ -942,12 +1071,20 @@ export function PublicPortfolioView() {
         {/* TAB 3: MEXC TRADING BOT */}
         {activeTab === 'trading-bot' && (
           <div className="bg-dark-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-            <div className="border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2">
-                <h3 className="text-xl font-bold text-white">MEXC Quant Execution Engine & Multi-Strategy Simulator</h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded-md">SUB-50MS EXECUTION</span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-white">MEXC Quant Execution Engine & Multi-Strategy Simulator</h3>
+                  <span className="text-[10px] font-mono px-2 py-0.5 bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded-md">SUB-50MS EXECUTION</span>
+                </div>
+                <p className="text-xs text-slate-400">High-throughput automated order routing, risk management, and backtesting</p>
               </div>
-              <p className="text-xs text-slate-400">High-throughput automated order routing, risk management, and backtesting</p>
+              <button
+                onClick={() => setActiveVideoModal(SHOWCASE_TABS.find(t => t.id === 'trading-bot'))}
+                className="px-3.5 py-2 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-xl text-xs font-bold flex items-center gap-1.5 shrink-0"
+              >
+                <Play className="w-3.5 h-3.5 fill-cyan-400" /> Watch 10s Demo
+              </button>
             </div>
 
             <form onSubmit={handleTradeBacktest} className="grid grid-cols-1 sm:grid-cols-4 gap-4">
@@ -1042,12 +1179,20 @@ export function PublicPortfolioView() {
         {/* TAB 4: MONOPOLY PK */}
         {activeTab === 'monopoly-pk' && (
           <div className="bg-dark-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-            <div className="border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2">
-                <h3 className="text-xl font-bold text-white">Monopoly PK & Plot Twist • Real Estate Economy Simulator</h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-md">PROP-TECH ENGINE</span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-white">Monopoly PK & Plot Twist • Real Estate Economy Simulator</h3>
+                  <span className="text-[10px] font-mono px-2 py-0.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-md">PROP-TECH ENGINE</span>
+                </div>
+                <p className="text-xs text-slate-400">Pakistan prime metropolitan capital growth & rental yield modeling</p>
               </div>
-              <p className="text-xs text-slate-400">Pakistan prime metropolitan capital growth & rental yield modeling</p>
+              <button
+                onClick={() => setActiveVideoModal(SHOWCASE_TABS.find(t => t.id === 'monopoly-pk'))}
+                className="px-3.5 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded-xl text-xs font-bold flex items-center gap-1.5 shrink-0"
+              >
+                <Play className="w-3.5 h-3.5 fill-indigo-400" /> Watch 10s Demo
+              </button>
             </div>
 
             <form onSubmit={handleMonopolyPKCalc} className="grid grid-cols-1 sm:grid-cols-4 gap-4">
@@ -1132,12 +1277,20 @@ export function PublicPortfolioView() {
         {/* TAB 5: BRIGHT STAR SCHOOL PORTAL */}
         {activeTab === 'school-portal' && (
           <div className="bg-dark-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-            <div className="border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2">
-                <h3 className="text-xl font-bold text-white">Bright Star Grammar School • Admissions & Tuition Gateway</h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md">LIVE ED-TECH</span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-white">Bright Star Grammar School • Admissions & Tuition Gateway</h3>
+                  <span className="text-[10px] font-mono px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md">LIVE ED-TECH</span>
+                </div>
+                <p className="text-xs text-slate-400">Dynamic fee breakdown, sibling discounts, and admissions eligibility evaluation</p>
               </div>
-              <p className="text-xs text-slate-400">Dynamic fee breakdown, sibling discounts, and admissions eligibility evaluation</p>
+              <button
+                onClick={() => setActiveVideoModal(SHOWCASE_TABS.find(t => t.id === 'school-portal'))}
+                className="px-3.5 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-xl text-xs font-bold flex items-center gap-1.5 shrink-0"
+              >
+                <Play className="w-3.5 h-3.5 fill-emerald-400" /> Watch 10s Demo
+              </button>
             </div>
 
             <form onSubmit={handleSchoolInquiry} className="grid grid-cols-1 sm:grid-cols-4 gap-4">
@@ -1217,12 +1370,20 @@ export function PublicPortfolioView() {
         {/* TAB 6: 24/7 AI RECEPTIONIST */}
         {activeTab === 'ai-receptionist' && (
           <div className="bg-dark-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-            <div className="border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2">
-                <h3 className="text-xl font-bold text-white">Apex Dental • 24/7 Autonomous Receptionist & Booking Triage</h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-md">LIVE CHATBOT</span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-white">Apex Dental • 24/7 Autonomous Receptionist & Booking Triage</h3>
+                  <span className="text-[10px] font-mono px-2 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-md">LIVE CHATBOT</span>
+                </div>
+                <p className="text-xs text-slate-400">Multi-turn natural conversation, emergency triage, insurance policy verification, and live calendar locking</p>
               </div>
-              <p className="text-xs text-slate-400">Multi-turn natural conversation, emergency triage, insurance policy verification, and live calendar locking</p>
+              <button
+                onClick={() => setActiveVideoModal(SHOWCASE_TABS.find(t => t.id === 'ai-receptionist'))}
+                className="px-3.5 py-2 bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 border border-teal-500/30 rounded-xl text-xs font-bold flex items-center gap-1.5 shrink-0"
+              >
+                <Play className="w-3.5 h-3.5 fill-teal-400" /> Watch 10s Demo
+              </button>
             </div>
 
             <div className="bg-dark-950 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4">
@@ -1270,12 +1431,20 @@ export function PublicPortfolioView() {
         {/* TAB 7: SPEED TO LEAD */}
         {activeTab === 'speed-lead' && (
           <div className="bg-dark-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-            <div className="border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2">
-                <h3 className="text-xl font-bold text-white">Prestige Capital • Sub-60s Speed-to-Lead Qualification Pipeline</h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-md">PIPELINE SIMULATOR</span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-white">Prestige Capital • Sub-60s Speed-to-Lead Qualification Pipeline</h3>
+                  <span className="text-[10px] font-mono px-2 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-md">PIPELINE SIMULATOR</span>
+                </div>
+                <p className="text-xs text-slate-400">Captures buyer inquiries from Zillow/portals, enriches intent, and confirms private showings in seconds</p>
               </div>
-              <p className="text-xs text-slate-400">Captures buyer inquiries from Zillow/portals, enriches intent, and confirms private showings in seconds</p>
+              <button
+                onClick={() => setActiveVideoModal(SHOWCASE_TABS.find(t => t.id === 'speed-lead'))}
+                className="px-3.5 py-2 bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 border border-teal-500/30 rounded-xl text-xs font-bold flex items-center gap-1.5 shrink-0"
+              >
+                <Play className="w-3.5 h-3.5 fill-teal-400" /> Watch 10s Demo
+              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1328,12 +1497,20 @@ export function PublicPortfolioView() {
         {/* TAB 8: OMNISYNC DISPATCH */}
         {activeTab === 'omnisync' && (
           <div className="bg-dark-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6">
-            <div className="border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2">
-                <h3 className="text-xl font-bold text-white">OmniSync • Field Contractor Voice AI & Automated CRM Dispatch</h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-md">EMERGENCY TRIAGE</span>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xl font-bold text-white">OmniSync • Field Contractor Voice AI & Automated CRM Dispatch</h3>
+                  <span className="text-[10px] font-mono px-2 py-0.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-md">EMERGENCY TRIAGE</span>
+                </div>
+                <p className="text-xs text-slate-400">Autonomous voice call transcription, urgency triage, Jobber CRM sync, and GPS technician dispatch</p>
               </div>
-              <p className="text-xs text-slate-400">Autonomous voice call transcription, urgency triage, Jobber CRM sync, and GPS technician dispatch</p>
+              <button
+                onClick={() => setActiveVideoModal(SHOWCASE_TABS.find(t => t.id === 'omnisync'))}
+                className="px-3.5 py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs font-bold flex items-center gap-1.5 shrink-0"
+              >
+                <Play className="w-3.5 h-3.5 fill-rose-400" /> Watch 10s Demo
+              </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1440,9 +1617,17 @@ export function PublicPortfolioView() {
             >
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-tr ${member.gradient} flex items-center justify-center font-black text-dark-950 text-base shadow-md font-mono shrink-0`}>
-                    {member.initials}
-                  </div>
+                  {member.image ? (
+                    <img 
+                      src={member.image} 
+                      alt={member.name}
+                      className="w-14 h-14 rounded-2xl object-cover border-2 border-teal-500/30 shadow-md shrink-0"
+                    />
+                  ) : (
+                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-tr ${member.gradient} flex items-center justify-center font-black text-dark-950 text-base shadow-md font-mono shrink-0`}>
+                      {member.initials}
+                    </div>
+                  )}
                   <div>
                     <h3 className="text-base font-bold text-white group-hover:text-teal-300 transition-colors">
                       {member.name}
@@ -1463,7 +1648,61 @@ export function PublicPortfolioView() {
 
               <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
                 <span>{member.experience}</span>
-                <span className="text-teal-400">RFS CORE</span>
+                <span className="text-teal-400 font-bold">RFS CORE</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* VERIFIED CLIENT TESTIMONIALS & PROOF */}
+      <section id="testimonials" className="space-y-8">
+        <div className="text-center space-y-2">
+          <div className="text-xs font-mono text-teal-400 font-bold uppercase tracking-wider">VERIFIED DEPLOYMENT PROOF</div>
+          <h2 className="text-3xl font-black text-white">Client Outcomes & Quantified ROI</h2>
+          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
+            Real feedback from business owners and operators who deployed Rine Forge Systems architectures.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {TESTIMONIALS.map((t, idx) => (
+            <div 
+              key={idx}
+              className="bg-dark-900 border border-slate-800 hover:border-teal-500/30 rounded-2xl p-6 sm:p-7 space-y-4 transition-all flex flex-col justify-between shadow-lg relative group"
+            >
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono px-2 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-md font-bold">
+                    {t.tag}
+                  </span>
+                  <div className="flex items-center gap-1 text-amber-400 text-xs">
+                    {'★'.repeat(t.rating)}
+                  </div>
+                </div>
+
+                <p className="text-xs sm:text-sm text-slate-200 leading-relaxed italic">
+                  "{t.quote}"
+                </p>
+              </div>
+
+              <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <img 
+                    src={t.image} 
+                    alt={t.name}
+                    className="w-10 h-10 rounded-full object-cover border border-slate-700 shrink-0" 
+                  />
+                  <div>
+                    <div className="font-bold text-xs text-white">{t.name}</div>
+                    <div className="text-[10px] text-slate-400">{t.role}, {t.company}</div>
+                  </div>
+                </div>
+
+                <div className="text-right">
+                  <div className="text-xs font-black text-emerald-400 font-mono">{t.metric}</div>
+                  <div className="text-[9px] text-slate-500 font-mono">VERIFIED IMPACT</div>
+                </div>
               </div>
             </div>
           ))}
@@ -1825,6 +2064,77 @@ export function PublicPortfolioView() {
           setIsPaymentModalOpen(true);
         }}
       />
+
+      {/* Video Demo Player Modal */}
+      {activeVideoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-950/85 backdrop-blur-md">
+          <div className="bg-dark-900 border border-slate-700 rounded-3xl max-w-2xl w-full p-6 space-y-5 shadow-2xl relative text-slate-100">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center font-bold">
+                  <Play className="w-4 h-4 fill-teal-400" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white">{activeVideoModal.name} • 10s Architecture Demo</h3>
+                  <div className="text-[10px] text-teal-400 font-mono">{activeVideoModal.badge}</div>
+                </div>
+              </div>
+              <button
+                onClick={() => setActiveVideoModal(null)}
+                className="p-1.5 rounded-lg bg-dark-850 hover:bg-slate-800 text-slate-400 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Video Frame */}
+            <div className="relative rounded-2xl overflow-hidden border border-slate-800 aspect-video bg-dark-950 group">
+              <img
+                src={activeVideoModal.image}
+                alt={activeVideoModal.name}
+                className="w-full h-full object-cover opacity-70 group-hover:opacity-85 transition-opacity"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/30 to-transparent" />
+              
+              {/* Center Play Beacon */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-teal-500/90 text-dark-950 flex items-center justify-center shadow-xl shadow-teal-500/40 animate-pulse">
+                  <Play className="w-7 h-7 fill-dark-950 ml-1" />
+                </div>
+              </div>
+
+              {/* Bottom Video Controls Overlay */}
+              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-[11px] font-mono bg-dark-900/80 backdrop-blur-md p-2 rounded-xl border border-slate-800">
+                <span className="text-teal-400 font-bold">● LIVE DEMO STREAM ({activeVideoModal.videoLength})</span>
+                <span className="text-slate-300">1080p HD • 60 FPS</span>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-300 leading-relaxed">
+              {activeVideoModal.videoHighlight}
+            </p>
+
+            <div className="flex justify-end gap-3 pt-2 border-t border-slate-800/80">
+              <button
+                onClick={() => setActiveVideoModal(null)}
+                className="px-4 py-2 bg-dark-850 hover:bg-dark-800 text-slate-300 rounded-xl text-xs font-bold"
+              >
+                Close Preview
+              </button>
+              <button
+                onClick={() => {
+                  setActiveVideoModal(null);
+                  setSelectedPackageForModal('ai-receptionist');
+                  setIsPaymentModalOpen(true);
+                }}
+                className="px-5 py-2 bg-teal-500 hover:bg-teal-400 text-dark-950 font-black rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-teal-500/20"
+              >
+                Deploy This Engine ($249 - $449 Deposit) →
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
