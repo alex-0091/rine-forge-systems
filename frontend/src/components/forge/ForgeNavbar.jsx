@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import { 
   Menu, X, ArrowRight, Sparkles, Layers, 
-  Cpu, Building2, ShieldCheck, CheckCircle2, ChevronDown 
+  Cpu, Building2, ShieldCheck, CheckCircle2, ChevronDown, 
+  FlaskConical, LayoutDashboard 
 } from 'lucide-react';
 
 export function ForgeNavbar({ onNavigate, currentView = 'home' }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [solutionsOpen, setSolutionsOpen] = useState(false);
 
   const handleNav = (target) => {
     setMobileMenuOpen(false);
-    setSolutionsOpen(false);
-    onNavigate(target);
+    if (onNavigate) onNavigate(target);
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#080c14]/90 backdrop-blur-md border-b border-slate-800/80 transition-all">
+    <header className="sticky top-0 z-40 bg-[#080c14]/95 backdrop-blur-md border-b border-slate-800/80 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between gap-4">
+        
         {/* Brand Logo */}
         <button 
           onClick={() => handleNav('home')}
@@ -34,7 +34,15 @@ export function ForgeNavbar({ onNavigate, currentView = 'home' }) {
         </button>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-1 text-xs font-semibold text-slate-300">
+        <nav className="hidden lg:flex items-center gap-1 text-xs font-mono font-semibold text-slate-300">
+          <button
+            onClick={() => handleNav('systems')}
+            className={`px-3 py-2 rounded-lg hover:text-white hover:bg-slate-850 transition-colors ${
+              currentView === 'systems' || currentView.startsWith('system-') ? 'text-teal-400 bg-teal-500/10' : ''
+            }`}
+          >
+            Systems Library
+          </button>
           <button
             onClick={() => handleNav('solutions')}
             className={`px-3 py-2 rounded-lg hover:text-white hover:bg-slate-850 transition-colors ${
@@ -44,36 +52,38 @@ export function ForgeNavbar({ onNavigate, currentView = 'home' }) {
             Solutions
           </button>
           <button
+            onClick={() => handleNav('lab')}
+            className={`px-3 py-2 rounded-lg hover:text-white hover:bg-slate-850 transition-colors flex items-center gap-1 ${
+              currentView === 'lab' ? 'text-teal-400 bg-teal-500/10' : ''
+            }`}
+          >
+            <FlaskConical className="w-3.5 h-3.5 text-teal-400" />
+            <span>AI Lab</span>
+          </button>
+          <button
+            onClick={() => handleNav('experience')}
+            className={`px-3 py-2 rounded-lg hover:text-white hover:bg-slate-850 transition-colors flex items-center gap-1 ${
+              currentView === 'experience' ? 'text-teal-400 bg-teal-500/10' : ''
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <span>OS Experience</span>
+          </button>
+          <button
             onClick={() => handleNav('industries')}
             className={`px-3 py-2 rounded-lg hover:text-white hover:bg-slate-850 transition-colors ${
-              currentView.startsWith('industry') ? 'text-teal-400 bg-teal-500/10' : ''
+              currentView.startsWith('industry') || currentView.startsWith('for-') ? 'text-teal-400 bg-teal-500/10' : ''
             }`}
           >
             Industries
           </button>
           <button
-            onClick={() => handleNav('agents')}
+            onClick={() => handleNav('pricing')}
             className={`px-3 py-2 rounded-lg hover:text-white hover:bg-slate-850 transition-colors ${
-              currentView === 'agents' ? 'text-teal-400 bg-teal-500/10' : ''
+              currentView === 'pricing' ? 'text-teal-400 bg-teal-500/10' : ''
             }`}
           >
-            AI Agents
-          </button>
-          <button
-            onClick={() => handleNav('case-studies')}
-            className={`px-3 py-2 rounded-lg hover:text-white hover:bg-slate-850 transition-colors ${
-              currentView === 'case-studies' ? 'text-teal-400 bg-teal-500/10' : ''
-            }`}
-          >
-            Case Studies
-          </button>
-          <button
-            onClick={() => handleNav('how-it-works')}
-            className={`px-3 py-2 rounded-lg hover:text-white hover:bg-slate-850 transition-colors ${
-              currentView === 'how-it-works' ? 'text-teal-400 bg-teal-500/10' : ''
-            }`}
-          >
-            How It Works
+            Pricing
           </button>
           <button
             onClick={() => handleNav('about')}
@@ -85,17 +95,28 @@ export function ForgeNavbar({ onNavigate, currentView = 'home' }) {
           </button>
         </nav>
 
-        {/* Right Action CTA */}
+        {/* Right Action Buttons */}
         <div className="flex items-center gap-2 sm:gap-3">
+          
+          {/* Direct Launch into App / Free Trial */}
+          <button
+            onClick={() => handleNav('app-dashboard')}
+            className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-850 text-slate-200 border border-slate-700 font-mono font-bold text-xs transition-all"
+          >
+            <LayoutDashboard className="w-3.5 h-3.5 text-teal-400" />
+            <span>Launch App</span>
+          </button>
+
+          {/* Primary Audit CTA */}
           <button
             onClick={() => handleNav('audit')}
-            className="px-3.5 sm:px-5 py-2 sm:py-2.5 bg-teal-500 hover:bg-teal-400 text-dark-950 font-extrabold text-xs sm:text-xs rounded-xl transition-all shadow-md shadow-teal-500/15 flex items-center gap-1.5 shrink-0"
+            className="px-3.5 sm:px-4 py-2 bg-teal-500 hover:bg-teal-400 text-dark-950 font-black text-xs font-mono rounded-xl transition-all shadow-md shadow-teal-500/15 flex items-center gap-1.5 shrink-0"
           >
-            <span>GET FREE AI AUDIT</span>
+            <span>FREE AI AUDIT</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
 
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="lg:hidden p-2 rounded-xl bg-dark-900 border border-slate-800 text-slate-300 hover:text-white focus:outline-none"
@@ -106,14 +127,32 @@ export function ForgeNavbar({ onNavigate, currentView = 'home' }) {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Menu Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-slate-800 bg-[#080c14] px-4 pt-3 pb-6 space-y-2 text-xs font-semibold">
+        <div className="lg:hidden border-t border-slate-800 bg-[#080c14] px-4 pt-3 pb-6 space-y-2 text-xs font-mono font-semibold">
+          <button
+            onClick={() => handleNav('systems')}
+            className="block w-full text-left py-2.5 px-3 rounded-lg text-slate-200 hover:bg-dark-850"
+          >
+            Systems Library
+          </button>
           <button
             onClick={() => handleNav('solutions')}
             className="block w-full text-left py-2.5 px-3 rounded-lg text-slate-200 hover:bg-dark-850"
           >
             Solutions
+          </button>
+          <button
+            onClick={() => handleNav('lab')}
+            className="block w-full text-left py-2.5 px-3 rounded-lg text-teal-400 hover:bg-dark-850 flex items-center gap-2"
+          >
+            <FlaskConical className="w-4 h-4" /> The AI Lab
+          </button>
+          <button
+            onClick={() => handleNav('experience')}
+            className="block w-full text-left py-2.5 px-3 rounded-lg text-cyan-400 hover:bg-dark-850 flex items-center gap-2"
+          >
+            <Sparkles className="w-4 h-4" /> OS Experience Simulator
           </button>
           <button
             onClick={() => handleNav('industries')}
@@ -122,22 +161,10 @@ export function ForgeNavbar({ onNavigate, currentView = 'home' }) {
             Industries
           </button>
           <button
-            onClick={() => handleNav('agents')}
+            onClick={() => handleNav('pricing')}
             className="block w-full text-left py-2.5 px-3 rounded-lg text-slate-200 hover:bg-dark-850"
           >
-            AI Agents
-          </button>
-          <button
-            onClick={() => handleNav('case-studies')}
-            className="block w-full text-left py-2.5 px-3 rounded-lg text-slate-200 hover:bg-dark-850"
-          >
-            Case Studies
-          </button>
-          <button
-            onClick={() => handleNav('how-it-works')}
-            className="block w-full text-left py-2.5 px-3 rounded-lg text-slate-200 hover:bg-dark-850"
-          >
-            How It Works
+            Pricing
           </button>
           <button
             onClick={() => handleNav('about')}
@@ -145,7 +172,14 @@ export function ForgeNavbar({ onNavigate, currentView = 'home' }) {
           >
             About
           </button>
-          <div className="pt-2 border-t border-slate-800/80">
+          <div className="pt-2 border-t border-slate-800 space-y-2">
+            <button
+              onClick={() => handleNav('app-dashboard')}
+              className="w-full py-3 bg-slate-900 border border-slate-700 text-teal-300 font-bold rounded-xl text-center flex items-center justify-center gap-1.5"
+            >
+              <LayoutDashboard className="w-4 h-4" />
+              <span>LAUNCH PRODUCT PLATFORM</span>
+            </button>
             <button
               onClick={() => handleNav('audit')}
               className="w-full py-3 bg-teal-500 text-dark-950 font-black rounded-xl text-center flex items-center justify-center gap-1.5"

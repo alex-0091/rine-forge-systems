@@ -6,15 +6,20 @@ import {
   Cpu, Award, Building2, PhoneCall, Check, ArrowUpRight,
   Activity, Play, Flame, BarChart3, Database, Globe,
   Briefcase, DollarSign, School, CheckCircle, AlertTriangle,
-  CreditCard, Wallet, Lock, Landmark, CheckCheck
+  CreditCard, Wallet, Lock, Landmark, CheckCheck, FlaskConical,
+  LayoutDashboard 
 } from 'lucide-react';
 
-// Forge Master Components
+// Forge Marketing & Discovery Components (Experience A)
 import { ForgeNavbar } from './forge/ForgeNavbar';
 import { ForgeHero } from './forge/ForgeHero';
+import { LiveActivityStream } from './forge/LiveActivityStream';
+import { LiveSystemsShowcase } from './forge/LiveSystemsShowcase';
 import { ProblemSection } from './forge/ProblemSection';
+import { SystemsMarketplace } from './forge/SystemsMarketplace';
 import { WhatWeBuildSection } from './forge/WhatWeBuildSection';
 import { RoiCalculatorSection } from './forge/RoiCalculatorSection';
+import { AgentNetworkVisualizer } from './forge/AgentNetworkVisualizer';
 import { AgentsSection } from './forge/AgentsSection';
 import { WorkflowModal } from './forge/WorkflowModal';
 import { OracleShowcaseSection } from './forge/OracleShowcaseSection';
@@ -31,8 +36,24 @@ import { ForgeFooter } from './forge/ForgeFooter';
 import { AuditPage } from './forge/AuditPage';
 import { IndustryDetailPage } from './forge/IndustryDetailPage';
 import { SolutionDetailPage } from './forge/SolutionDetailPage';
+import { SystemDetailPage } from './forge/SystemDetailPage';
+import { ForgeAiLab } from './forge/ForgeAiLab';
+import { ForgeExperienceView } from './forge/ForgeExperienceView';
+import { PersonalizedIndustryView } from './forge/PersonalizedIndustryView';
 
-// Ancillary Forge and Utility Views
+// Product Platform & Operating System Components (Experience B)
+import { AppLayout } from './app/AppLayout';
+import { AppDashboard } from './app/AppDashboard';
+import { OnboardingWizard } from './app/OnboardingWizard';
+import { AppSystemBuilder } from './app/AppSystemBuilder';
+import { AppKnowledgeBase } from './app/AppKnowledgeBase';
+import { AppApprovals } from './app/AppApprovals';
+import { AppIntegrations } from './app/AppIntegrations';
+import { AppControlCenter } from './app/AppControlCenter';
+import { AppBilling } from './app/AppBilling';
+import { AdminPanel } from './app/AdminPanel';
+
+// Ancillary Modals
 import { PaymentPortalModal } from './PaymentPortalModal';
 import { AIToolsForgeView } from './AIToolsForgeView';
 import { FloatingAIAssistant } from './FloatingAIAssistant';
@@ -44,24 +65,37 @@ export function PublicPortfolioView() {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [selectedPackageForModal, setSelectedPackageForModal] = useState('ai-receptionist');
   const [activeVideoModal, setActiveVideoModal] = useState(null);
+  const [trialCreditsUsed, setTrialCreditsUsed] = useState(32);
 
-  // Check URL query parameters or hash on load
+  // Check URL pathname, search params or hash on load
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
       const search = window.location.search;
       const hash = window.location.hash.replace('#', '');
 
-      if (path.includes('/audit') || search.includes('audit=true')) {
+      if (path.startsWith('/app')) {
+        const sub = path.replace('/app', '').replace('/', '') || 'dashboard';
+        setCurrentView(`app-${sub}`);
+      } else if (path.includes('/lab')) {
+        setCurrentView('lab');
+      } else if (path.includes('/experience')) {
+        setCurrentView('experience');
+      } else if (path.includes('/audit') || search.includes('audit=true')) {
         setCurrentView('audit');
-      } else if (path.includes('/industries/') || search.includes('industry=')) {
-        const slug = path.split('/industries/')[1] || new URLSearchParams(search).get('industry');
+      } else if (path.includes('/systems/')) {
+        const slug = path.split('/systems/')[1];
+        if (slug) setCurrentView(`system-${slug}`);
+      } else if (path.includes('/for/')) {
+        const slug = path.split('/for/')[1];
+        if (slug) setCurrentView(`for-${slug}`);
+      } else if (path.includes('/industries/')) {
+        const slug = path.split('/industries/')[1];
         if (slug) setCurrentView(`industry-${slug}`);
-      } else if (path.includes('/solutions/') || search.includes('solution=')) {
-        const slug = path.split('/solutions/')[1] || new URLSearchParams(search).get('solution');
+      } else if (path.includes('/solutions/')) {
+        const slug = path.split('/solutions/')[1];
         if (slug) setCurrentView(`solution-${slug}`);
       } else if (hash) {
-        // Scroll to hash element if exists
         setTimeout(() => {
           const el = document.getElementById(hash);
           if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -71,21 +105,15 @@ export function PublicPortfolioView() {
   }, []);
 
   const handleNavigate = (target) => {
-    if (target === 'audit') {
-      setCurrentView('audit');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (target === 'home') {
-      setCurrentView('home');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (target.startsWith('industry-')) {
+    if (target.startsWith('app-')) {
       setCurrentView(target);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (target.startsWith('solution-')) {
+    } else if (target === 'lab' || target === 'experience' || target === 'audit' || target === 'home' || target.startsWith('system-') || target.startsWith('for-') || target.startsWith('industry-') || target.startsWith('solution-')) {
       setCurrentView(target);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      // If we are currently on a subpage and user clicks a section anchor (e.g. 'solutions', 'industries', 'agents', 'about')
-      if (currentView !== 'home') {
+      // Anchor scroll or return to home anchor
+      if (currentView.startsWith('app-') || currentView !== 'home') {
         setCurrentView('home');
         setTimeout(() => {
           const el = document.getElementById(target);
@@ -93,97 +121,191 @@ export function PublicPortfolioView() {
         }, 100);
       } else {
         const el = document.getElementById(target);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
-        }
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
       }
     }
   };
 
+  const isAppExperience = currentView.startsWith('app-');
+
+  // EXPERIENCE B: PRODUCT PLATFORM & OS
+  if (isAppExperience) {
+    const appSubTab = currentView.replace('app-', '');
+
+    // Onboarding Wizard fullscreen mode
+    if (appSubTab === 'onboarding') {
+      return (
+        <div className="min-h-screen bg-[#060a12] text-slate-100 p-4 sm:p-8 flex flex-col justify-center">
+          <OnboardingWizard
+            onCompleteOnboarding={() => {
+              setTrialCreditsUsed(prev => prev + 1);
+              setCurrentView('app-dashboard');
+            }}
+            onCancel={() => setCurrentView('home')}
+          />
+        </div>
+      );
+    }
+
+    return (
+      <AppLayout
+        currentAppTab={appSubTab}
+        onNavigateApp={(tab) => setCurrentView(`app-${tab}`)}
+        onNavigateMarketing={handleNavigate}
+        trialCreditsUsed={trialCreditsUsed}
+        trialDaysLeft={14}
+      >
+        {appSubTab === 'dashboard' && (
+          <AppDashboard 
+            onNavigateApp={(tab) => setCurrentView(`app-${tab}`)} 
+            trialCreditsUsed={trialCreditsUsed}
+          />
+        )}
+        {appSubTab === 'systems' && (
+          <div className="space-y-6">
+            <div className="space-y-1">
+              <h1 className="text-2xl font-black text-white">Active AI Systems & Catalog</h1>
+              <p className="text-xs text-slate-400">Manage running instances or deploy new systems to your tenant.</p>
+            </div>
+            <SystemsMarketplace onNavigate={handleNavigate} />
+          </div>
+        )}
+        {appSubTab === 'builder' && (
+          <AppSystemBuilder onSaveSystem={() => setCurrentView('app-dashboard')} />
+        )}
+        {appSubTab === 'knowledge' && <AppKnowledgeBase />}
+        {appSubTab === 'approvals' && <AppApprovals />}
+        {appSubTab === 'integrations' && <AppIntegrations />}
+        {appSubTab === 'control' && <AppControlCenter />}
+        {appSubTab === 'billing' && <AppBilling />}
+        {appSubTab === 'admin' && <AdminPanel />}
+      </AppLayout>
+    );
+  }
+
+  // EXPERIENCE A: MARKETING & DISCOVERY PLATFORM
   return (
-    <div className="min-h-screen bg-[#070b12] text-slate-100 font-sans selection:bg-teal-500 selection:text-dark-950">
+    <div className="min-h-screen bg-[#060a12] text-slate-100 font-sans selection:bg-teal-500 selection:text-dark-950">
       
       {/* Top Universal Navbar */}
       <ForgeNavbar onNavigate={handleNavigate} currentView={currentView} />
 
-      {/* Main View Router */}
+      {/* Main Experience Router */}
       <main>
         {currentView === 'home' && (
           <>
-            {/* 1. Hero with 5-stage live system visualization */}
+            {/* 1. Immersive Hero with Interactive FORGE Engine Visualization */}
             <ForgeHero onNavigate={handleNavigate} />
 
-            {/* 2. Problem Section: Missed Leads, Repetitive Admin, etc. */}
+            {/* 2. Live System Activity Stream */}
+            <LiveActivityStream onNavigate={handleNavigate} />
+
+            {/* 3. Try AI Now / Interactive Live Systems Showcase */}
+            <LiveSystemsShowcase onNavigate={handleNavigate} />
+
+            {/* 4. Business Problems & Breakdowns */}
             <ProblemSection onNavigate={handleNavigate} />
 
-            {/* 3. What We Build: 5 Core Solution Areas */}
+            {/* 5. The FORGE System Library (Marketplace) */}
+            <SystemsMarketplace onNavigate={handleNavigate} />
+
+            {/* 6. What We Build Core Architecture */}
             <WhatWeBuildSection onNavigate={handleNavigate} />
 
-            {/* 4. Interactive B2B ROI Opportunity Calculator */}
+            {/* 7. Interactive B2B ROI Calculator */}
             <RoiCalculatorSection onNavigate={handleNavigate} />
 
-            {/* 5. 6 Modular Autonomous AI Agents */}
+            {/* 8. The Multi-Agent Network Topology */}
+            <AgentNetworkVisualizer onNavigate={handleNavigate} />
+
+            {/* 9. 6 Modular Autonomous Agents with Step Execution */}
             <AgentsSection 
               onNavigate={handleNavigate} 
               onOpenWorkflowModal={(agent) => setSelectedAgentForModal(agent)} 
             />
 
-            {/* 6. Live Prototype Showcase (Oracle AI, Fact Fuel, Speed-to-Lead, etc.) */}
+            {/* 10. Flagship Production Demonstrations (Oracle AI, Speed-to-Lead, Fact Fuel, OmniSync) */}
             <OracleShowcaseSection onNavigate={handleNavigate} />
 
-            {/* 7. Technical Case Studies with Concrete Architectures */}
+            {/* 11. Technical Architecture Case Studies */}
             <CaseStudiesSection onNavigate={handleNavigate} />
 
-            {/* 8. 5-Stage How It Works (Audit -> Design -> Build -> Deploy -> Optimize) */}
+            {/* 12. 5-Stage How It Works Framework */}
             <HowItWorksSection onNavigate={handleNavigate} />
 
-            {/* 9. Why FORGE: Core Engineering Tenets */}
+            {/* 13. Why FORGE Core Principles */}
             <WhyForgeSection />
 
-            {/* 10. Security, Privacy & Compliance Architecture */}
+            {/* 14. Security, Privacy & Human Governance */}
             <SecuritySection />
 
-            {/* 11. 10 Vertical Industry Solutions */}
+            {/* 15. 10 Industry Vertical Solutions */}
             <IndustriesSection onNavigate={handleNavigate} />
 
-            {/* 12. 15+ Interactive Free AI Tools */}
-            <section id="tools-forge" className="py-20 border-t border-slate-800 bg-[#080d16]">
+            {/* 16. 15+ Free Interactive AI Utilities */}
+            <section id="tools-forge" className="py-20 border-t border-slate-800 bg-[#070c14]">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
                 <div className="text-center space-y-3 max-w-3xl mx-auto">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-teal-500/10 border border-teal-500/20 text-teal-400 text-xs font-mono font-bold tracking-wider uppercase">
-                    <Sparkles className="w-3.5 h-3.5" /> 100% Free • No Signup Required
+                    <Sparkles className="w-3.5 h-3.5" /> 100% Free • Sandbox Browser Tools
                   </div>
                   <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
                     The FORGE AI Utility Suite
                   </h2>
                   <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-                    Test our autonomous generators directly in your browser. From cold outreach synthesizers and invoice parsers to ROI estimators and regex generators.
+                    Test our autonomous generators directly in your browser. From cold outreach synthesizers and invoice parsers to ROI estimators and regex sanitizers.
                   </p>
                 </div>
                 <AIToolsForgeView />
               </div>
             </section>
 
-            {/* 13. Transparent Scopes & Pricing Models */}
+            {/* 17. Transparent Pricing & Milestone Scopes */}
             <PricingSection onNavigate={handleNavigate} />
 
-            {/* 14. Frequently Asked Questions */}
+            {/* 18. Frequently Asked Questions */}
             <FaqSection onNavigate={handleNavigate} />
 
-            {/* 15. About FORGE & Leadership Team */}
+            {/* 19. About FORGE & Engineering Leadership */}
             <AboutSection onNavigate={handleNavigate} />
 
-            {/* 16. Final High-Impact Call to Action */}
+            {/* 20. Final High-Impact Call to Action */}
             <FinalCtaSection onNavigate={handleNavigate} />
           </>
         )}
 
-        {/* Audit Portal Subpage */}
+        {/* The AI Lab Subpage (/lab) */}
+        {currentView === 'lab' && (
+          <ForgeAiLab onNavigate={handleNavigate} />
+        )}
+
+        {/* Cinematic OS Experience Simulator (/experience) */}
+        {currentView === 'experience' && (
+          <ForgeExperienceView onNavigate={handleNavigate} />
+        )}
+
+        {/* Free AI Automation Audit Portal (/audit) */}
         {currentView === 'audit' && (
           <AuditPage onNavigate={handleNavigate} />
         )}
 
-        {/* Dynamic Industry Subpages */}
+        {/* Dedicated System Product Pages (/systems/:slug) */}
+        {currentView.startsWith('system-') && (
+          <SystemDetailPage
+            slug={currentView.replace('system-', '')}
+            onNavigate={handleNavigate}
+          />
+        )}
+
+        {/* Tailored Industry Pages (/for/:slug) */}
+        {currentView.startsWith('for-') && (
+          <PersonalizedIndustryView
+            industrySlug={currentView.replace('for-', '')}
+            onNavigate={handleNavigate}
+          />
+        )}
+
+        {/* Dynamic Industry Subpages (/industries/:slug) */}
         {currentView.startsWith('industry-') && (
           <IndustryDetailPage 
             slug={currentView.replace('industry-', '')} 
@@ -192,7 +314,7 @@ export function PublicPortfolioView() {
           />
         )}
 
-        {/* Dynamic Solution Subpages */}
+        {/* Dynamic Solution Subpages (/solutions/:slug) */}
         {currentView.startsWith('solution-') && (
           <SolutionDetailPage 
             slug={currentView.replace('solution-', '')} 
