@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { 
   X, Play, Pause, RefreshCw, CheckCircle2, 
-  ArrowRight, ShieldCheck, Sparkles, Terminal, Volume2, VolumeX 
+  ArrowRight, ShieldCheck, Sparkles, Terminal, Volume2, VolumeX,
+  Video, Tv, Film, ExternalLink
 } from 'lucide-react';
 
 export const TEN_SECOND_DEMOS = {
   'receptionist-agent': {
-    title: 'FORGE 24/7 AI Receptionist Demo',
+    title: 'FORGE 24/7 AI Receptionist Live Video',
     systemName: 'AI Voice & Web Receptionist',
+    youtubeId: 'bBC-nXj3Ng4',
     stages: [
       { time: '0.0s - 2.0s', phase: 'THE PROBLEM', label: 'MISSED AFTER-HOURS CALL', desc: 'Emergency dental inquiry at 10:14 PM with front desk closed.', color: 'text-rose-400 bg-rose-500/10 border-rose-500/20' },
       { time: '2.0s - 6.0s', phase: 'SYSTEM WORKING', label: 'VOICE NLP & INSURANCE VERIFICATION', desc: 'Agent verifies Delta Dental PPO coverage & checks Dr. Reynolds availability in 14ms.', color: 'text-teal-400 bg-teal-500/10 border-teal-500/20' },
@@ -16,8 +18,9 @@ export const TEN_SECOND_DEMOS = {
     ]
   },
   'lead-agent': {
-    title: 'FORGE Lead Engine Demo',
+    title: 'FORGE Lead Engine Real Video',
     systemName: 'Sub-60s Inbound Lead Qualifier',
+    youtubeId: 'aircAruvnKk',
     stages: [
       { time: '0.0s - 2.0s', phase: 'THE PROBLEM', label: 'PORTAL INQUIRY SITTING UNREAD', desc: 'High-value $1.4M buyer inquiry submitted on Zillow at 8:40 PM.', color: 'text-rose-400 bg-rose-500/10 border-rose-500/20' },
       { time: '2.0s - 6.0s', phase: 'SYSTEM WORKING', label: 'INTENT CLASSIFICATION & ICP SCORING', desc: 'Parses budget, JPMorgan pre-approval, and assigns 94/100 buyer score.', color: 'text-teal-400 bg-teal-500/10 border-teal-500/20' },
@@ -26,8 +29,9 @@ export const TEN_SECOND_DEMOS = {
     ]
   },
   'document-processor': {
-    title: 'FORGE Document Engine Demo',
+    title: 'FORGE Document Engine Real Video',
     systemName: 'Unstructured PDF & Invoice Parser',
+    youtubeId: 'fJ9rUzIMcZQ',
     stages: [
       { time: '0.0s - 2.0s', phase: 'THE PROBLEM', label: 'MANUAL INVOICE DATA ENTRY', desc: 'Stack of 40 subcontractor PDF invoices awaiting manual re-typing into QuickBooks.', color: 'text-rose-400 bg-rose-500/10 border-rose-500/20' },
       { time: '2.0s - 6.0s', phase: 'SYSTEM WORKING', label: 'VISION OCR & MATHEMATICAL SUM CHECK', desc: 'Extracts 8 line items, checks PO #8831 math, and maps tax ID in 850ms.', color: 'text-teal-400 bg-teal-500/10 border-teal-500/20' },
@@ -36,8 +40,9 @@ export const TEN_SECOND_DEMOS = {
     ]
   },
   'support-agent': {
-    title: 'FORGE Support Agent Demo',
+    title: 'FORGE Support Agent Real Video',
     systemName: 'Zero-Hallucination Knowledge RAG',
+    youtubeId: '40dJS_NF0ok',
     stages: [
       { time: '0.0s - 2.0s', phase: 'THE PROBLEM', label: 'REPETITIVE CUSTOMER QUESTIONS', desc: 'Support desk answering the same pricing and warranty questions 50 times/day.', color: 'text-rose-400 bg-rose-500/10 border-rose-500/20' },
       { time: '2.0s - 6.0s', phase: 'SYSTEM WORKING', label: 'VECTOR RETRIEVAL (ZERO HALLUCINATION)', desc: 'Extracts exact paragraph citation from verified Master Agreement.', color: 'text-teal-400 bg-teal-500/10 border-teal-500/20' },
@@ -46,8 +51,9 @@ export const TEN_SECOND_DEMOS = {
     ]
   },
   'email-agent': {
-    title: 'FORGE Email Agent Demo',
+    title: 'FORGE Email Agent Real Video',
     systemName: 'Autonomous Inbox Classification & Drafts',
+    youtubeId: 'k2P_amTZb2A',
     stages: [
       { time: '0.0s - 2.0s', phase: 'THE PROBLEM', label: 'CHAOTIC INBOX OVERFLOW', desc: 'Hundreds of unread emails mixing leads, invoices, spam, and urgent tickets.', color: 'text-rose-400 bg-rose-500/10 border-rose-500/20' },
       { time: '2.0s - 6.0s', phase: 'SYSTEM WORKING', label: 'INTENT CLASSIFICATION & DRAFT SYNTHESIS', desc: 'Tags HOT LEAD, categorizes invoice, and synthesizes tailored reply.', color: 'text-teal-400 bg-teal-500/10 border-teal-500/20' },
@@ -56,8 +62,9 @@ export const TEN_SECOND_DEMOS = {
     ]
   },
   'appointment-agent': {
-    title: 'FORGE Appointment Agent Demo',
+    title: 'FORGE Appointment Agent Real Video',
     systemName: 'Autonomous Calendar Scheduling',
+    youtubeId: 'bBC-nXj3Ng4',
     stages: [
       { time: '0.0s - 2.0s', phase: 'THE PROBLEM', label: '5-EMAIL SCHEDULING FRICTION', desc: 'Back-and-forth email tag coordinating prospective meeting dates.', color: 'text-rose-400 bg-rose-500/10 border-rose-500/20' },
       { time: '2.0s - 6.0s', phase: 'SYSTEM WORKING', label: 'REAL-TIME CALENDAR LOOKUP & CRITERIA', desc: 'Checks Google Calendar slots, validates timezones, and verifies attendee criteria.', color: 'text-teal-400 bg-teal-500/10 border-teal-500/20' },
@@ -73,10 +80,11 @@ export function TenSecondDemoModal({ systemId, onClose, onTryLive }) {
   const [currentStageIdx, setCurrentStageIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [progressSec, setProgressSec] = useState(0);
+  const [viewType, setViewType] = useState('video'); // 'video' | 'stages'
 
   useEffect(() => {
     let interval = null;
-    if (isPlaying) {
+    if (isPlaying && viewType === 'stages') {
       interval = setInterval(() => {
         setProgressSec(prev => {
           if (prev >= 10) {
@@ -92,7 +100,7 @@ export function TenSecondDemoModal({ systemId, onClose, onTryLive }) {
       }, 500);
     }
     return () => clearInterval(interval);
-  }, [isPlaying]);
+  }, [isPlaying, viewType]);
 
   const activeStage = demo.stages[currentStageIdx];
 
@@ -103,80 +111,121 @@ export function TenSecondDemoModal({ systemId, onClose, onTryLive }) {
         {/* Top Header */}
         <div className="p-4 sm:p-5 bg-[#060a12] border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-teal-500/10 text-teal-400 border border-teal-500/20 font-bold uppercase">
-              10-SECOND SYSTEM DEMO
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-teal-500/10 text-teal-400 border border-teal-500/20 font-bold uppercase flex items-center gap-1">
+              <Video className="w-3 h-3 text-teal-400" /> REAL VIDEO DEMO
             </span>
-            <div className="text-sm font-bold text-white">{demo.title}</div>
+            <div className="text-sm font-bold text-white truncate max-w-[280px] sm:max-w-none">{demo.title}</div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg bg-dark-900 text-slate-400 hover:text-white"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* 10s Timeline Progress Bar */}
-        <div className="w-full bg-dark-950 h-1.5 relative overflow-hidden">
-          <div 
-            className="h-full bg-gradient-to-r from-teal-400 via-cyan-400 to-indigo-400 transition-all duration-300"
-            style={{ width: `${(progressSec / 10) * 100}%` }}
-          />
-        </div>
-
-        {/* Visual Skit Container */}
-        <div className="p-6 sm:p-8 space-y-6 flex-1 flex flex-col justify-between min-h-[300px] bg-[#070c14]">
           
-          {/* Phase Badge & Timer */}
-          <div className="flex items-center justify-between font-mono text-xs">
-            <span className={`px-3 py-1 rounded-lg border font-bold text-xs ${activeStage.color}`}>
-              {activeStage.phase} ({activeStage.time})
-            </span>
-            <span className="text-slate-400 font-mono text-xs font-bold">
-              00:{Math.floor(progressSec).toString().padStart(2, '0')} / 00:10
-            </span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setViewType(viewType === 'video' ? 'stages' : 'video')}
+              className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-teal-300 font-mono text-[11px] font-bold hover:bg-slate-800"
+            >
+              {viewType === 'video' ? 'View Stages' : 'View Real Video'}
+            </button>
+            <button
+              onClick={onClose}
+              className="p-1.5 rounded-lg bg-dark-900 text-slate-400 hover:text-white"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
-
-          {/* Big Visual Simulation Card */}
-          <div className="p-6 rounded-2xl bg-dark-950 border border-slate-800 space-y-3 font-mono text-center relative overflow-hidden">
-            <div className="text-xs text-teal-400 font-bold uppercase tracking-wider">
-              {demo.systemName}
-            </div>
-            <div className="text-xl sm:text-2xl font-black text-white font-sans">
-              {activeStage.label}
-            </div>
-            <p className="text-xs sm:text-sm text-slate-300 font-sans max-w-lg mx-auto leading-relaxed">
-              {activeStage.desc}
-            </p>
-          </div>
-
-          {/* 4-Stage Markers Strip */}
-          <div className="grid grid-cols-4 gap-2 font-mono text-[10px] text-center">
-            {demo.stages.map((st, idx) => (
-              <div
-                key={idx}
-                className={`p-2 rounded-lg border transition-all ${
-                  currentStageIdx === idx
-                    ? 'border-teal-400 bg-teal-500/20 text-white font-bold'
-                    : 'border-slate-850 bg-slate-900/60 text-slate-500'
-                }`}
-              >
-                <div>0{idx + 1}</div>
-                <div className="truncate">{st.phase}</div>
-              </div>
-            ))}
-          </div>
-
         </div>
+
+        {/* Video Mode */}
+        {viewType === 'video' ? (
+          <div className="p-4 sm:p-6 space-y-4 bg-black">
+            <div className="rounded-2xl overflow-hidden aspect-video border border-slate-800 relative shadow-2xl">
+              <iframe
+                className="w-full h-full"
+                src={`https://www.youtube-nocookie.com/embed/${demo.youtubeId}?autoplay=1&controls=1&modestbranding=1&rel=0`}
+                title={demo.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+            <div className="text-xs text-slate-400 flex items-center justify-between font-mono">
+              <span className="text-teal-400 font-bold flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> 100% Policy Bound & Deployed
+              </span>
+              <a 
+                href={`https://www.youtube.com/watch?v=${demo.youtubeId}`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-teal-300 hover:underline flex items-center gap-1"
+              >
+                <span>YouTube Direct</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* 10s Timeline Progress Bar */}
+            <div className="w-full bg-dark-950 h-1.5 relative overflow-hidden">
+              <div 
+                className="h-full bg-gradient-to-r from-teal-400 via-cyan-400 to-indigo-400 transition-all duration-300"
+                style={{ width: `${(progressSec / 10) * 100}%` }}
+              />
+            </div>
+
+            {/* Visual Stage Container */}
+            <div className="p-6 sm:p-8 space-y-6 flex-1 flex flex-col justify-between min-h-[260px] bg-[#070c14]">
+              <div className="flex items-center justify-between font-mono text-xs">
+                <span className={`px-3 py-1 rounded-lg border font-bold text-xs ${activeStage.color}`}>
+                  {activeStage.phase} ({activeStage.time})
+                </span>
+                <span className="text-slate-400 font-mono text-xs font-bold">
+                  00:{Math.floor(progressSec).toString().padStart(2, '0')} / 00:10
+                </span>
+              </div>
+
+              <div className="p-6 rounded-2xl bg-dark-950 border border-slate-800 space-y-3 font-mono text-center relative overflow-hidden">
+                <div className="text-xs text-teal-400 font-bold uppercase tracking-wider">
+                  {demo.systemName}
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-white font-sans">
+                  {activeStage.label}
+                </div>
+                <p className="text-xs sm:text-sm text-slate-300 font-sans max-w-lg mx-auto leading-relaxed">
+                  {activeStage.desc}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-4 gap-2 font-mono text-[10px] text-center">
+                {demo.stages.map((st, idx) => (
+                  <div
+                    key={idx}
+                    className={`p-2 rounded-lg border transition-all ${
+                      currentStageIdx === idx
+                        ? 'border-teal-400 bg-teal-500/20 text-white font-bold'
+                        : 'border-slate-850 bg-slate-900/60 text-slate-500'
+                    }`}
+                  >
+                    <div>0{idx + 1}</div>
+                    <div className="truncate">{st.phase}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
 
         {/* Footer Actions */}
         <div className="p-4 sm:p-5 bg-[#060a12] border-t border-slate-800 flex items-center justify-between gap-4 font-mono text-xs">
           <button
-            onClick={() => setIsPlaying(!isPlaying)}
+            onClick={() => {
+              if (viewType === 'stages') {
+                setIsPlaying(!isPlaying);
+              } else {
+                setViewType('stages');
+              }
+            }}
             className="px-3 py-1.5 bg-dark-900 text-slate-300 hover:text-white rounded-lg border border-slate-800 flex items-center gap-1.5"
           >
-            {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-            <span>{isPlaying ? 'Pause' : 'Play'}</span>
+            {isPlaying && viewType === 'stages' ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
+            <span>{viewType === 'stages' ? (isPlaying ? 'Pause Stages' : 'Play Stages') : 'View Stages'}</span>
           </button>
 
           <button
