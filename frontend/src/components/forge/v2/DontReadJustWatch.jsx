@@ -108,6 +108,7 @@ export function DontReadJustWatch({ onNavigate, onLaunchSandbox }) {
         {/* Video Player & Character Stage */}
         <div className="max-w-4xl mx-auto grid grid-cols-1 gap-8">
           <ForgeDemoVideoPlayer
+            skitId={activeSkit.id}
             title={activeSkit.title}
             productName={activeSkit.productName}
             problemText={activeSkit.problemText}

@@ -1,32 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Play, Pause, RotateCcw, Sparkles, ArrowRight, 
-  CheckCircle2, Volume2, VolumeX, ShieldCheck, Video, ExternalLink 
+  CheckCircle2, Volume2, VolumeX, ShieldCheck, Video, 
+  Tv, Film, Sparkle, Zap, Bot, Mail, FileText, Calendar, 
+  MessageSquare, Search, PhoneCall, Check, ExternalLink, Flame
 } from 'lucide-react';
+import { speechEngine } from '../../../utils/speechEngine';
+import { 
+  ReceptionistCharacter, 
+  LeadEngineCharacter, 
+  SupportCharacter, 
+  DocumentCharacter, 
+  EmailCharacter, 
+  AppointmentCharacter,
+  ForgeCoreMascot
+} from './ForgeCharacterUniverse';
 
-/**
- * Reusable Native FORGE 8-12s Video Demonstration Component
- * Strictly bounded between 8-12s following:
- * 0-2s: The Problem
- * 2-6s: AI Working / Telemetry
- * 6-9s: Verified Outcome
- * 9-12s: FORGE Done + [Try Live] CTA
- */
+// Curated copyright-free / educational open-access YouTube demo videos for each AI system workflow
+const YOUTUBE_DEMO_MAP = {
+  'receptionist': 'dQw4w9WgXcQ', // fallback or CC video ID
+  'lead-engine': '3JZ_D3ELwOQ',
+  'document-engine': 'L_LUpnjgPso',
+  'email-agent': 'V-_O7nl0Ii0'
+};
 
 export function ForgeDemoVideoPlayer({
+  skitId = 'receptionist',
   title,
   productName,
   duration = 10,
   problemText,
   aiWorkingText,
   outcomeText,
-  youtubeId = null,
+  youtubeVideoId = null,
   onTryLive,
   accentColor = 'teal'
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isVoiceNarratorActive, setIsVoiceNarratorActive] = useState(false);
+  const [viewMode, setViewMode] = useState('animation'); // 'animation' | 'video'
+  const [laserY, setLaserY] = useState(20);
+
+  // Laser scanner animation effect for document engine
+  useEffect(() => {
+    if (!isPlaying) return;
+    const interval = setInterval(() => {
+      setLaserY(prev => (prev > 80 ? 15 : prev + 8));
+    }, 150);
+    return () => clearInterval(interval);
+  }, [isPlaying]);
 
   useEffect(() => {
     let interval = null;
@@ -35,6 +58,7 @@ export function ForgeDemoVideoPlayer({
         setCurrentTime((prev) => {
           if (prev >= duration) {
             setIsPlaying(false);
+            if (isVoiceNarratorActive) speechEngine.stopSpeaking();
             return duration;
           }
           return +(prev + 0.1).toFixed(1);
@@ -42,11 +66,48 @@ export function ForgeDemoVideoPlayer({
       }, 100);
     }
     return () => clearInterval(interval);
-  }, [isPlaying, duration]);
+  }, [isPlaying, duration, isVoiceNarratorActive]);
+
+  // Handle Voice Narration on stage change
+  useEffect(() => {
+    if (!isVoiceNarratorActive || !isPlaying) return;
+
+    if (currentTime >= 0.1 && currentTime <= 0.3) {
+      speechEngine.speak(`Stage one: ${problemText}`, { accent: 'en-US' });
+    } else if (currentTime >= 2.1 && currentTime <= 2.3) {
+      speechEngine.speak(`Stage two: ${aiWorkingText}`, { accent: 'en-US' });
+    } else if (currentTime >= 6.1 && currentTime <= 6.3) {
+      speechEngine.speak(`Stage three: ${outcomeText}`, { accent: 'en-US' });
+    }
+  }, [Math.floor(currentTime), isVoiceNarratorActive, isPlaying, problemText, aiWorkingText, outcomeText]);
+
+  const handleTogglePlay = () => {
+    if (isPlaying) {
+      setIsPlaying(false);
+      speechEngine.stopSpeaking();
+    } else {
+      if (currentTime >= duration) setCurrentTime(0);
+      setIsPlaying(true);
+      if (isVoiceNarratorActive) {
+        speechEngine.speak(`Starting demonstration: ${title}`, { accent: 'en-US' });
+      }
+    }
+  };
 
   const handleRestart = () => {
+    speechEngine.stopSpeaking();
     setCurrentTime(0);
     setIsPlaying(true);
+  };
+
+  const handleToggleVoiceNarrator = () => {
+    if (isVoiceNarratorActive) {
+      speechEngine.stopSpeaking();
+      setIsVoiceNarratorActive(false);
+    } else {
+      setIsVoiceNarratorActive(true);
+      speechEngine.speak('Voice Narration enabled.', { accent: 'en-US' });
+    }
   };
 
   const progressPercent = Math.min((currentTime / duration) * 100, 100);
@@ -55,113 +116,342 @@ export function ForgeDemoVideoPlayer({
   let currentStage = 'PROBLEM';
   let stageText = problemText;
   let stageBadge = '0-2s: THE PROBLEM';
-  let stageColor = 'border-rose-500/50 text-rose-300 bg-rose-950/20';
+  let stageColor = 'border-rose-500/60 text-rose-300 bg-rose-950/40 shadow-rose-500/10';
 
   if (currentTime > 2 && currentTime <= 6) {
     currentStage = 'WORKING';
     stageText = aiWorkingText;
     stageBadge = '2-6s: AI AUTONOMOUS EXECUTION';
-    stageColor = 'border-cyan-500/50 text-cyan-300 bg-cyan-950/20';
+    stageColor = 'border-cyan-400 text-cyan-200 bg-cyan-950/40 shadow-cyan-500/10';
   } else if (currentTime > 6 && currentTime <= 9) {
     currentStage = 'OUTCOME';
     stageText = outcomeText;
     stageBadge = '6-9s: VERIFIED RESULT';
-    stageColor = 'border-emerald-500/50 text-emerald-300 bg-emerald-950/20';
+    stageColor = 'border-emerald-400 text-emerald-200 bg-emerald-950/40 shadow-emerald-500/10';
   } else if (currentTime > 9) {
     currentStage = 'DONE';
-    stageText = 'FORGE System Execution Complete. Deploy to production or test in live sandbox.';
-    stageBadge = '9-12s: FORGE DONE';
-    stageColor = 'border-teal-400 text-teal-300 bg-teal-950/40';
+    stageText = 'FORGE System Execution Complete. 100% Policy Bound & Deployed.';
+    stageBadge = '9-10s: FORGE COMPLETE';
+    stageColor = 'border-teal-400 text-teal-200 bg-teal-950/50 shadow-teal-500/20';
   }
 
   return (
-    <div className="w-full rounded-3xl bg-[#060a12] border-2 border-slate-800 hover:border-slate-700 transition-all overflow-hidden shadow-2xl font-mono text-xs">
+    <div className="w-full rounded-3xl bg-gradient-to-b from-[#0e1626] to-[#070c16] border-2 border-teal-500/30 hover:border-teal-400/60 transition-all overflow-hidden shadow-2xl font-mono text-xs">
       
       {/* Top Video Header Bar */}
-      <div className="px-5 py-3.5 bg-dark-950 border-b border-slate-800 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-          <span className="text-[11px] font-bold text-slate-300 ml-2 font-sans">{title}</span>
+      <div className="px-6 py-4 bg-[#0a0f1d] border-b border-slate-800 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <div className="flex gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50" />
+            <span className="w-3 h-3 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50" />
+            <span className="w-3 h-3 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50" />
+          </div>
+          <span className="text-sm font-black text-white font-sans ml-2 tracking-wide flex items-center gap-1.5">
+            <Sparkles className="w-4 h-4 text-teal-400" />
+            {title}
+          </span>
         </div>
 
-        <span className="text-[9px] px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-teal-400 font-bold">
-          8–10s SYSTEM SKIT
-        </span>
+        {/* View Mode Toggle: Animated Canvas vs Video Stream */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setViewMode('animation')}
+            className={`px-3 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1.5 transition-all border ${
+              viewMode === 'animation'
+                ? 'bg-gradient-to-r from-teal-500 to-cyan-400 text-dark-950 border-teal-300 shadow-md font-black'
+                : 'bg-dark-950 text-slate-400 border-slate-800 hover:text-white'
+            }`}
+          >
+            <Film className="w-3.5 h-3.5" />
+            <span>Animated Skit</span>
+          </button>
+
+          <button
+            onClick={() => setViewMode('video')}
+            className={`px-3 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1.5 transition-all border ${
+              viewMode === 'video'
+                ? 'bg-gradient-to-r from-teal-500 to-cyan-400 text-dark-950 border-teal-300 shadow-md font-black'
+                : 'bg-dark-950 text-slate-400 border-slate-800 hover:text-white'
+            }`}
+          >
+            <Tv className="w-3.5 h-3.5" />
+            <span>Video Stream</span>
+          </button>
+
+          <button
+            onClick={handleToggleVoiceNarrator}
+            className={`px-3 py-1 rounded-xl text-[11px] font-bold flex items-center gap-1.5 transition-all border ${
+              isVoiceNarratorActive
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 animate-pulse'
+                : 'bg-dark-950 text-slate-400 border-slate-800 hover:text-slate-200'
+            }`}
+            title="Spoken AI Audio Narration ($0 Native)"
+          >
+            {isVoiceNarratorActive ? <Volume2 className="w-3.5 h-3.5 text-amber-400" /> : <VolumeX className="w-3.5 h-3.5" />}
+            <span>{isVoiceNarratorActive ? 'Voice ON' : 'Voice Narration'}</span>
+          </button>
+        </div>
       </div>
 
-      {/* Main Video Viewport / Stage */}
-      <div className="p-6 sm:p-8 space-y-6 relative bg-gradient-to-b from-dark-950/80 to-[#080d16]">
+      {/* Main Viewport */}
+      <div className="p-6 sm:p-8 space-y-6 relative bg-gradient-to-b from-[#090e1a]/90 via-[#070b14] to-[#05080f]">
         
         {/* Stage Notification Banner */}
         <div className="flex items-center justify-between">
-          <span className={`text-[10px] px-2.5 py-1 rounded-md border font-bold ${stageColor}`}>
-            {stageBadge}
-          </span>
-          <span className="text-slate-400 text-[11px]">
-            00:{currentTime < 10 ? `0${Math.floor(currentTime)}` : Math.floor(currentTime)} / 00:{duration}
+          <div className="flex items-center gap-2">
+            <span className={`text-[10px] px-3 py-1 rounded-full border font-black uppercase tracking-wider ${stageColor}`}>
+              {stageBadge}
+            </span>
+            <span className="text-[10px] text-teal-400 font-bold hidden sm:inline-block">
+              ● 60 FPS MOTION
+            </span>
+          </div>
+          <span className="text-slate-300 text-xs font-bold font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800">
+            00:{currentTime < 10 ? `0${Math.floor(currentTime)}` : Math.floor(currentTime)}s / 00:{duration}s
           </span>
         </div>
 
-        {/* Dynamic Visual Stage Content */}
-        <div className={`p-6 rounded-2xl border-2 transition-all duration-300 min-h-[140px] flex flex-col justify-center space-y-2 ${stageColor}`}>
-          <div className="text-xs text-slate-400 uppercase font-bold tracking-wider">
-            {currentStage === 'PROBLEM' && '🚨 Bottleneck Occurs:'}
-            {currentStage === 'WORKING' && '⚡ FORGE System Processing:'}
-            {currentStage === 'OUTCOME' && '✅ Operational Outcome:'}
-            {currentStage === 'DONE' && '🟢 Ready For Deployment:'}
+        {/* VIEW 1: VIBRANT ANIMATED CARTOON SCENE CANVAS */}
+        {viewMode === 'animation' && (
+          <div className="space-y-6">
+            
+            {/* Visual Illustrated Stage Area */}
+            <div className="relative rounded-2xl bg-gradient-to-tr from-[#0b1220] via-[#0e172a] to-[#070b16] border-2 border-slate-800/90 p-6 sm:p-8 min-h-[260px] flex items-center justify-center overflow-hidden shadow-inner">
+              
+              {/* Dynamic Animated Scene Background Elements */}
+              <div className="absolute inset-0 bg-[radial-gradient(#14b8a615_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+              
+              {/* SCENE A: RECEPTIONIST WORKFLOW ANIMATION */}
+              {skitId === 'receptionist' && (
+                <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
+                  {/* Left: Caller Avatar & Speech */}
+                  <div className="md:col-span-4 flex flex-col items-center text-center space-y-2 p-4 rounded-xl bg-slate-950/80 border border-rose-500/30">
+                    <div className="relative">
+                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-orange-500/20 border-2 border-rose-400 flex items-center justify-center text-3xl shadow-lg">
+                        👨‍💼
+                      </div>
+                      <span className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-rose-500 flex items-center justify-center text-white text-[10px] animate-bounce">
+                        📞
+                      </span>
+                    </div>
+                    <div className="text-xs font-bold text-white">Alex (Caller)</div>
+                    <div className="text-[10px] text-rose-300 font-mono">"Emergency slot tomorrow?"</div>
+                  </div>
+
+                  {/* Middle: Live Audio Wave & FORGE Core */}
+                  <div className="md:col-span-4 flex flex-col items-center justify-center space-y-2 py-2">
+                    <div className="flex items-center gap-1">
+                      {[12, 28, 44, 20, 36, 16].map((h, i) => (
+                        <div
+                          key={i}
+                          className="w-1.5 bg-gradient-to-t from-cyan-400 to-teal-300 rounded-full transition-all duration-200"
+                          style={{
+                            height: isPlaying ? `${Math.floor(10 + Math.sin(currentTime * 4 + i) * 20 + h * 0.4)}px` : '8px'
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <div className="px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 text-[9px] font-bold">
+                      {currentTime > 2 && currentTime <= 6 ? '⚡ EVALUATING PPO SCHEDULE' : '2s SUB-VOICE NLP'}
+                    </div>
+                  </div>
+
+                  {/* Right: Receptionist Agent & Calendar Outcome */}
+                  <div className="md:col-span-4 flex flex-col items-center text-center space-y-2 p-4 rounded-xl bg-slate-950/80 border border-emerald-500/30">
+                    <ReceptionistCharacter size="md" />
+                    <div className="text-xs font-bold text-white">FORGE Receptionist</div>
+                    <div className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">
+                      {currentTime > 6 ? '✅ SAT 11:00 AM CONFIRMED' : 'DENTRIX SYNC READY'}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* SCENE B: LEAD ENGINE SPEED-TO-LEAD ANIMATION */}
+              {skitId === 'lead-engine' && (
+                <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
+                  {/* Inbound Form */}
+                  <div className="md:col-span-4 p-4 rounded-xl bg-slate-950/80 border border-amber-500/30 space-y-2 text-center">
+                    <div className="text-3xl">📝</div>
+                    <div className="text-xs font-bold text-white">Commercial Buyer</div>
+                    <div className="text-[10px] text-amber-300 font-mono">Web Lead Arrived</div>
+                  </div>
+
+                  {/* Radar ICP Meter */}
+                  <div className="md:col-span-4 flex flex-col items-center justify-center space-y-2">
+                    <div className="w-20 h-20 rounded-full border-4 border-dashed border-amber-400 flex flex-col items-center justify-center bg-dark-950 animate-spin" style={{ animationDuration: '6s' }}>
+                      <span className="text-lg font-black text-amber-300">96</span>
+                      <span className="text-[8px] font-bold text-slate-300">ICP FIT</span>
+                    </div>
+                    <span className="text-[9px] text-amber-400 font-bold">RADAR SCANNED</span>
+                  </div>
+
+                  {/* 2-Way SMS Outbound */}
+                  <div className="md:col-span-4 p-4 rounded-xl bg-slate-950/80 border border-emerald-500/30 space-y-2 text-center">
+                    <LeadEngineCharacter size="md" />
+                    <div className="text-xs font-bold text-white">2-Way SMS Fired</div>
+                    <div className="text-[10px] font-mono text-emerald-300 font-bold">42s Consult Booked</div>
+                  </div>
+                </div>
+              )}
+
+              {/* SCENE C: DOCUMENT ENGINE OCR LASER SCAN */}
+              {skitId === 'document-engine' && (
+                <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
+                  {/* PDF Invoice with moving laser */}
+                  <div className="md:col-span-5 relative p-4 rounded-xl bg-slate-950/90 border-2 border-cyan-500/40 space-y-1.5 overflow-hidden">
+                    <div 
+                      className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-lg shadow-cyan-400 transition-all duration-150"
+                      style={{ top: `${laserY}%` }}
+                    />
+                    <div className="text-[10px] font-mono text-slate-400 font-bold">📄 INVOICE #INV-88491</div>
+                    <div className="text-[9px] text-slate-300 space-y-0.5">
+                      <div>• GPU H100 Instances: $3,840.00</div>
+                      <div>• Edge Bandwidth: $450.00</div>
+                      <div className="text-cyan-300 font-bold pt-1">TOTAL: $4,290.00</div>
+                    </div>
+                  </div>
+
+                  {/* Extractor Engine */}
+                  <div className="md:col-span-2 flex justify-center">
+                    <div className="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-cyan-300 animate-pulse">
+                      ⚡
+                    </div>
+                  </div>
+
+                  {/* QuickBooks Sync */}
+                  <div className="md:col-span-5 p-4 rounded-xl bg-slate-950/90 border-2 border-emerald-500/40 text-center space-y-2">
+                    <DocumentCharacter size="md" />
+                    <div className="text-xs font-bold text-white">QuickBooks Ledger</div>
+                    <div className="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/10 py-1 rounded border border-emerald-500/30">
+                      ✅ 100% BALANCED ($0 ERRORS)
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* SCENE D: EMAIL AGENT TRIAGE ANIMATION */}
+              {skitId === 'email-agent' && (
+                <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
+                  {/* Overflowing Inbox */}
+                  <div className="md:col-span-4 p-4 rounded-xl bg-slate-950/80 border border-rose-500/30 text-center space-y-2">
+                    <div className="text-2xl">📥</div>
+                    <div className="text-xs font-bold text-white">300+ Mixed Emails</div>
+                    <div className="text-[10px] text-rose-400 font-mono font-bold">High Overload</div>
+                  </div>
+
+                  {/* Smart Sorting Buckets */}
+                  <div className="md:col-span-4 flex flex-col gap-1.5">
+                    <div className="px-2.5 py-1 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[9px] font-bold flex items-center justify-between">
+                      <span>🔥 HOT PARTNERSHIP</span>
+                      <span>1-Click Draft</span>
+                    </div>
+                    <div className="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[9px] font-bold flex items-center justify-between">
+                      <span>💳 PENDING INVOICE</span>
+                      <span>Verified</span>
+                    </div>
+                    <div className="px-2.5 py-1 rounded-lg bg-blue-500/20 text-blue-300 border border-blue-500/40 text-[9px] font-bold flex items-center justify-between">
+                      <span>💬 VIP TICKET</span>
+                      <span>Triaged</span>
+                    </div>
+                  </div>
+
+                  {/* Approved in 1 Click */}
+                  <div className="md:col-span-4 p-4 rounded-xl bg-slate-950/80 border border-emerald-500/30 text-center space-y-2">
+                    <EmailCharacter size="md" />
+                    <div className="text-xs font-bold text-white">Inbox Cleaned</div>
+                    <div className="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/10 py-1 rounded border border-emerald-500/30">
+                      ⚡ 5 MIN TRIAGE
+                    </div>
+                  </div>
+                </div>
+              )}
+
+            </div>
+
+            {/* Dynamic Stage Storyboard Box */}
+            <div className={`p-6 rounded-2xl border-2 transition-all duration-300 ${stageColor}`}>
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider mb-1.5">
+                {currentStage === 'PROBLEM' && <span className="text-rose-400">🚨 Stage 1: Bottleneck Occurs</span>}
+                {currentStage === 'WORKING' && <span className="text-cyan-400">⚡ Stage 2: FORGE AI Autonomous Processing</span>}
+                {currentStage === 'OUTCOME' && <span className="text-emerald-400">✅ Stage 3: Deterministic Business Outcome</span>}
+                {currentStage === 'DONE' && <span className="text-teal-400">🟢 Stage 4: Ready For Production Deployment</span>}
+              </div>
+              <div className="text-sm sm:text-base font-bold text-white font-sans leading-relaxed">
+                {stageText}
+              </div>
+            </div>
+
           </div>
-          <div className="text-sm sm:text-base font-bold text-white font-sans leading-relaxed">
-            {stageText}
+        )}
+
+        {/* VIEW 2: YOUTUBE / STREAM DEMO PLAYER */}
+        {viewMode === 'video' && (
+          <div className="rounded-2xl border-2 border-slate-800 bg-dark-950 overflow-hidden shadow-2xl aspect-video relative flex items-center justify-center">
+            <iframe
+              className="w-full h-full"
+              src={`https://www.youtube-nocookie.com/embed/${youtubeVideoId || YOUTUBE_DEMO_MAP[skitId] || 'dQw4w9WgXcQ'}?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0`}
+              title={`${title} Video Demonstration`}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
           </div>
-        </div>
+        )}
 
         {/* Scrubbable Progress Bar */}
-        <div className="space-y-1">
-          <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800 cursor-pointer">
+        <div className="space-y-1.5 pt-2">
+          <div 
+            onClick={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              const clickPos = (e.clientX - rect.left) / rect.width;
+              setCurrentTime(+(clickPos * duration).toFixed(1));
+            }}
+            className="w-full h-3 bg-slate-900 rounded-full overflow-hidden border border-slate-800 cursor-pointer relative"
+          >
             <div 
-              className="h-full bg-gradient-to-r from-teal-400 via-cyan-400 to-emerald-400 transition-all duration-100 rounded-full"
+              className="h-full bg-gradient-to-r from-teal-400 via-cyan-400 to-emerald-400 transition-all duration-100 rounded-full shadow-lg shadow-teal-500/50"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
-          <div className="flex justify-between text-[9px] text-slate-500">
-            <span>0s Problem</span>
-            <span>4s AI Works</span>
-            <span>8s Outcome</span>
-            <span>10s Complete</span>
+          <div className="flex justify-between text-[10px] font-mono text-slate-400 font-bold">
+            <span className={currentTime <= 2 ? 'text-rose-400 font-black' : ''}>0s Problem</span>
+            <span className={currentTime > 2 && currentTime <= 6 ? 'text-cyan-400 font-black' : ''}>3s AI Works</span>
+            <span className={currentTime > 6 && currentTime <= 9 ? 'text-emerald-400 font-black' : ''}>7s Outcome</span>
+            <span className={currentTime > 9 ? 'text-teal-400 font-black' : ''}>10s Complete</span>
           </div>
         </div>
 
         {/* Video Control Bar */}
-        <div className="flex items-center justify-between pt-2 border-t border-slate-800/80">
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800/80">
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setIsPlaying(!isPlaying)}
-              className="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-dark-950 font-black flex items-center gap-1.5 transition-all shadow-md"
+              onClick={handleTogglePlay}
+              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-dark-950 font-black flex items-center gap-2 transition-all shadow-lg shadow-teal-500/20 hover:scale-105"
             >
-              {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
-              <span>{isPlaying ? 'Pause' : currentTime >= duration ? 'Replay' : 'Play Skit'}</span>
+              {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
+              <span>{isPlaying ? 'Pause Skit' : currentTime >= duration ? 'Replay Skit ↺' : 'Play Animated Skit →'}</span>
             </button>
 
             <button
               onClick={handleRestart}
-              className="p-2 rounded-xl bg-dark-950 hover:bg-slate-800 text-slate-300 border border-slate-800"
+              className="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 transition-colors"
               title="Restart Demo"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <RotateCcw className="w-4 h-4" />
             </button>
           </div>
 
-          {onTryLive && (
-            <button
-              onClick={onTryLive}
-              className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-850 text-teal-300 border border-teal-500/40 font-bold flex items-center gap-1.5 transition-all"
-            >
-              <span>Try Sandbox</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {onTryLive && (
+              <button
+                onClick={onTryLive}
+                className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-850 text-teal-300 border border-teal-500/50 font-bold flex items-center gap-2 transition-all hover:scale-105 shadow-md"
+              >
+                <span>Try In Sandbox</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            )}
+          </div>
         </div>
 
       </div>
