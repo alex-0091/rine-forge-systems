@@ -3,7 +3,7 @@ import {
   Sparkles, Play, ArrowRight, CheckCircle2, 
   Bot, Zap, FileText, Mail, Calendar, MessageSquare, ShieldCheck,
   Video, Tv, Film, ExternalLink, Flame, Check, PlayCircle, HelpCircle,
-  Clock, CheckCheck
+  Clock, CheckCheck, TrendingUp, Send
 } from 'lucide-react';
 import { ForgeDemoVideoPlayer, SYSTEM_ANIMATED_CLIPS } from './ForgeDemoVideoPlayer';
 import { 
@@ -14,191 +14,175 @@ import {
   EmailCharacter, 
   AppointmentCharacter 
 } from './ForgeCharacterUniverse';
+import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
 
 const SYSTEM_TABS = [
   {
-    id: 'receptionist',
-    sysId: 'receptionist-agent',
-    name: 'AI Receptionist',
-    icon: Bot,
-    tag: '5.5s Call Clip',
-    Character: ReceptionistCharacter
+    id: 'support-agent',
+    sysId: 'support-agent',
+    name: 'AI Customer Support',
+    icon: HelpCircle,
+    demoTime: 'Watch 30 sec demo',
+    tag: '30s Demo',
+    color: 'border-blue-500/40 text-blue-300',
+    Character: SupportCharacter,
+    description: 'Resolves customer queries instantly using verified vector knowledge base with 0% hallucinations.'
   },
   {
     id: 'lead-engine',
     sysId: 'lead-agent',
-    name: 'Speed-to-Lead',
+    name: 'AI Lead Generation',
     icon: Zap,
-    tag: '5.5s SMS Clip',
-    Character: LeadEngineCharacter
+    demoTime: 'Watch 40 sec demo',
+    tag: '40s Demo',
+    color: 'border-violet-500/40 text-violet-300',
+    Character: LeadEngineCharacter,
+    description: 'Sub-45s webhook ingestion, 0-100 ICP qualification, and automated 2-way SMS booking.'
+  },
+  {
+    id: 'receptionist',
+    sysId: 'receptionist-agent',
+    name: 'AI Voice Receptionist',
+    icon: Bot,
+    demoTime: 'Watch 35 sec demo',
+    tag: '35s Demo',
+    color: 'border-cyan-500/40 text-cyan-300',
+    Character: ReceptionistCharacter,
+    description: '24/7 telephony answering in 2 seconds, calendar availability verification, and patient intake.'
   },
   {
     id: 'document-engine',
     sysId: 'document-processor',
-    name: 'Document OCR',
+    name: 'Document & Invoice OCR',
     icon: FileText,
-    tag: '5.5s Laser Clip',
-    Character: DocumentCharacter
+    demoTime: 'Watch 45 sec demo',
+    tag: '45s Demo',
+    color: 'border-orange-500/40 text-orange-300',
+    Character: DocumentCharacter,
+    description: 'Extracts 14+ line items from PDF invoices and syncs to QuickBooks AP with zero typing errors.'
   },
   {
     id: 'email-agent',
     sysId: 'email-agent',
-    name: 'Email Triage',
-    icon: Mail,
-    tag: '5.5s Inbox Clip',
-    Character: EmailCharacter
-  },
-  {
-    id: 'support-agent',
-    sysId: 'support-agent',
-    name: 'Knowledge RAG',
-    icon: HelpCircle,
-    tag: '5.5s Vector Clip',
-    Character: SupportCharacter
+    name: 'AI Outreach Agent',
+    icon: Send,
+    demoTime: 'Watch 60 sec demo',
+    tag: '60s Demo',
+    color: 'border-pink-500/40 text-pink-300',
+    Character: EmailCharacter,
+    description: 'Autonomous lead scraping, contextual multi-channel email drafts, and 1-click human approvals.'
   },
   {
     id: 'appointment-agent',
     sysId: 'appointment-agent',
-    name: 'Appointment Sync',
-    icon: Calendar,
-    tag: '5.5s Cal Clip',
-    Character: AppointmentCharacter
+    name: 'AI Trading Intelligence (Oracle AI)',
+    icon: TrendingUp,
+    demoTime: 'Watch 45 sec demo',
+    tag: '45s Demo',
+    color: 'border-emerald-500/40 text-emerald-300',
+    Character: AppointmentCharacter,
+    description: 'Real-time quantitative market microstructure analysis and deterministic regime execution.'
   }
 ];
 
-export function DontReadJustWatch({ onNavigate, onLaunchSandbox }) {
-  const [selectedSystemId, setSelectedSystemId] = useState('receptionist');
+export function DontReadJustWatch({ onNavigate, onLaunchSandbox, onWatchDemo }) {
+  const [selectedSystemId, setSelectedSystemId] = useState('support-agent');
+
+  const handleSelectTab = (id) => {
+    forgeAudioSynth.playClick();
+    setSelectedSystemId(id);
+    const el = document.getElementById('player-canvas');
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  };
 
   return (
     <section className="py-20 sm:py-28 border-b border-slate-800/80 bg-[#060a12] relative" id="watch-demos">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
-        {/* Playful Headline */}
+        {/* Playful & Demonstrative Headline */}
         <div className="text-center space-y-4 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 text-xs font-mono font-bold tracking-wider uppercase shadow-md">
-            <Film className="w-3.5 h-3.5 text-teal-400" /> 5.5-SECOND BESPOKE AI ANIMATED CLIPS • ZERO FLUFF
+            <Film className="w-3.5 h-3.5 text-teal-400" />
+            <span>REAL DIGITAL WORKERS IN ACTION</span>
           </div>
+          
           <h2 className="text-4xl sm:text-6xl font-black text-white tracking-tight">
-            DON'T READ THIS. <br />
-            <span className="text-teal-400">WATCH THE 5-SECOND CLIPS.</span>
+            WATCH OUR <span className="text-teal-400">AI WORK.</span>
           </h2>
+          
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-            Watch our animated AI characters show you exactly what each system accomplishes in under 6 seconds.
+            Don't read paragraphs about AI. Watch our digital workers answer customers, qualify leads, and complete work in real time.
           </p>
         </div>
 
-        {/* 6-System Animated Clip Switcher Pills */}
-        <div className="flex items-center justify-center flex-wrap gap-2.5">
+        {/* 6 Quick Watch Cards (Direct Click to Play Demo) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {SYSTEM_TABS.map((tab) => {
             const isSelected = selectedSystemId === tab.id;
             const Icon = tab.icon;
+            const Character = tab.Character;
             return (
-              <button
+              <div
                 key={tab.id}
-                onClick={() => setSelectedSystemId(tab.id)}
-                className={`px-4 py-3 rounded-2xl font-mono text-xs font-bold transition-all flex items-center gap-2 border ${
+                onClick={() => handleSelectTab(tab.id)}
+                className={`p-5 rounded-3xl border transition-all cursor-pointer group flex flex-col justify-between space-y-4 relative overflow-hidden ${
                   isSelected
-                    ? 'bg-gradient-to-r from-teal-500 to-cyan-400 text-dark-950 border-teal-300 shadow-xl shadow-teal-500/20 scale-105 font-black'
-                    : 'bg-[#090e18] text-slate-300 border-slate-800 hover:border-slate-700 hover:text-white'
+                    ? 'bg-gradient-to-b from-[#0c1628] to-[#070c18] border-teal-400 shadow-xl shadow-teal-500/20 scale-[1.02]'
+                    : 'bg-[#080d18] border-slate-800 hover:border-slate-700 hover:bg-slate-900/60'
                 }`}
               >
-                <Icon className="w-4 h-4" />
-                <span>{tab.name}</span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/40 text-slate-300 font-mono">
-                  {tab.tag}
-                </span>
-              </button>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800 text-[10px] font-mono font-bold text-slate-400">
+                      {tab.tag}
+                    </span>
+                    <span className="text-xs font-mono font-bold text-emerald-400 flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> 100% Policy Bound
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <Character size="sm" />
+                    <div>
+                      <h4 className="font-bold text-sm text-white group-hover:text-teal-300 transition-colors">
+                        {tab.name}
+                      </h4>
+                      <div className="text-[11px] text-slate-400 font-mono">
+                        {tab.demoTime}
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-slate-300 font-sans leading-relaxed line-clamp-2">
+                    {tab.description}
+                  </p>
+                </div>
+
+                {/* Big Action Button */}
+                <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+                  <span className="text-xs font-mono font-bold text-teal-400 flex items-center gap-1.5 group-hover:underline">
+                    <Play className="w-3.5 h-3.5 fill-current" />
+                    <span>{tab.demoTime}</span>
+                  </span>
+                  <span className="text-slate-500 text-[11px] font-mono group-hover:text-white transition-colors">
+                    ▶ Play Clip
+                  </span>
+                </div>
+              </div>
             );
           })}
         </div>
 
-        {/* 🌟 Central 60FPS Animated Video Player */}
-        <div className="max-w-4xl mx-auto">
+        {/* 🌟 Master In-Page 60FPS Video Stage */}
+        <div className="max-w-4xl mx-auto pt-4" id="player-canvas">
           <ForgeDemoVideoPlayer
             skitId={selectedSystemId}
-            onTryLive={() => onLaunchSandbox && onLaunchSandbox(SYSTEM_ANIMATED_CLIPS[selectedSystemId]?.sysId || 'receptionist-agent')}
+            onTryLive={() => onLaunchSandbox && onLaunchSandbox(SYSTEM_ANIMATED_CLIPS[selectedSystemId]?.sysId || 'support-agent')}
             onSelectSystem={(sysId) => {
               const matchedKey = Object.keys(SYSTEM_ANIMATED_CLIPS).find(k => SYSTEM_ANIMATED_CLIPS[k].sysId === sysId);
               if (matchedKey) setSelectedSystemId(matchedKey);
             }}
           />
-        </div>
-
-        {/* 6-System Animated Video Grid Wall */}
-        <div className="pt-8 border-t border-slate-800/80 space-y-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h3 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-teal-400" />
-                <span>All 6 Animated AI System Demonstrations</span>
-              </h3>
-              <p className="text-slate-400 text-xs sm:text-sm mt-1">
-                Click any system card below to immediately load and play its custom animated video clip.
-              </p>
-            </div>
-            <span className="text-xs font-mono text-teal-400 font-bold bg-teal-500/10 px-3 py-1.5 rounded-xl border border-teal-500/20">
-              ⚡ 6 Bespoke 60FPS Video Clips
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {SYSTEM_TABS.map((item) => {
-              const isSelected = selectedSystemId === item.id;
-              const clipData = SYSTEM_ANIMATED_CLIPS[item.id];
-              const Character = item.Character;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setSelectedSystemId(item.id);
-                    const el = document.getElementById('watch-demos');
-                    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                  }}
-                  className={`p-5 rounded-3xl border text-left transition-all group relative overflow-hidden flex flex-col justify-between min-h-[220px] ${
-                    isSelected
-                      ? 'bg-gradient-to-b from-teal-950/60 to-[#0c1424] border-teal-400 shadow-xl shadow-teal-500/20 scale-[1.02]'
-                      : 'bg-[#090e18] border-slate-800 hover:border-slate-700 hover:bg-slate-900/60'
-                  }`}
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="px-2.5 py-1 rounded-full bg-teal-500/10 text-teal-400 text-[10px] font-mono font-bold border border-teal-500/30">
-                        {clipData.tag}
-                      </span>
-                      <span className="text-xs font-mono font-bold text-slate-400">
-                        05.5s 60FPS
-                      </span>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <Character size="sm" />
-                      <div>
-                        <h4 className="font-bold text-sm text-white group-hover:text-teal-300 transition-colors">
-                          {clipData.productName}
-                        </h4>
-                        <div className="text-[11px] text-slate-400 font-mono">
-                          {clipData.characterName}
-                        </div>
-                      </div>
-                    </div>
-
-                    <p className="text-xs text-slate-300 line-clamp-2 leading-relaxed font-sans">
-                      {clipData.dialogue.action}
-                    </p>
-                  </div>
-
-                  <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono">
-                    <span className="text-teal-400 font-bold flex items-center gap-1 group-hover:underline">
-                      <Play className="w-3.5 h-3.5 fill-current" /> Play Animated Clip
-                    </span>
-                    <span className="text-slate-300 text-[10px]">
-                      100% Policy Bound
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
         </div>
 
       </div>

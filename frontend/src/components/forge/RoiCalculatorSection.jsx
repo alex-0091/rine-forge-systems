@@ -1,60 +1,67 @@
 import React, { useState } from 'react';
-import { Calculator, ArrowRight, TrendingUp, Clock, Users, DollarSign, Info } from 'lucide-react';
+import { Calculator, ArrowRight, TrendingUp, Clock, Users, DollarSign, MessageSquare, Zap, Sparkles } from 'lucide-react';
+import { forgeAudioSynth } from '../../utils/forgeAudioSynth';
 
 export function RoiCalculatorSection({ onNavigate }) {
-  const [employees, setEmployees] = useState(6);
-  const [hoursPerWeek, setHoursPerWeek] = useState(12);
-  const [hourlyCost, setHourlyCost] = useState(38);
-  const [monthlyLeads, setMonthlyLeads] = useState(140);
-  const [customerValue, setCustomerValue] = useState(2200);
+  const [employees, setEmployees] = useState(4);
+  const [messagesPerDay, setMessagesPerDay] = useState(65);
+  const [leadsPerMonth, setLeadsPerMonth] = useState(80);
+  const [hoursRepetitive, setHoursRepetitive] = useState(12);
 
-  // Calculations
-  const totalAnnualHours = employees * hoursPerWeek * 50;
-  const estimatedAnnualLabor = totalAnnualHours * hourlyCost;
-  
-  // Potential lead capture estimate: 20% of inbound leads typically missed/delayed; 25% recovered with sub-60s response
-  const missedLeadsPerYear = monthlyLeads * 12 * 0.20;
-  const recoveredCustomersPerYear = Math.round(missedLeadsPerYear * 0.25);
-  const estimatedRevenueOpportunity = recoveredCustomersPerYear * customerValue;
+  // Dynamic calculations based on user inputs
+  // Base repetitive hours = employees * hoursRepetitive * 4.2 weeks
+  // Automation factor = ~75% of administrative, scheduling, and data entry can be automated
+  const rawMonthlyHours = employees * hoursRepetitive * 4.2;
+  const automatedHoursMonth = Math.round(rawMonthlyHours * 0.75);
 
-  // Monthly capacity recovered (hours per month)
-  const monthlyHoursRecovered = Math.round((totalAnnualHours / 12) * 0.75);
+  // Monetary value saved assuming modest $32/hr loaded cost
+  const estimatedSavingsMonth = automatedHoursMonth * 32;
+
+  // Faster response lead capture recovery (typically 15% more leads converted when responded under 1 min)
+  const additionalLeadsConverted = Math.max(1, Math.round(leadsPerMonth * 0.15));
 
   return (
-    <section id="roi-calculator" className="py-16 sm:py-24 border-b border-slate-800/80 bg-[#080c14] relative">
+    <section id="opportunity-calculator" className="py-20 sm:py-28 border-b border-slate-800/80 bg-[#080d1a] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
         {/* Section Header */}
-        <div className="text-center space-y-3 max-w-3xl mx-auto">
-          <div className="text-xs font-mono font-bold text-teal-400 tracking-widest uppercase">
-            WORKFLOW OPPORTUNITY MODELLING
+        <div className="text-center space-y-4 max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 text-xs font-mono font-bold tracking-wider uppercase shadow-sm">
+            <Calculator className="w-3.5 h-3.5 text-teal-400" />
+            <span>AI OPPORTUNITY CALCULATOR</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-            WHAT COULD YOUR BUSINESS AUTOMATE?
+
+          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+            HOW MUCH TIME CAN <br />
+            <span className="text-teal-400">YOUR BUSINESS SAVE?</span>
           </h2>
-          <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
-            Adjust the parameters below to evaluate how much repetitive labor cost and missed revenue capacity can be recovered through intelligent automation.
+
+          <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+            Move the sliders below. See your estimated hours recovered and automated revenue capacity in real time.
           </p>
         </div>
 
         {/* Interactive Calculator Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch max-w-5xl mx-auto">
           
-          {/* Left Inputs Card */}
-          <div className="lg:col-span-6 bg-dark-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
+          {/* Left: 4 Interactive Sliders (7 cols) */}
+          <div className="lg:col-span-7 bg-[#091120] border-2 border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
+            
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <div className="flex items-center gap-2 text-xs font-mono font-bold text-white uppercase">
-                <Calculator className="w-4 h-4 text-teal-400" />
-                <span>Operational Parameters</span>
-              </div>
-              <span className="text-[10px] font-mono text-slate-400">Interactive Model</span>
+              <span className="text-xs font-mono font-bold text-white uppercase flex items-center gap-2">
+                <Users className="w-4 h-4 text-teal-400" />
+                <span>Your Business Parameters</span>
+              </span>
+              <span className="text-[10px] font-mono text-teal-400 font-bold bg-teal-500/10 px-2.5 py-0.5 rounded border border-teal-500/20">
+                100% Free Estimator
+              </span>
             </div>
 
-            {/* Parameter 1: Employees */}
+            {/* Slider 1: Employees */}
             <div className="space-y-2">
-              <div className="flex justify-between text-xs">
-                <span className="text-slate-300 font-semibold">Number of team members doing repetitive work:</span>
-                <span className="text-teal-400 font-mono font-bold">{employees} employees</span>
+              <div className="flex justify-between text-xs font-mono">
+                <span className="text-slate-300 font-semibold font-sans">How many team members?</span>
+                <span className="text-teal-400 font-bold">{employees} employees</span>
               </div>
               <input
                 type="range"
@@ -62,142 +69,129 @@ export function RoiCalculatorSection({ onNavigate }) {
                 max="50"
                 step="1"
                 value={employees}
-                onChange={(e) => setEmployees(Number(e.target.value))}
-                className="w-full accent-teal-500 bg-dark-950 h-2 rounded-lg cursor-pointer"
+                onChange={(e) => {
+                  setEmployees(Number(e.target.value));
+                  forgeAudioSynth.playClick();
+                }}
+                className="w-full accent-teal-400 bg-slate-950 h-2 rounded-lg cursor-pointer"
               />
             </div>
 
-            {/* Parameter 2: Hours Per Week */}
+            {/* Slider 2: Customer messages per day */}
             <div className="space-y-2">
-              <div className="flex justify-between text-xs">
-                <span className="text-slate-300 font-semibold">Hours per week spent on admin / copy-paste / follow-up:</span>
-                <span className="text-teal-400 font-mono font-bold">{hoursPerWeek} hrs / week</span>
+              <div className="flex justify-between text-xs font-mono">
+                <span className="text-slate-300 font-semibold font-sans">Customer messages / day (calls + WhatsApp):</span>
+                <span className="text-cyan-400 font-bold">{messagesPerDay} inquiries / day</span>
+              </div>
+              <input
+                type="range"
+                min="10"
+                max="500"
+                step="5"
+                value={messagesPerDay}
+                onChange={(e) => {
+                  setMessagesPerDay(Number(e.target.value));
+                  forgeAudioSynth.playClick();
+                }}
+                className="w-full accent-cyan-400 bg-slate-950 h-2 rounded-lg cursor-pointer"
+              />
+            </div>
+
+            {/* Slider 3: Inbound leads per month */}
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs font-mono">
+                <span className="text-slate-300 font-semibold font-sans">Inbound leads / month:</span>
+                <span className="text-violet-400 font-bold">{leadsPerMonth} leads / mo</span>
+              </div>
+              <input
+                type="range"
+                min="10"
+                max="300"
+                step="5"
+                value={leadsPerMonth}
+                onChange={(e) => {
+                  setLeadsPerMonth(Number(e.target.value));
+                  forgeAudioSynth.playClick();
+                }}
+                className="w-full accent-violet-400 bg-slate-950 h-2 rounded-lg cursor-pointer"
+              />
+            </div>
+
+            {/* Slider 4: Hours spent on repetitive tasks */}
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs font-mono">
+                <span className="text-slate-300 font-semibold font-sans">Hours spent on repetitive admin / staff / week:</span>
+                <span className="text-amber-400 font-bold">{hoursRepetitive} hrs / week</span>
               </div>
               <input
                 type="range"
                 min="2"
-                max="30"
+                max="40"
                 step="1"
-                value={hoursPerWeek}
-                onChange={(e) => setHoursPerWeek(Number(e.target.value))}
-                className="w-full accent-teal-500 bg-dark-950 h-2 rounded-lg cursor-pointer"
+                value={hoursRepetitive}
+                onChange={(e) => {
+                  setHoursRepetitive(Number(e.target.value));
+                  forgeAudioSynth.playClick();
+                }}
+                className="w-full accent-amber-400 bg-slate-950 h-2 rounded-lg cursor-pointer"
               />
             </div>
 
-            {/* Parameter 3: Hourly Cost */}
-            <div className="space-y-2">
-              <label className="block text-xs font-semibold text-slate-300">Average fully loaded hourly employee cost ($):</label>
-              <div className="relative">
-                <span className="absolute left-3.5 top-3 text-slate-500 font-mono text-xs">$</span>
-                <input
-                  type="number"
-                  min="15"
-                  max="250"
-                  value={hourlyCost}
-                  onChange={(e) => setHourlyCost(Number(e.target.value))}
-                  className="w-full pl-8 pr-4 py-2.5 bg-dark-950 border border-slate-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-teal-500"
-                />
-              </div>
-            </div>
-
-            {/* Parameter 4 & 5: Monthly Leads & Customer Value */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-800/80">
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-slate-300">Monthly Inbound Leads:</label>
-                <input
-                  type="number"
-                  min="10"
-                  max="5000"
-                  value={monthlyLeads}
-                  onChange={(e) => setMonthlyLeads(Number(e.target.value))}
-                  className="w-full px-3.5 py-2.5 bg-dark-950 border border-slate-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-teal-500"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-slate-300">Average Customer Value ($):</label>
-                <div className="relative">
-                  <span className="absolute left-3.5 top-2.5 text-slate-500 font-mono text-xs">$</span>
-                  <input
-                    type="number"
-                    min="100"
-                    max="100000"
-                    value={customerValue}
-                    onChange={(e) => setCustomerValue(Number(e.target.value))}
-                    className="w-full pl-7 pr-3.5 py-2.5 bg-dark-950 border border-slate-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-teal-500"
-                  />
-                </div>
-              </div>
-            </div>
           </div>
 
-          {/* Right Calculated Outputs Card */}
-          <div className="lg:col-span-6 bg-gradient-to-br from-dark-900 via-dark-950 to-dark-900 border border-teal-500/30 rounded-3xl p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-2xl">
-            <div>
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                <div className="text-xs font-mono font-bold text-teal-400 uppercase tracking-wider">
-                  Modelled Business Opportunity
+          {/* Right: Output Card (5 cols) */}
+          <div className="lg:col-span-5 bg-gradient-to-b from-[#0e1a2a] via-[#09121d] to-[#070c14] border-2 border-teal-500/50 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl flex flex-col justify-between relative overflow-hidden">
+            
+            <div className="space-y-6">
+              
+              <div className="space-y-1">
+                <div className="text-[10px] font-mono font-bold text-teal-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>YOUR ESTIMATED AUTOMATION OPPORTUNITY</span>
                 </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 bg-teal-500/10 text-teal-300 border border-teal-500/20 rounded font-bold">
-                  ESTIMATED VALUE
-                </span>
-              </div>
-
-              {/* 4 Output Metrics */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                <div className="p-4 bg-dark-950 rounded-2xl border border-slate-800 space-y-1">
-                  <div className="text-[10px] font-mono text-slate-400 uppercase">Estimated Annual Labor Opportunity</div>
-                  <div className="text-2xl sm:text-3xl font-black text-teal-400 font-mono">
-                    ${estimatedAnnualLabor.toLocaleString()}
-                  </div>
-                  <div className="text-[10px] text-slate-400">Current annual cost spent on repetitive work</div>
+                <div className="text-4xl sm:text-5xl font-black text-white font-sans tracking-tight">
+                  {automatedHoursMonth} hrs <span className="text-teal-400 text-2xl font-bold">/ month</span>
                 </div>
-
-                <div className="p-4 bg-dark-950 rounded-2xl border border-slate-800 space-y-1">
-                  <div className="text-[10px] font-mono text-slate-400 uppercase">Potential Hours Recovered</div>
-                  <div className="text-2xl sm:text-3xl font-black text-cyan-400 font-mono">
-                    {totalAnnualHours.toLocaleString()} hrs
-                  </div>
-                  <div className="text-[10px] text-slate-400">Annual capacity redirected to high-value tasks</div>
-                </div>
-
-                <div className="p-4 bg-dark-950 rounded-2xl border border-slate-800 space-y-1">
-                  <div className="text-[10px] font-mono text-slate-400 uppercase">Potential Monthly Capacity</div>
-                  <div className="text-2xl sm:text-3xl font-black text-indigo-400 font-mono">
-                    +{monthlyHoursRecovered} hrs/mo
-                  </div>
-                  <div className="text-[10px] text-slate-400">Additional team throughput without new hiring</div>
-                </div>
-
-                <div className="p-4 bg-dark-950 rounded-2xl border border-slate-800 space-y-1">
-                  <div className="text-[10px] font-mono text-slate-400 uppercase">Potential Revenue Opportunity</div>
-                  <div className="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">
-                    ${estimatedRevenueOpportunity.toLocaleString()}
-                  </div>
-                  <div className="text-[10px] text-slate-400">Estimated value of recovered speed-to-lead inquiries</div>
+                <div className="text-xs text-slate-300 font-mono">
+                  Potentially automated with zero human fatigue.
                 </div>
               </div>
+
+              {/* Breakdown Metric Pills */}
+              <div className="space-y-3 pt-2 border-t border-slate-800">
+                <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between text-xs font-mono">
+                  <span className="text-slate-300">Recovered Labor Value:</span>
+                  <strong className="text-emerald-400 text-sm">~${estimatedSavingsMonth.toLocaleString()} / mo</strong>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between text-xs font-mono">
+                  <span className="text-slate-300">Extra Converted Leads:</span>
+                  <strong className="text-cyan-300 text-sm">+{additionalLeadsConverted} booked deals / mo</strong>
+                </div>
+              </div>
+
+              <p className="text-xs text-slate-400 font-sans leading-relaxed">
+                Based on an average 75% automation rate across scheduling, CRM updates, invoice parsing, and sub-minute lead engagement.
+              </p>
+
             </div>
 
-            {/* Disclaimer & Action */}
-            <div className="space-y-4 pt-4 border-t border-slate-800/80">
-              <div className="flex items-start gap-2 text-[10px] font-mono text-slate-400 leading-relaxed bg-dark-950/80 p-3 rounded-xl border border-slate-850">
-                <Info className="w-3.5 h-3.5 text-teal-400 shrink-0 mt-0.5" />
-                <span>
-                  <strong>Disclaimer:</strong> Illustrative estimate based on the information provided. Actual results depend on workflow design, implementation, and team adoption.
-                </span>
-              </div>
+            {/* High-Converting CTA Button (#18) */}
+            <button
+              onClick={() => {
+                forgeAudioSynth.playSuccess();
+                if (onNavigate) onNavigate('audit');
+              }}
+              className="w-full py-4 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-dark-950 font-mono text-xs font-black flex items-center justify-center gap-2 transition-all shadow-xl shadow-teal-500/25 group"
+            >
+              <span>LET FORGE FIND THE REST →</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
 
-              <button
-                onClick={() => onNavigate('audit')}
-                className="w-full py-4 bg-teal-500 hover:bg-teal-400 text-dark-950 font-black rounded-xl text-xs sm:text-sm transition-all shadow-xl shadow-teal-500/20 flex items-center justify-center gap-2"
-              >
-                <span>FIND OUT WHAT FORGE COULD AUTOMATE →</span>
-              </button>
-            </div>
           </div>
 
         </div>
+
       </div>
     </section>
   );

@@ -47,6 +47,9 @@ import { VisualIndustrySelector } from './forge/v2/VisualIndustrySelector';
 import { BeforeAfterComparison } from './forge/v2/BeforeAfterComparison';
 import { DontReadJustWatch } from './forge/v2/DontReadJustWatch';
 import { ForgeCommandCenter } from './forge/v2/ForgeCommandCenter';
+import { WhatForgeCanDo } from './forge/v2/WhatForgeCanDo';
+import { InteractiveAiDemoWidget } from './forge/v2/InteractiveAiDemoWidget';
+import { TrustAndTechStack } from './forge/v2/TrustAndTechStack';
 
 // Interactive Human Interface & 10s Demo Modals
 import { ForgeHumanControl } from './forge/ForgeHumanControl';
@@ -238,98 +241,74 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
       <main>
         {currentView === 'home' && (
           <>
-            {/* 1. FORGE V2 Animated Hero & Business Environment Scene */}
+            {/* 1. HERO: AI Employees for Small Businesses + Animated Scenario */}
             <ForgeV2HeroScene 
               onNavigate={handleNavigate} 
               onLaunchSystemDemo={handleLaunchSystemSandbox}
               onWatchTenSecDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
             />
 
-            {/* 2. Live System Activity Stream */}
+            {/* 2. LIVE SYSTEM TELEMETRY: FORGE AI Network Active Status & Live Counters */}
             <LiveActivityStream onNavigate={handleNavigate} />
 
-            {/* 3. V2 Playful Video Showcase: "DON'T READ THIS. JUST WATCH." */}
+            {/* 3. WATCH OUR AI WORK: 60FPS Bespoke Motion Demos & Video Cards */}
             <DontReadJustWatch 
-              onNavigate={handleNavigate}
-              onLaunchSandbox={handleLaunchSystemSandbox}
-            />
-
-            {/* 4. V2 TOUCH FORGE: Master Interactive Command Center */}
-            <ForgeCommandCenter 
               onNavigate={handleNavigate}
               onLaunchSandbox={handleLaunchSystemSandbox}
               onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
             />
 
-            {/* 5. V2 THE FORGE WORKFORCE Multi-Agent Interactive Map */}
-            <ForgeWorkforceMap 
-              onNavigate={handleNavigate} 
-              onLaunchSystemDemo={handleLaunchSystemSandbox}
-              onWatchTenSecDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
-            />
-
-            {/* 5. Interactive Live Systems Showcase / Deep Sandboxes */}
-            <LiveSystemsShowcase 
+            {/* 4. WHAT CAN FORGE DO? 3 Visual Digital Workers (Customer Service, Sales, Automation) */}
+            <WhatForgeCanDo 
               onNavigate={handleNavigate}
-              onWatchTenSecDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
+              onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
             />
 
-            {/* 6. V2 CHAOS TO ORDER: "YOUR BUSINESS GETS BUSY" */}
-            <ChaosToOrderStory 
-              onNavigate={handleNavigate}
-              onLaunchSandbox={handleLaunchSystemSandbox}
-            />
+            {/* 5. BEFORE FORGE vs. AFTER FORGE: Step-by-Step Flow & ROI Metrics */}
+            <BeforeAfterComparison onNavigate={handleNavigate} />
 
-            {/* 7. V2 WHAT DO YOU RUN? Visual Industry Architecture */}
+            {/* 6. WHAT DO YOU RUN? 6 High-Wealth Small Business Verticals */}
             <VisualIndustrySelector 
               onNavigate={handleNavigate}
               onLaunchSandbox={handleLaunchSystemSandbox}
               onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
             />
 
-            {/* 8. V2 BEFORE FORGE vs. WITH FORGE Comparison */}
-            <BeforeAfterComparison onNavigate={handleNavigate} />
-
-            {/* 9. The FORGE System Library (Marketplace) */}
-            <SystemsMarketplace onNavigate={handleNavigate} />
-
-            {/* 6. What We Build Core Architecture */}
-            <WhatWeBuildSection onNavigate={handleNavigate} />
-
-            {/* 7. Interactive B2B ROI Calculator */}
-            <RoiCalculatorSection onNavigate={handleNavigate} />
-
-            {/* 8. The Multi-Agent Network Topology */}
-            <AgentNetworkVisualizer onNavigate={handleNavigate} />
-
-            {/* 9. 6 Modular Autonomous Agents with Step Execution */}
-            <AgentsSection 
-              onNavigate={handleNavigate} 
-              onOpenWorkflowModal={(agent) => setSelectedAgentForModal(agent)} 
+            {/* 7. INTERACTIVE AI DEMO: "Tell Me What Your Business Does" (5 Automated Workflows) */}
+            <InteractiveAiDemoWidget 
+              onNavigate={handleNavigate}
+              onSelectSystem={handleLaunchSystemSandbox}
             />
 
-            {/* 10. Flagship Production Demonstrations (Oracle AI, Speed-to-Lead, Fact Fuel, OmniSync) */}
-            <OracleShowcaseSection onNavigate={handleNavigate} />
-
-            {/* 11. Technical Architecture Case Studies */}
-            <CaseStudiesSection onNavigate={handleNavigate} />
-
-            {/* 12. 5-Stage How It Works Framework */}
+            {/* 8. HOW IT WORKS: 5-Stage Implementation Framework with Video Demos */}
             <HowItWorksSection 
               onNavigate={handleNavigate} 
               onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
             />
 
-            {/* 13. Why FORGE Core Principles */}
-            <WhyForgeSection />
+            {/* 9. REAL SYSTEMS: NOT AI THEATER & Enterprise Tech Stack */}
+            <TrustAndTechStack 
+              onNavigate={handleNavigate}
+              onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
+            />
 
-            {/* 14. Security, Privacy & Human Governance */}
+            {/* 10. AI OPPORTUNITY CALCULATOR: Calculate Your Business Hours & Labor Savings */}
+            <RoiCalculatorSection onNavigate={handleNavigate} />
+
+            {/* 11. TOUCH FORGE: Master Command Center Sandbox */}
+            <ForgeCommandCenter 
+              onNavigate={handleNavigate}
+              onLaunchSandbox={handleLaunchSystemSandbox}
+              onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
+            />
+
+            {/* 12. Security & Human Governance */}
             <SecuritySection />
 
-            {/* 15. 10 Industry Vertical Solutions */}
-            <IndustriesSection onNavigate={handleNavigate} />
+            {/* 13. Frequently Asked Questions */}
+            <FaqSection onNavigate={handleNavigate} />
 
-            {/* 16. 15+ Free Interactive AI Utilities */}
+            {/* 14. 15+ Free Interactive AI Utilities Suite */}
             <section id="tools-forge" className="py-20 border-t border-slate-800 bg-[#070c14]">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
                 <div className="text-center space-y-3 max-w-3xl mx-auto">
@@ -347,16 +326,7 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
               </div>
             </section>
 
-            {/* 17. Transparent Pricing & Milestone Scopes */}
-            <PricingSection onNavigate={handleNavigate} />
-
-            {/* 18. Frequently Asked Questions */}
-            <FaqSection onNavigate={handleNavigate} />
-
-            {/* 19. About FORGE & Engineering Leadership */}
-            <AboutSection onNavigate={handleNavigate} />
-
-            {/* 20. Final High-Impact Call to Action */}
+            {/* 15. High-Impact Agency Final CTA */}
             <FinalCtaSection onNavigate={handleNavigate} />
           </>
         )}
