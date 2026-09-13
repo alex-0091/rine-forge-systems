@@ -17,9 +17,9 @@ export const ALL_FORGE_TOOLS = [
     name: 'AI Animated Video & Film Director Studio',
     category: '🎬 Video & Motion',
     icon: Film,
-    badge: 'SORA 2.0 & RUNWAY GEN-3',
+    badge: 'KLING • HAILUO • SORA',
     popular: true,
-    description: 'Create interactive cinematic animated video clips with custom AI prompts, multi-model engines (Sora 2.0, Runway Gen-3, Luma Ray 2, Pika 2.0), 3D camera controls, and spoken voiceover narration.'
+    description: 'Create interactive cinematic animated video clips with custom AI prompts, multi-model engines (Kling AI 1.5, Hailuo Video-01, Sora 2.0, Runway Gen-3, Luma Ray 2), 3D camera controls, and spoken voiceover narration.'
   },
 
   {
@@ -184,7 +184,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
   const [copiedKey, setCopiedKey] = useState('');
   // 0. AI Animated Video Generator State
   const [animVideoPrompt, setAnimVideoPrompt] = useState('Cyberpunk AI voice receptionist answering glowing holographic call in futuristic skyscraper 60fps 8k');
-  const [animVideoModel, setAnimVideoModel] = useState('Sora 2.0 (OpenAI)');
+  const [animVideoModel, setAnimVideoModel] = useState('Kling AI 1.5 (Free HD)');
   const [animVideoCamera, setAnimVideoCamera] = useState('Cinematic Drone 360°');
   const [animVideoStyle, setAnimVideoStyle] = useState('Photoreal 8K VFX');
   const [animVideoFps, setAnimVideoFps] = useState('60 FPS Ultra-Smooth');
@@ -195,7 +195,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
   const [animVideoVoiceActive, setAnimVideoVoiceActive] = useState(false);
   const [animVideoResult, setAnimVideoResult] = useState({
     title: 'Cyberpunk AI Voice Receptionist in Action',
-    model: 'Sora 2.0 (OpenAI)',
+    model: 'Kling AI 1.5 (Free HD)',
     prompt: 'Cyberpunk AI voice receptionist answering glowing holographic call in futuristic skyscraper 60fps 8k',
     camera: 'Cinematic Drone 360°',
     style: 'Photoreal 8K VFX',
@@ -834,12 +834,12 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
                   </h3>
                 </div>
                 <p className="text-xs sm:text-sm text-slate-300 pt-1.5">
-                  Generate outclass, high-energy animated video clips with custom AI prompts, multi-model engines (Sora 2.0, Runway Gen-3, Luma Ray 2, Pika 2.0), 3D camera controls, and synchronized voiceover narration.
+                  Generate outclass, high-energy animated video clips with custom AI prompts, multi-model engines (Kling AI 1.5, Hailuo Video-01, Sora 2.0, Runway Gen-3, Luma Ray 2), 3D camera controls, and synchronized voiceover narration.
                 </p>
               </div>
               <div className="flex items-center gap-2">
                 <span className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 to-teal-500/20 text-amber-300 border border-amber-500/40 text-xs font-mono font-black flex items-center gap-1.5 shadow-lg shadow-amber-500/10">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-400" /> SORA 2.0 • RUNWAY GEN-3 • 4K
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" /> KLING AI • HAILUO • LUMA • 4K
                 </span>
               </div>
             </div>
@@ -856,30 +856,30 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {[
                   {
-                    title: '🌆 Cyberpunk AI Receptionist',
+                    title: '🌆 Kling AI Receptionist',
                     prompt: 'Cyberpunk AI voice receptionist answering glowing holographic phone in neon Tokyo skyscraper 60fps 8k',
-                    model: 'Sora 2.0 (OpenAI)',
+                    model: 'Kling AI 1.5 (Free HD)',
                     camera: 'Cinematic Drone 360°',
                     style: 'Cyberpunk Neon Glow'
                   },
                   {
-                    title: '🚀 Speed-to-Lead Rocket',
+                    title: '🚀 Hailuo Speed-to-Lead Rocket',
                     prompt: 'Hyper-speed rocket zooming through digital fiber optic CRM data highway with glowing SMS sparks',
-                    model: 'Runway Gen-3 Alpha',
+                    model: 'Hailuo AI Video-01 (MiniMax Free)',
                     camera: 'Dynamic FPV Zoom',
                     style: 'Photoreal 8K VFX'
                   },
                   {
-                    title: '📄 Quantum Laser OCR Robot',
+                    title: '📄 Luma Ray 2 Quantum Laser',
                     prompt: 'Futuristic robot arm sweeping cyan laser scanner over floating 3D glass invoice in cybernetic lab',
                     model: 'Luma Ray 2',
                     camera: 'Orbit 3D Pan',
                     style: 'Photoreal 8K VFX'
                   },
                   {
-                    title: '🤖 Autonomous AI Boardroom',
+                    title: '🤖 Runway Gen-3 Boardroom',
                     prompt: 'Swarm of 6 friendly Pixar-style AI robotic agents collaborating around glowing glass strategy table',
-                    model: 'Pika 2.0 Dynamic',
+                    model: 'Runway Gen-3 Alpha',
                     camera: 'Steady Crane Shot',
                     style: 'Pixar 3D Cartoon'
                   },
@@ -995,9 +995,11 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
                     onChange={(e) => setAnimVideoModel(e.target.value)}
                     className="w-full px-3 py-2.5 bg-[#080d1a] border border-slate-700 rounded-xl text-white font-bold text-xs focus:outline-none focus:border-teal-400"
                   >
+                    <option value="Kling AI 1.5 (Free HD)">🎬 Kling AI 1.5 (Free Daily Credits)</option>
+                    <option value="Hailuo AI Video-01 (MiniMax Free)">🌟 Hailuo AI Video-01 (MiniMax Free)</option>
+                    <option value="Luma Ray 2">⚡ Luma Ray 2 (Free Generation)</option>
+                    <option value="Runway Gen-3 Alpha">🎥 Runway Gen-3 Alpha (Free Tier)</option>
                     <option value="Sora 2.0 (OpenAI)">🌌 Sora 2.0 (OpenAI)</option>
-                    <option value="Runway Gen-3 Alpha">⚡ Runway Gen-3 Alpha</option>
-                    <option value="Luma Ray 2">🌟 Luma Ray 2</option>
                     <option value="Pika 2.0 Dynamic">🪄 Pika 2.0 Dynamic</option>
                     <option value="Midjourney Motion">💫 Midjourney Motion</option>
                   </select>
@@ -1220,6 +1222,44 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
                     <Download className="w-4 h-4" />
                     <span>Download MP4 (4K)</span>
                   </button>
+                </div>
+              </div>
+
+              {/* Quick Launch Top Rated Free AI Video Engines */}
+              <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-slate-300 font-bold">Tested Free AI Video Generators:</span>
+                  <span className="text-slate-400 text-[11px] hidden md:inline">Generate external clips with free credits:</span>
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <a
+                    href="https://klingai.com"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] font-bold flex items-center gap-1.5 transition-all"
+                  >
+                    <span>Kling AI (Free Daily)</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                  <a
+                    href="https://hailuoai.video"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3 py-1.5 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 border border-teal-500/30 text-[11px] font-bold flex items-center gap-1.5 transition-all"
+                  >
+                    <span>Hailuo Video-01 (Free)</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                  <a
+                    href="https://lumalabs.ai/dream-machine"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3 py-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[11px] font-bold flex items-center gap-1.5 transition-all"
+                  >
+                    <span>Luma Ray 2 (Free)</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
                 </div>
               </div>
 
