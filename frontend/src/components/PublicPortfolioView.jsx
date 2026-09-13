@@ -63,7 +63,7 @@ import { AdminPanel } from './app/AdminPanel';
 import { PaymentPortalModal } from './PaymentPortalModal';
 import { AIToolsForgeView } from './AIToolsForgeView';
 
-export function PublicPortfolioView() {
+export function PublicPortfolioView({ onOpenOperatorConsole }) {
   const [currentView, setCurrentView] = useState('home');
   const [selectedAgentForModal, setSelectedAgentForModal] = useState(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -88,6 +88,8 @@ export function PublicPortfolioView() {
         setCurrentView('experience');
       } else if (path.includes('/audit') || search.includes('audit=true')) {
         setCurrentView('audit');
+      } else if (path.includes('/payment') || search.includes('payment=true')) {
+        setIsPaymentModalOpen(true);
       } else if (path.includes('/systems/')) {
         const slug = path.split('/systems/')[1];
         if (slug) setCurrentView(`system-${slug}`);
@@ -112,6 +114,16 @@ export function PublicPortfolioView() {
   const handleNavigate = (target) => {
     if (target === 'try-forge-modal') {
       setIsGlobalTryModalOpen(true);
+      return;
+    }
+
+    if (target === 'payment' || target === 'deposit' || target === 'payment-modal') {
+      setIsPaymentModalOpen(true);
+      return;
+    }
+
+    if (target === 'operator-console' && onOpenOperatorConsole) {
+      onOpenOperatorConsole();
       return;
     }
 
@@ -353,7 +365,7 @@ export function PublicPortfolioView() {
       </main>
 
       {/* Global Footer */}
-      <ForgeFooter onNavigate={handleNavigate} />
+      <ForgeFooter onNavigate={handleNavigate} onOpenOperatorConsole={onOpenOperatorConsole} />
 
       {/* Persistent Human Interface (FORGE CONTROL) */}
       <ForgeHumanControl 

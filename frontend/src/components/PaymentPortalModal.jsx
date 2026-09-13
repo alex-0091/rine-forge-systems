@@ -68,8 +68,8 @@ const PRICING_PACKAGES = [
   }
 ];
 
-export function PaymentPortalModal({ isOpen, onClose, defaultPackageId = 'ai-receptionist' }) {
-  const [selectedPkgId, setSelectedPkgId] = useState(defaultPackageId);
+export function PaymentPortalModal({ isOpen, onClose, defaultPackageId = 'ai-receptionist', initialService }) {
+  const [selectedPkgId, setSelectedPkgId] = useState(initialService || defaultPackageId || 'ai-receptionist');
   const [paymentRail, setPaymentRail] = useState('euro_bank'); // 'euro_bank', 'usd_bank', 'crypto_usdt'
   const [copiedField, setCopiedField] = useState('');
 

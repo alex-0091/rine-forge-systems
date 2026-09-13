@@ -2,8 +2,12 @@ import React from 'react';
 import { ArrowRight, ShieldCheck, Lock, Terminal, Sparkles, Building2, Globe } from 'lucide-react';
 import { FORGE_SOLUTIONS, FORGE_INDUSTRIES } from '../../data/siteData';
 
-export function ForgeFooter({ onNavigate }) {
+export function ForgeFooter({ onNavigate, onOpenOperatorConsole }) {
   const handleNav = (target) => {
+    if (target === 'operator-console' && onOpenOperatorConsole) {
+      onOpenOperatorConsole();
+      return;
+    }
     if (onNavigate) onNavigate(target);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -153,8 +157,23 @@ export function ForgeFooter({ onNavigate }) {
                 </button>
               </li>
               <li>
-                <button onClick={() => handleNav('about')} className="hover:text-teal-300 transition-colors text-left">
-                  Engineering Team
+                <button onClick={() => handleNav('app-dashboard')} className="hover:text-teal-300 transition-colors text-left font-bold text-teal-400">
+                  Product OS Platform (/app)
+                </button>
+              </li>
+              <li>
+                <button onClick={() => handleNav('lab')} className="hover:text-teal-300 transition-colors text-left">
+                  The AI Lab (/lab)
+                </button>
+              </li>
+              <li>
+                <button onClick={() => handleNav('payment')} className="hover:text-teal-300 transition-colors text-left">
+                  Milestone Settlement & Deposit
+                </button>
+              </li>
+              <li>
+                <button onClick={() => handleNav('operator-console')} className="hover:text-teal-300 transition-colors text-left text-slate-500 hover:text-slate-400">
+                  Operator Admin Console
                 </button>
               </li>
             </ul>

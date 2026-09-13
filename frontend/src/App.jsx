@@ -75,22 +75,71 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-dark-950 text-slate-100 flex flex-col font-sans">
-      {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-40 bg-dark-900/90 backdrop-blur-md border-b border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          {/* Brand Logo */}
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('dashboard')}>
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-teal-500 to-indigo-600 flex items-center justify-center text-dark-950 font-black text-lg shadow-lg shadow-teal-500/20">
-              R
+      {/* Operator Navigation Bar - Shown only in Operator Mode */}
+      {activeTab !== 'public_website' && (
+        <header className="sticky top-0 z-40 bg-dark-900/90 backdrop-blur-md border-b border-slate-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+            {/* Brand Logo */}
+            <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('dashboard')}>
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-teal-500 to-indigo-600 flex items-center justify-center text-dark-950 font-black text-lg shadow-lg shadow-teal-500/20">
+                R
+              </div>
+              <div>
+                <div className="font-extrabold text-sm text-white tracking-wider">RINE FORGE SYSTEMS</div>
+                <div className="text-[10px] text-teal-400 font-mono">AUTONOMOUS CLIENT ACQUISITION OS • OPERATOR CONSOLE</div>
+              </div>
             </div>
-            <div>
-              <div className="font-extrabold text-sm text-white tracking-wider">RINE FORGE SYSTEMS</div>
-              <div className="text-[10px] text-teal-400 font-mono">AUTONOMOUS CLIENT ACQUISITION OS</div>
+
+            {/* Navigation Links */}
+            <nav className="hidden xl:flex items-center gap-1 bg-dark-950/60 p-1 rounded-xl border border-slate-800/80">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                      isActive
+                        ? 'bg-teal-500 text-dark-950 shadow-sm'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-dark-850'
+                    }`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    {item.label}
+                  </button>
+                );
+              })}
+            </nav>
+
+            {/* Kill Switch & Mode Controls */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setActiveTab('public_website')}
+                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono font-bold border border-slate-700 transition-all"
+              >
+                <Globe className="w-3.5 h-3.5 text-teal-400" />
+                <span>Live Site</span>
+              </button>
+
+              <button
+                onClick={handleToggleKillSwitch}
+                disabled={togglingKillSwitch}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-md ${
+                  killSwitchStatus.kill_switch_active
+                    ? 'bg-rose-500 hover:bg-rose-400 text-white animate-pulse shadow-rose-500/30'
+                    : 'bg-dark-850 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 border border-slate-700 hover:border-rose-500/40'
+                }`}
+                title={killSwitchStatus.kill_switch_active ? 'Click to deactivate emergency pause' : 'Emergency Kill Switch: Stop all sending immediately'}
+              >
+                <ShieldAlert className="w-4 h-4" />
+                {killSwitchStatus.kill_switch_active ? 'KILL SWITCH ACTIVE' : 'STOP ALL OUTREACH'}
+              </button>
             </div>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="hidden xl:flex items-center gap-1 bg-dark-950/60 p-1 rounded-xl border border-slate-800/80">
+          {/* Mobile/Tablet Secondary Nav */}
+          <div className="xl:hidden flex items-center overflow-x-auto px-4 py-2 border-t border-slate-800/60 gap-1 bg-dark-950/80">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -98,10 +147,10 @@ export function App() {
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold shrink-0 transition-all ${
                     isActive
-                      ? 'bg-teal-500 text-dark-950 shadow-sm'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-dark-850'
+                      ? 'bg-teal-500 text-dark-950'
+                      : 'text-slate-400 hover:text-slate-200 bg-dark-900'
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
@@ -109,53 +158,14 @@ export function App() {
                 </button>
               );
             })}
-          </nav>
-
-          {/* Kill Switch & Mode Controls */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleToggleKillSwitch}
-              disabled={togglingKillSwitch}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-md ${
-                killSwitchStatus.kill_switch_active
-                  ? 'bg-rose-500 hover:bg-rose-400 text-white animate-pulse shadow-rose-500/30'
-                  : 'bg-dark-850 hover:bg-rose-500/20 text-slate-300 hover:text-rose-400 border border-slate-700 hover:border-rose-500/40'
-              }`}
-              title={killSwitchStatus.kill_switch_active ? 'Click to deactivate emergency pause' : 'Emergency Kill Switch: Stop all sending immediately'}
-            >
-              <ShieldAlert className="w-4 h-4" />
-              {killSwitchStatus.kill_switch_active ? 'KILL SWITCH ACTIVE' : 'STOP ALL OUTREACH'}
-            </button>
           </div>
-        </div>
-
-        {/* Mobile/Tablet Secondary Nav */}
-        <div className="xl:hidden flex items-center overflow-x-auto px-4 py-2 border-t border-slate-800/60 gap-1 bg-dark-950/80">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold shrink-0 transition-all ${
-                  isActive
-                    ? 'bg-teal-500 text-dark-950'
-                    : 'text-slate-400 hover:text-slate-200 bg-dark-900'
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                {item.label}
-              </button>
-            );
-          })}
-        </div>
-      </header>
+        </header>
+      )}
 
       {/* Main Content Area */}
       {activeTab === 'public_website' ? (
         <div className="flex-1 w-full">
-          <PublicPortfolioView />
+          <PublicPortfolioView onOpenOperatorConsole={() => setActiveTab('dashboard')} />
         </div>
       ) : (
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
