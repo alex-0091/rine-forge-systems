@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Mail, Send, CheckCircle2, ShieldCheck, 
-  ArrowRight, RefreshCw, X, AlertTriangle, User, Clock 
+  ArrowRight, RefreshCw, X, AlertTriangle, User, Clock, Sparkles 
 } from 'lucide-react';
 
 const SAMPLE_EMAILS = [

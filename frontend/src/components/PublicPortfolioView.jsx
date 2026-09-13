@@ -65,9 +65,11 @@ import { AppControlCenter } from './app/AppControlCenter';
 import { AppBilling } from './app/AppBilling';
 import { AdminPanel } from './app/AdminPanel';
 
-// Ancillary Modals
+// Ancillary Modals & Lab Views
 import { PaymentPortalModal } from './PaymentPortalModal';
 import { AIToolsForgeView } from './AIToolsForgeView';
+import { ForgeAiLab } from './forge/ForgeAiLab';
+import { ForgeExperienceView } from './forge/ForgeExperienceView';
 
 export function PublicPortfolioView({ onOpenOperatorConsole }) {
   const [currentView, setCurrentView] = useState('home');

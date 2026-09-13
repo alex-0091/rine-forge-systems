@@ -6,7 +6,7 @@ import {
   Zap, ShieldCheck, DollarSign, ChevronRight, Layers,
   Flame, TrendingUp, CheckCircle2, Lock, Search,
   Mic, MicOff, Volume2, VolumeX, Code2, ScanText, Users, Globe2, QrCode,
-  Terminal, Play, Sliders, Wand2, Image, Scissors, Share2, Award,
+  Terminal, Play, Pause, Sliders, Wand2, Image, Scissors, Share2, Award,
   FileCheck, Video, Send, Bookmark, Star, ArrowUpRight, Compass, Film, Tv, Maximize2
 } from 'lucide-react';
 import { speechEngine } from '../utils/speechEngine';
