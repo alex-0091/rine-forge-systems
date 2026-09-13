@@ -12,6 +12,7 @@ import {
 import { PaymentPortalModal } from './PaymentPortalModal';
 import { AIToolsForgeView } from './AIToolsForgeView';
 import { FloatingAIAssistant } from './FloatingAIAssistant';
+import { InteractiveVideoPlayerModal } from './InteractiveVideoPlayerModal';
 import { 
   BrandLogo, OpenAILogo, GeminiLogo, AWSLogo, 
   StripeLogo, PythonLogo, VercelLogo, SupabaseLogo 
@@ -849,6 +850,83 @@ export function PublicPortfolioView() {
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 bg-dark-950 border border-slate-800 rounded-xl text-xs text-slate-300 font-mono">
             <SupabaseLogo className="w-4 h-4 text-emerald-400" /> <span>Supabase</span>
+          </div>
+        </div>
+      </section>
+
+      {/* A PERSONAL LETTER & GUARANTEE FROM FOUNDER ALEX RINE */}
+      <section className="bg-gradient-to-br from-dark-900 via-dark-950 to-dark-900 border border-teal-500/30 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Founder Headshot & Credentials */}
+          <div className="lg:col-span-4 space-y-4 text-center lg:text-left">
+            <div className="relative inline-block">
+              <img
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80"
+                alt="Alex Rine"
+                className="w-32 h-32 sm:w-40 sm:h-40 rounded-3xl object-cover border-2 border-teal-500/50 shadow-xl shadow-teal-500/20 mx-auto lg:mx-0"
+              />
+              <div className="absolute -bottom-2 -right-2 px-3 py-1 bg-teal-500 text-dark-950 font-black text-[10px] rounded-full shadow-md font-mono flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3" /> FOUNDER VERIFIED
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-black text-white">Alex Rine</h3>
+              <div className="text-xs text-teal-400 font-mono font-semibold">Founder & Principal AI Systems Architect</div>
+              <div className="text-[11px] text-slate-400 mt-1">M.S. Computer Engineering • Distributed Systems</div>
+            </div>
+
+            <div className="pt-2">
+              <a
+                href="mailto:alexrine691@gmail.com"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-dark-950 hover:bg-dark-850 text-teal-300 border border-teal-500/40 rounded-xl text-xs font-mono font-bold transition-colors"
+              >
+                <Send className="w-3.5 h-3.5" /> alexrine691@gmail.com
+              </a>
+            </div>
+          </div>
+
+          {/* Letter Body */}
+          <div className="lg:col-span-8 space-y-4 text-slate-300 text-xs sm:text-sm leading-relaxed">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-teal-500/10 border border-teal-500/30 rounded-lg text-teal-400 font-mono text-[11px] font-bold">
+              <Sparkles className="w-3.5 h-3.5" /> A NOTE FROM THE FOUNDER
+            </div>
+
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              We Build Real Software, Not <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-indigo-400">\$30,000 Slide Decks</span>
+            </h2>
+
+            <p>
+              I founded <strong className="text-white">Rine Forge Systems</strong> because I watched too many business owners get burned by traditional agencies charging massive upfront fees for broken Zapier templates and vague strategy decks that generate zero revenue.
+            </p>
+
+            <p>
+              We do things differently. We write high-throughput async Python, train custom NLP triage models, stream live sub-50ms WebSocket orderbooks, and build real automated lead pipelines.
+            </p>
+
+            <div className="p-4 bg-dark-950/80 border border-slate-800 rounded-2xl space-y-2">
+              <div className="font-bold text-white text-xs uppercase font-mono text-teal-400">Our 48-Hour Zero-Risk Guarantee:</div>
+              <p className="text-xs text-slate-300">
+                1. Test all <strong className="text-teal-300">15+ free AI tools below</strong> with zero sign-up or credit card.<br />
+                2. If you want a bespoke system for your company, we will build you a <strong className="text-emerald-300">live working prototype in 48 hours for free</strong>.<br />
+                3. You only put down a <strong className="text-cyan-300">50% milestone deposit</strong> once you have tested and approved the live staging system.
+              </p>
+            </div>
+
+            <div className="pt-2 flex flex-wrap items-center justify-between gap-4 border-t border-slate-800/80">
+              <div className="text-[11px] font-mono text-slate-400">
+                Official Settlement: <strong className="text-white">Albaraka Bank (Euro/USD) & BEP-20 USDT</strong> (Owais ahmed)
+              </div>
+              <a
+                href="#contact"
+                className="px-5 py-2.5 bg-teal-500 hover:bg-teal-400 text-dark-950 font-black rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-teal-500/20"
+              >
+                Talk Directly with Alex →
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -2065,75 +2143,19 @@ export function PublicPortfolioView() {
         }}
       />
 
-      {/* Video Demo Player Modal */}
+      {/* Interactive 10s Video Player Modal */}
       {activeVideoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-950/85 backdrop-blur-md">
-          <div className="bg-dark-900 border border-slate-700 rounded-3xl max-w-2xl w-full p-6 space-y-5 shadow-2xl relative text-slate-100">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center font-bold">
-                  <Play className="w-4 h-4 fill-teal-400" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-white">{activeVideoModal.name} • 10s Architecture Demo</h3>
-                  <div className="text-[10px] text-teal-400 font-mono">{activeVideoModal.badge}</div>
-                </div>
-              </div>
-              <button
-                onClick={() => setActiveVideoModal(null)}
-                className="p-1.5 rounded-lg bg-dark-850 hover:bg-slate-800 text-slate-400 hover:text-white"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Video Frame */}
-            <div className="relative rounded-2xl overflow-hidden border border-slate-800 aspect-video bg-dark-950 group">
-              <img
-                src={activeVideoModal.image}
-                alt={activeVideoModal.name}
-                className="w-full h-full object-cover opacity-70 group-hover:opacity-85 transition-opacity"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/30 to-transparent" />
-              
-              {/* Center Play Beacon */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-16 h-16 rounded-full bg-teal-500/90 text-dark-950 flex items-center justify-center shadow-xl shadow-teal-500/40 animate-pulse">
-                  <Play className="w-7 h-7 fill-dark-950 ml-1" />
-                </div>
-              </div>
-
-              {/* Bottom Video Controls Overlay */}
-              <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-[11px] font-mono bg-dark-900/80 backdrop-blur-md p-2 rounded-xl border border-slate-800">
-                <span className="text-teal-400 font-bold">● LIVE DEMO STREAM ({activeVideoModal.videoLength})</span>
-                <span className="text-slate-300">1080p HD • 60 FPS</span>
-              </div>
-            </div>
-
-            <p className="text-xs text-slate-300 leading-relaxed">
-              {activeVideoModal.videoHighlight}
-            </p>
-
-            <div className="flex justify-end gap-3 pt-2 border-t border-slate-800/80">
-              <button
-                onClick={() => setActiveVideoModal(null)}
-                className="px-4 py-2 bg-dark-850 hover:bg-dark-800 text-slate-300 rounded-xl text-xs font-bold"
-              >
-                Close Preview
-              </button>
-              <button
-                onClick={() => {
-                  setActiveVideoModal(null);
-                  setSelectedPackageForModal('ai-receptionist');
-                  setIsPaymentModalOpen(true);
-                }}
-                className="px-5 py-2 bg-teal-500 hover:bg-teal-400 text-dark-950 font-black rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-teal-500/20"
-              >
-                Deploy This Engine ($249 - $449 Deposit) →
-              </button>
-            </div>
-          </div>
-        </div>
+        <InteractiveVideoPlayerModal
+          activeProject={activeVideoModal}
+          onClose={() => setActiveVideoModal(null)}
+          onSelectPackage={(pkgId) => {
+            setActiveVideoModal(null);
+            setSelectedPackageForModal(pkgId || 'ai-receptionist');
+            setIsPaymentModalOpen(true);
+          }}
+          allProjects={SHOWCASE_TABS}
+          onSwitchProject={(project) => setActiveVideoModal(project)}
+        />
       )}
     </div>
   );
