@@ -17,6 +17,7 @@ import {
   BusinessOwnerAvatar
 } from './ForgeCharacterUniverse';
 import { speechEngine } from '../../../utils/speechEngine';
+import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
 
 const FORGE_HERO_SCENES = [
   {
@@ -65,6 +66,7 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
   const [activeStepIdx, setActiveStepIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isVoiceNarratorActive, setIsVoiceNarratorActive] = useState(false);
+  const [sceneSpeed, setSceneSpeed] = useState(1);
 
   useEffect(() => {
     let interval = null;
@@ -72,17 +74,23 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
       interval = setInterval(() => {
         setActiveStepIdx(prev => {
           const next = (prev + 1) % FORGE_HERO_SCENES.length;
+          if (next === 0) forgeAudioSynth.playPhoneRing();
+          else if (next === 1) forgeAudioSynth.playWarp();
+          else if (next === 2) forgeAudioSynth.playScan();
+          else if (next === 3) forgeAudioSynth.playSuccess();
+
           if (isVoiceNarratorActive) {
             speechEngine.speak(FORGE_HERO_SCENES[next].spokenText, { accent: 'en-US' });
           }
           return next;
         });
-      }, 3200);
+      }, Math.floor(3200 / sceneSpeed));
     }
     return () => clearInterval(interval);
-  }, [isPlaying, isVoiceNarratorActive]);
+  }, [isPlaying, isVoiceNarratorActive, sceneSpeed]);
 
   const handleToggleVoice = () => {
+    forgeAudioSynth.playClick();
     if (isVoiceNarratorActive) {
       speechEngine.stopSpeaking();
       setIsVoiceNarratorActive(false);
@@ -130,6 +138,7 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
             {/* 1. 👁 WATCH */}
             <button
               onClick={() => {
+                forgeAudioSynth.playClick();
                 const el = document.getElementById('watch-demos');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
                 else if (onWatchTenSecDemo) onWatchTenSecDemo('receptionist-agent');
@@ -143,6 +152,7 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
             {/* 2. 🖐 TRY */}
             <button
               onClick={() => {
+                forgeAudioSynth.playSuccess();
                 const el = document.getElementById('command-center');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
                 else if (onNavigate) onNavigate('command-center');
@@ -156,6 +166,7 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
             {/* 3. 🚀 DEPLOY */}
             <button
               onClick={() => {
+                forgeAudioSynth.playClick();
                 const el = document.getElementById('build-business');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
                 else if (onNavigate) onNavigate('build-business');
@@ -189,6 +200,17 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
             {/* Step Selector & Voiceover Narration */}
             <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
               <button
+                onClick={() => {
+                  forgeAudioSynth.playClick();
+                  setSceneSpeed(s => (s === 1 ? 1.5 : s === 1.5 ? 2 : 1));
+                }}
+                className="px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white font-mono text-[10px] font-bold"
+                title="Scene Playback Speed"
+              >
+                {sceneSpeed}x Speed
+              </button>
+
+              <button
                 onClick={handleToggleVoice}
                 className={`px-3 py-1.5 rounded-xl border flex items-center gap-1.5 transition-all ${
                   isVoiceNarratorActive
@@ -202,7 +224,10 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
               </button>
 
               <button
-                onClick={() => setIsPlaying(!isPlaying)}
+                onClick={() => {
+                  forgeAudioSynth.playClick();
+                  setIsPlaying(!isPlaying);
+                }}
                 className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center gap-1.5"
               >
                 {isPlaying ? <Pause className="w-3.5 h-3.5 text-amber-400" /> : <Play className="w-3.5 h-3.5 text-emerald-400 fill-current" />}
@@ -353,6 +378,7 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
                   <div className="flex items-center gap-3 font-mono text-xs">
                     <button
                       onClick={() => {
+                        forgeAudioSynth.playClick();
                         const el = document.getElementById('watch-demos');
                         if (el) el.scrollIntoView({ behavior: 'smooth' });
                       }}
@@ -362,6 +388,7 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
                     </button>
                     <button
                       onClick={() => {
+                        forgeAudioSynth.playSuccess();
                         const el = document.getElementById('command-center');
                         if (el) el.scrollIntoView({ behavior: 'smooth' });
                       }}
@@ -381,6 +408,7 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
                 <button
                   key={idx}
                   onClick={() => {
+                    forgeAudioSynth.playClick();
                     setActiveStepIdx(idx);
                     setIsPlaying(false);
                     if (isVoiceNarratorActive) {

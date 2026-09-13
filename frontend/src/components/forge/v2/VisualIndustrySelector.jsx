@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { 
   Building2, ArrowRight, CheckCircle2, Sparkles, 
   Play, PhoneCall, Calendar, Zap, FileText, ShieldCheck, HeartPulse, Home, Hotel, Wrench, Scale, ShoppingBag, Briefcase,
-  Check, MessageSquare, ArrowDown, Rocket
+  Check, MessageSquare, ArrowDown, Rocket, Volume2
 } from 'lucide-react';
+import { speechEngine } from '../../../utils/speechEngine';
+import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
 import { ReceptionistCharacter, LeadEngineCharacter, DocumentCharacter, AppointmentCharacter, SupportCharacter } from './ForgeCharacterUniverse';
 
 export const INDUSTRY_PRESETS = [
@@ -137,7 +139,15 @@ export const INDUSTRY_PRESETS = [
 
 export function VisualIndustrySelector({ onNavigate, onLaunchSandbox, onWatchDemo }) {
   const [selectedIndustry, setSelectedIndustry] = useState(INDUSTRY_PRESETS[0]);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
   const Icon = selectedIndustry.icon;
+
+  const handlePlayDialogue = () => {
+    forgeAudioSynth.playClick();
+    setIsPlayingAudio(true);
+    speechEngine.speak(selectedIndustry.dialogue.customer + ' ... ' + selectedIndustry.dialogue.aiAction + ' ... ' + selectedIndustry.dialogue.outcome, { accent: 'en-US' });
+    setTimeout(() => setIsPlayingAudio(false), 8000);
+  };
 
   return (
     <section id="build-business" className="py-20 sm:py-28 border-b border-slate-800/80 bg-[#070c14] relative">
@@ -165,7 +175,10 @@ export function VisualIndustrySelector({ onNavigate, onLaunchSandbox, onWatchDem
             return (
               <button
                 key={ind.id}
-                onClick={() => setSelectedIndustry(ind)}
+                onClick={() => {
+                  forgeAudioSynth.playClick();
+                  setSelectedIndustry(ind);
+                }}
                 className={`p-3.5 rounded-2xl font-mono text-xs font-bold transition-all flex flex-col items-center justify-center gap-2 border text-center ${
                   isSelected
                     ? 'bg-gradient-to-b from-teal-500/20 to-[#0c1828] text-white border-teal-400 shadow-xl shadow-teal-500/20 scale-105 font-black'
@@ -191,13 +204,27 @@ export function VisualIndustrySelector({ onNavigate, onLaunchSandbox, onWatchDem
               </div>
             </div>
 
-            <button
-              onClick={() => onLaunchSandbox && onLaunchSandbox(selectedIndustry.sysId)}
-              className="px-5 py-2.5 bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-dark-950 font-black rounded-xl text-xs font-mono transition-all shadow-md flex items-center gap-2 shrink-0"
-            >
-              <span>TEST IN {selectedIndustry.name.toUpperCase()} SANDBOX</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handlePlayDialogue}
+                className="px-3.5 py-2.5 bg-slate-900 border border-slate-800 hover:border-slate-700 text-teal-300 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all"
+                title="Listen to Live Audio Scenario"
+              >
+                <Volume2 className="w-4 h-4 text-teal-400" />
+                <span>{isPlayingAudio ? 'Playing...' : 'Audio Preview'}</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  forgeAudioSynth.playSuccess();
+                  if (onLaunchSandbox) onLaunchSandbox(selectedIndustry.sysId);
+                }}
+                className="px-5 py-2.5 bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-dark-950 font-black rounded-xl text-xs font-mono transition-all shadow-md flex items-center gap-2 shrink-0"
+              >
+                <span>TEST IN {selectedIndustry.name.toUpperCase()} SANDBOX</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
@@ -274,7 +301,10 @@ export function VisualIndustrySelector({ onNavigate, onLaunchSandbox, onWatchDem
               </div>
 
               <button
-                onClick={() => onLaunchSandbox && onLaunchSandbox(selectedIndustry.sysId)}
+                onClick={() => {
+                  forgeAudioSynth.playSuccess();
+                  if (onLaunchSandbox) onLaunchSandbox(selectedIndustry.sysId);
+                }}
                 className="w-full py-3 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-dark-950 font-black text-xs font-mono transition-all shadow-md flex items-center justify-center gap-1.5"
               >
                 <Rocket className="w-3.5 h-3.5" />

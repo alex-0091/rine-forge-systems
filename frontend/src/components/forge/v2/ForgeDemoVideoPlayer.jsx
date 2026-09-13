@@ -4,9 +4,10 @@ import {
   CheckCircle2, Volume2, VolumeX, ShieldCheck, Video, 
   Tv, Film, Sparkle, Zap, Bot, Mail, FileText, Calendar, 
   MessageSquare, Search, PhoneCall, Check, ExternalLink, Flame, Maximize2,
-  Clock, Smartphone, Database, CheckCheck, RefreshCw, Layers
+  Clock, Smartphone, Database, CheckCheck, RefreshCw, Layers, Terminal
 } from 'lucide-react';
 import { speechEngine } from '../../../utils/speechEngine';
+import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
 import { 
   ReceptionistCharacter, 
   LeadEngineCharacter, 
@@ -26,6 +27,9 @@ export const SYSTEM_ANIMATED_CLIPS = {
     duration: 5.5,
     tag: '24/7 Voice NLP',
     theme: 'cyan',
+    colorBorder: 'border-cyan-400',
+    colorGlow: 'shadow-cyan-500/30',
+    colorBadge: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
     dialogue: {
       problem: 'Alex calls at 10:45 PM: "Emergency root canal tomorrow?"',
       action: 'FORGE answers in 2s, verifies Delta Dental PPO, checks Dr. Evans chair.',
@@ -40,13 +44,34 @@ export const SYSTEM_ANIMATED_CLIPS = {
     productName: 'Speed-to-Lead Engine',
     duration: 5.5,
     tag: 'Sub-45s Ingest',
-    theme: 'amber',
+    theme: 'violet',
+    colorBorder: 'border-violet-400',
+    colorGlow: 'shadow-violet-500/30',
+    colorBadge: 'bg-violet-500/20 text-violet-300 border-violet-500/40',
     dialogue: {
       problem: 'Zillow $1.4M buyer lead arrives after hours.',
       action: 'FORGE evaluates 0-100 ICP (Score: 96) & triggers 2-way SMS questionnaire.',
       outcome: 'Buyer confirms on mobile. VIP Private Showing booked in 38s.'
     },
     characterName: 'Lead Velocity Bot'
+  },
+  'support-agent': {
+    id: 'support-agent',
+    sysId: 'support-agent',
+    title: 'Zero-Hallucination Knowledge RAG (5.5s Animated Clip)',
+    productName: 'Support & Knowledge Agent',
+    duration: 5.5,
+    tag: 'Vector RAG Search',
+    theme: 'blue',
+    colorBorder: 'border-blue-400',
+    colorGlow: 'shadow-blue-500/30',
+    colorBadge: 'bg-blue-500/20 text-blue-300 border-blue-500/40',
+    dialogue: {
+      problem: 'Client asks complex early-termination SLA penalty query.',
+      action: 'Vector engine scans 500-page Master Agreement with zero hallucination.',
+      outcome: 'Delivered exact answer with page & paragraph citation in 12ms.'
+    },
+    characterName: 'Knowledge RAG Core'
   },
   'document-engine': {
     id: 'document-engine',
@@ -55,7 +80,10 @@ export const SYSTEM_ANIMATED_CLIPS = {
     productName: 'Document & OCR Engine',
     duration: 5.5,
     tag: 'Laser Optical OCR',
-    theme: 'teal',
+    theme: 'orange',
+    colorBorder: 'border-orange-400',
+    colorGlow: 'shadow-orange-500/30',
+    colorBadge: 'bg-orange-500/20 text-orange-300 border-orange-500/40',
     dialogue: {
       problem: '120 PDF vendor invoices arrive with manual typing backlog.',
       action: 'Laser OCR extracts 14 line items & validates mathematical tax checksum ($4,290.00).',
@@ -70,28 +98,16 @@ export const SYSTEM_ANIMATED_CLIPS = {
     productName: 'Autonomous Email Agent',
     duration: 5.5,
     tag: 'Zero-Inbox AI',
-    theme: 'violet',
+    theme: 'pink',
+    colorBorder: 'border-pink-400',
+    colorGlow: 'shadow-pink-500/30',
+    colorBadge: 'bg-pink-500/20 text-pink-300 border-pink-500/40',
     dialogue: {
       problem: '300+ chaotic emails flooding executive inbox daily.',
       action: 'AI neural engine sorts into Hot Lead, Invoice, and VIP support buckets.',
       outcome: 'Contextual draft generated. 1-click human approved in 5 minutes.'
     },
     characterName: 'Inbox Intelligence AI'
-  },
-  'support-agent': {
-    id: 'support-agent',
-    sysId: 'support-agent',
-    title: 'Zero-Hallucination Knowledge RAG (5.5s Animated Clip)',
-    productName: 'Support & Knowledge Agent',
-    duration: 5.5,
-    tag: 'Vector RAG Search',
-    theme: 'emerald',
-    dialogue: {
-      problem: 'Client asks complex early-termination SLA penalty query.',
-      action: 'Vector engine scans 500-page Master Agreement with zero hallucination.',
-      outcome: 'Delivered exact answer with page & paragraph citation in 12ms.'
-    },
-    characterName: 'Knowledge RAG Core'
   },
   'appointment-agent': {
     id: 'appointment-agent',
@@ -100,7 +116,10 @@ export const SYSTEM_ANIMATED_CLIPS = {
     productName: 'Appointment Booking Agent',
     duration: 5.5,
     tag: 'Multi-Cal Sync',
-    theme: 'pink',
+    theme: 'green',
+    colorBorder: 'border-emerald-400',
+    colorGlow: 'shadow-emerald-500/30',
+    colorBadge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
     dialogue: {
       problem: '5-email back-and-forth negotiation causing dropped meetings.',
       action: 'AI scans 3 doctor calendars and resolves timezone buffers in real-time.',
@@ -123,11 +142,11 @@ export function ForgeDemoVideoPlayer({
   const [isVoiceNarratorActive, setIsVoiceNarratorActive] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [laserY, setLaserY] = useState(25);
+  const [activeTab, setActiveTab] = useState('canvas');
 
   const clip = SYSTEM_ANIMATED_CLIPS[activeClipId] || SYSTEM_ANIMATED_CLIPS['receptionist'];
   const duration = clip.duration;
 
-  // Sync if prop changes
   useEffect(() => {
     if (skitId && SYSTEM_ANIMATED_CLIPS[skitId]) {
       setActiveClipId(skitId);
@@ -136,7 +155,6 @@ export function ForgeDemoVideoPlayer({
     }
   }, [skitId]);
 
-  // Optical laser scanner animation for document engine
   useEffect(() => {
     if (!isPlaying) return;
     const interval = setInterval(() => {
@@ -145,7 +163,6 @@ export function ForgeDemoVideoPlayer({
     return () => clearInterval(interval);
   }, [isPlaying]);
 
-  // Main 60FPS Video Animation Loop
   useEffect(() => {
     let interval = null;
     if (isPlaying) {
@@ -153,7 +170,7 @@ export function ForgeDemoVideoPlayer({
         setCurrentTime((prev) => {
           const next = +(prev + 0.1 * playbackSpeed).toFixed(2);
           if (next >= duration) {
-            return 0; // seamless continuous 5.5s video loop
+            return 0;
           }
           return next;
         });
@@ -162,20 +179,28 @@ export function ForgeDemoVideoPlayer({
     return () => clearInterval(interval);
   }, [isPlaying, duration, playbackSpeed]);
 
-  // Spoken voiceover synchronization on scene transitions
   useEffect(() => {
-    if (!isVoiceNarratorActive || !isPlaying) return;
+    if (!isPlaying) return;
 
-    if (currentTime >= 0.1 && currentTime <= 0.3) {
-      speechEngine.speak(clip.dialogue.problem, { accent: 'en-US' });
-    } else if (currentTime >= 1.8 && currentTime <= 2.0) {
-      speechEngine.speak(clip.dialogue.action, { accent: 'en-US' });
-    } else if (currentTime >= 3.8 && currentTime <= 4.0) {
-      speechEngine.speak(clip.dialogue.outcome, { accent: 'en-US' });
+    if (currentTime >= 0.1 && currentTime <= 0.2) {
+      if (activeClipId === 'receptionist') forgeAudioSynth.playPhoneRing();
+      else if (activeClipId === 'lead-engine') forgeAudioSynth.playWarp();
+      else forgeAudioSynth.playClick();
+
+      if (isVoiceNarratorActive) speechEngine.speak(clip.dialogue.problem, { accent: 'en-US' });
+    } else if (currentTime >= 1.8 && currentTime <= 1.9) {
+      if (activeClipId === 'document-engine') forgeAudioSynth.playScan();
+      else forgeAudioSynth.playClick();
+
+      if (isVoiceNarratorActive) speechEngine.speak(clip.dialogue.action, { accent: 'en-US' });
+    } else if (currentTime >= 3.8 && currentTime <= 3.9) {
+      forgeAudioSynth.playSuccess();
+      if (isVoiceNarratorActive) speechEngine.speak(clip.dialogue.outcome, { accent: 'en-US' });
     }
-  }, [Math.floor(currentTime * 10), isVoiceNarratorActive, isPlaying, clip]);
+  }, [Math.floor(currentTime * 10), isVoiceNarratorActive, isPlaying, clip, activeClipId]);
 
   const handleTogglePlay = () => {
+    forgeAudioSynth.playClick();
     if (isPlaying) {
       setIsPlaying(false);
       speechEngine.stopSpeaking();
@@ -188,16 +213,16 @@ export function ForgeDemoVideoPlayer({
   };
 
   const handleToggleVoice = () => {
+    forgeAudioSynth.playClick();
     if (isVoiceNarratorActive) {
       speechEngine.stopSpeaking();
       setIsVoiceNarratorActive(false);
     } else {
       setIsVoiceNarratorActive(true);
-      speechEngine.speak('Voiceover narration activated. ' + clip.dialogue.problem, { accent: 'en-US' });
+      speechEngine.speak('Voiceover activated. ' + clip.dialogue.problem, { accent: 'en-US' });
     }
   };
 
-  // Determine active visual stage (0.0s - 1.8s Problem | 1.8s - 3.8s AI Action | 3.8s - 5.5s Outcome)
   let stageKey = 'problem';
   let stageLabel = '0.0s - 1.8s: THE INBOUND BOTTLENECK';
   let stageBadgeColor = 'bg-rose-500/20 text-rose-300 border-rose-500/40';
@@ -206,7 +231,7 @@ export function ForgeDemoVideoPlayer({
   if (currentTime >= 1.8 && currentTime < 3.8) {
     stageKey = 'action';
     stageLabel = '1.8s - 3.8s: FORGE AI AUTONOMOUS REASONING';
-    stageBadgeColor = 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40';
+    stageBadgeColor = clip.colorBadge;
     stageText = clip.dialogue.action;
   } else if (currentTime >= 3.8) {
     stageKey = 'outcome';
@@ -218,7 +243,7 @@ export function ForgeDemoVideoPlayer({
   const progressPercent = Math.min((currentTime / duration) * 100, 100);
 
   return (
-    <div className="w-full rounded-3xl bg-gradient-to-b from-[#0c1424] via-[#090e1a] to-[#060a12] border-2 border-teal-500/40 hover:border-teal-400/70 transition-all overflow-hidden shadow-2xl font-mono text-xs">
+    <div className={`w-full rounded-3xl bg-gradient-to-b from-[#0c1424] via-[#090e1a] to-[#060a12] border-2 ${clip.colorBorder} transition-all overflow-hidden shadow-2xl font-mono text-xs`}>
       
       {/* 🎬 TOP VIDEO PLAYER CHROME HEADER */}
       <div className="px-6 py-4 bg-[#080d18] border-b border-slate-800 flex flex-wrap items-center justify-between gap-3">
@@ -237,8 +262,34 @@ export function ForgeDemoVideoPlayer({
           </span>
         </div>
 
-        {/* Video Controls & Voiceover Toggle */}
+        {/* View Mode & Video Controls */}
         <div className="flex items-center gap-2">
+          <div className="flex rounded-lg bg-dark-950 p-0.5 border border-slate-800">
+            <button
+              onClick={() => {
+                forgeAudioSynth.playClick();
+                setActiveTab('canvas');
+              }}
+              className={`px-2.5 py-1 rounded-md text-[10px] font-bold ${
+                activeTab === 'canvas' ? 'bg-slate-800 text-teal-300' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Motion Canvas
+            </button>
+            <button
+              onClick={() => {
+                forgeAudioSynth.playClick();
+                setActiveTab('telemetry');
+              }}
+              className={`px-2.5 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 ${
+                activeTab === 'telemetry' ? 'bg-slate-800 text-teal-300' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Terminal className="w-3 h-3" />
+              <span>Logs</span>
+            </button>
+          </div>
+
           <button
             onClick={handleToggleVoice}
             className={`px-3 py-1.5 rounded-xl text-[11px] font-bold flex items-center gap-1.5 transition-all border ${
@@ -249,15 +300,18 @@ export function ForgeDemoVideoPlayer({
             title="Spoken AI Audio Narration"
           >
             {isVoiceNarratorActive ? <Volume2 className="w-3.5 h-3.5 text-amber-400" /> : <VolumeX className="w-3.5 h-3.5" />}
-            <span>{isVoiceNarratorActive ? 'Voiceover ON' : 'Voiceover'}</span>
+            <span>{isVoiceNarratorActive ? 'Voice ON' : 'Voice'}</span>
           </button>
 
           <button
-            onClick={() => setPlaybackSpeed(s => (s === 1 ? 1.5 : s === 1.5 ? 2 : 1))}
+            onClick={() => {
+              forgeAudioSynth.playClick();
+              setPlaybackSpeed(s => (s === 1 ? 1.5 : s === 1.5 ? 2 : 1));
+            }}
             className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white font-mono text-[10px] font-bold"
             title="Playback Speed"
           >
-            {playbackSpeed}x Speed
+            {playbackSpeed}x
           </button>
         </div>
       </div>
@@ -278,246 +332,258 @@ export function ForgeDemoVideoPlayer({
           </span>
         </div>
 
-        {/* 🎨 THE ANIMATED VIDEO STAGE (CUSTOM FOR EACH SYSTEM) */}
-        <div className="relative rounded-3xl bg-gradient-to-tr from-[#080e1c] via-[#0c162a] to-[#060a14] border-2 border-slate-800 p-6 sm:p-8 min-h-[300px] flex items-center justify-center overflow-hidden shadow-inner">
-          
-          {/* 3D Perspective Glowing Grid Background */}
-          <div className="absolute inset-0 bg-[radial-gradient(#06b6d415_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none opacity-80" />
-          
-          {/* Animated Glowing Laser Scanline */}
-          <div 
-            className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-teal-400 to-transparent shadow-lg shadow-teal-400 transition-all duration-100 pointer-events-none"
-            style={{ top: `${(currentTime / duration) * 100}%` }}
-          />
+        {/* 🎨 THE ANIMATED VIDEO STAGE */}
+        {activeTab === 'canvas' ? (
+          <div className="relative rounded-3xl bg-gradient-to-tr from-[#080e1c] via-[#0c162a] to-[#060a14] border-2 border-slate-800 p-6 sm:p-8 min-h-[300px] flex items-center justify-center overflow-hidden shadow-inner">
+            
+            <div className="absolute inset-0 bg-[radial-gradient(#06b6d415_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none opacity-80" />
+            
+            <div 
+              className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-teal-400 to-transparent shadow-lg shadow-teal-400 transition-all duration-100 pointer-events-none"
+              style={{ top: `${(currentTime / duration) * 100}%` }}
+            />
 
-          {/* 1. 📞 RECEPTIONIST ANIMATED CLIP */}
-          {activeClipId === 'receptionist' && (
-            <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
-              {/* Left: Caller (Alex) */}
-              <div className={`md:col-span-4 p-4 rounded-2xl border transition-all duration-300 text-center space-y-2 ${
-                stageKey === 'problem'
-                  ? 'bg-rose-950/70 border-rose-400 shadow-xl shadow-rose-500/20 scale-105'
-                  : 'bg-slate-950/60 border-slate-800 opacity-70'
-              }`}>
-                <div className="relative inline-block">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-orange-500/20 border-2 border-rose-400 flex items-center justify-center text-3xl shadow-lg">
-                    👨‍💼
+            {/* 1. 📞 RECEPTIONIST ANIMATED CLIP (CYAN) */}
+            {activeClipId === 'receptionist' && (
+              <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
+                <div className={`md:col-span-4 p-4 rounded-2xl border transition-all duration-300 text-center space-y-2 ${
+                  stageKey === 'problem'
+                    ? 'bg-rose-950/70 border-rose-400 shadow-xl shadow-rose-500/20 scale-105'
+                    : 'bg-slate-950/60 border-slate-800 opacity-70'
+                }`}>
+                  <div className="relative inline-block">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-orange-500/20 border-2 border-rose-400 flex items-center justify-center text-3xl shadow-lg">
+                      👨‍💼
+                    </div>
+                    <span className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-rose-500 flex items-center justify-center text-white text-[10px] animate-bounce">
+                      📞
+                    </span>
                   </div>
-                  <span className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-rose-500 flex items-center justify-center text-white text-[10px] animate-bounce">
-                    📞
-                  </span>
+                  <div className="text-xs font-bold text-white">Alex (Caller)</div>
+                  <div className="text-[10px] font-mono text-rose-300 font-bold">10:45 PM Emergency</div>
                 </div>
-                <div className="text-xs font-bold text-white">Alex (Caller)</div>
-                <div className="text-[10px] font-mono text-rose-300 font-bold">10:45 PM Emergency</div>
-              </div>
 
-              {/* Middle: Live Audio Waveform */}
-              <div className="md:col-span-4 flex flex-col items-center justify-center space-y-2 py-2">
-                <div className="flex items-center gap-1">
-                  {[14, 30, 48, 22, 40, 18, 34, 12].map((h, i) => (
-                    <div
-                      key={i}
-                      className="w-1.5 bg-gradient-to-t from-cyan-400 via-teal-300 to-indigo-400 rounded-full transition-all duration-150 shadow-md shadow-cyan-500/50"
-                      style={{
-                        height: isPlaying 
-                          ? `${Math.floor(10 + Math.sin(currentTime * 6 + i) * 20 + h * 0.4)}px`
-                          : '10px'
-                      }}
-                    />
-                  ))}
+                <div className="md:col-span-4 flex flex-col items-center justify-center space-y-2 py-2">
+                  <div className="flex items-center gap-1">
+                    {[14, 30, 48, 22, 40, 18, 34, 12].map((h, i) => (
+                      <div
+                        key={i}
+                        className="w-1.5 bg-gradient-to-t from-cyan-400 via-teal-300 to-indigo-400 rounded-full transition-all duration-150 shadow-md shadow-cyan-500/50"
+                        style={{
+                          height: isPlaying 
+                            ? `${Math.floor(10 + Math.sin(currentTime * 6 + i) * 20 + h * 0.4)}px`
+                            : '10px'
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <div className="px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-[10px] font-bold">
+                    {stageKey === 'action' ? '⚡ DELTA DENTAL PPO VERIFIED' : 'SUB-2s NLP MATRIX'}
+                  </div>
                 </div>
-                <div className="px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-cyan-300 text-[10px] font-bold">
-                  {stageKey === 'action' ? '⚡ DELTA DENTAL PPO VERIFIED' : 'SUB-2s NLP MATRIX'}
-                </div>
-              </div>
 
-              {/* Right: FORGE Receptionist & Calendar Lock */}
-              <div className={`md:col-span-4 p-4 rounded-2xl border transition-all duration-300 text-center space-y-2 ${
-                stageKey === 'outcome'
-                  ? 'bg-emerald-950/70 border-emerald-400 shadow-xl shadow-emerald-500/20 scale-105'
-                  : 'bg-slate-950/60 border-slate-800 opacity-70'
-              }`}>
-                <ReceptionistCharacter size="md" />
-                <div className="text-xs font-bold text-white">FORGE Receptionist</div>
-                <div className="text-[10px] font-mono px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">
-                  {stageKey === 'outcome' ? '✅ SAT 11:00 AM LOCKED' : 'DENTRIX SYNC ARMED'}
+                <div className={`md:col-span-4 p-4 rounded-2xl border transition-all duration-300 text-center space-y-2 ${
+                  stageKey === 'outcome'
+                    ? 'bg-emerald-950/70 border-emerald-400 shadow-xl shadow-emerald-500/20 scale-105'
+                    : 'bg-slate-950/60 border-slate-800 opacity-70'
+                }`}>
+                  <ReceptionistCharacter size="md" />
+                  <div className="text-xs font-bold text-white">FORGE Receptionist</div>
+                  <div className="text-[10px] font-mono px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold">
+                    {stageKey === 'outcome' ? '✅ SAT 11:00 AM LOCKED' : 'DENTRIX SYNC ARMED'}
+                  </div>
                 </div>
               </div>
+            )}
+
+            {/* 2. 🎯 SPEED-TO-LEAD ANIMATED CLIP (VIOLET) */}
+            {activeClipId === 'lead-engine' && (
+              <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
+                <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
+                  stageKey === 'problem' ? 'bg-rose-950/70 border-rose-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800 opacity-70'
+                }`}>
+                  <div className="text-4xl">📝</div>
+                  <div className="text-xs font-bold text-white">$1.4M Commercial Lead</div>
+                  <div className="text-[10px] text-rose-300 font-mono font-bold">Web Form Arrived</div>
+                </div>
+
+                <div className="md:col-span-4 flex flex-col items-center justify-center space-y-2">
+                  <div className="w-20 h-20 rounded-full border-4 border-dashed border-violet-400 flex flex-col items-center justify-center bg-dark-950 animate-spin" style={{ animationDuration: '4s' }}>
+                    <span className="text-xl font-black text-violet-300">96</span>
+                    <span className="text-[8px] font-bold text-slate-300">ICP FIT</span>
+                  </div>
+                  <span className="text-[10px] text-violet-400 font-bold font-mono">RADAR EVALUATED</span>
+                </div>
+
+                <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
+                  stageKey === 'outcome' ? 'bg-emerald-950/70 border-emerald-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800 opacity-70'
+                }`}>
+                  <LeadEngineCharacter size="md" />
+                  <div className="text-xs font-bold text-white">2-Way SMS Fired</div>
+                  <div className="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/20 py-1 rounded border border-emerald-500/40">
+                    ⚡ 38s VIP TOUR BOOKED
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 3. 🔷 SUPPORT RAG ANIMATED CLIP (BLUE) */}
+            {activeClipId === 'support-agent' && (
+              <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
+                <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
+                  stageKey === 'problem' ? 'bg-rose-950/70 border-rose-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800'
+                }`}>
+                  <div className="text-3xl">❓</div>
+                  <div className="text-xs font-bold text-white">Complex SLA Query</div>
+                  <div className="text-[10px] text-rose-300 font-mono font-bold">Clause Section 14</div>
+                </div>
+
+                <div className="md:col-span-4 flex flex-col items-center justify-center space-y-2">
+                  <div className="w-16 h-16 rounded-2xl bg-blue-500/10 border-2 border-blue-400 flex items-center justify-center text-2xl animate-pulse">
+                    🧠
+                  </div>
+                  <span className="text-[10px] text-blue-300 font-bold font-mono">VECTOR RAG SEARCH</span>
+                </div>
+
+                <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
+                  stageKey === 'outcome' ? 'bg-emerald-950/70 border-emerald-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800'
+                }`}>
+                  <SupportCharacter size="md" />
+                  <div className="text-xs font-bold text-white">Zero-Hallucination</div>
+                  <div className="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/20 py-1.5 rounded-lg border border-emerald-500/40">
+                    ✅ CITATION VERIFIED
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 4. 📄 DOCUMENT OCR ANIMATED CLIP (ORANGE) */}
+            {activeClipId === 'document-engine' && (
+              <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
+                <div className={`md:col-span-5 relative p-4 rounded-2xl border-2 space-y-2 overflow-hidden transition-all ${
+                  stageKey === 'problem' ? 'bg-rose-950/50 border-rose-400' : 'bg-slate-950/90 border-orange-500/40'
+                }`}>
+                  <div 
+                    className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-400 to-transparent shadow-lg shadow-orange-400 transition-all duration-150"
+                    style={{ top: `${laserY}%` }}
+                  />
+                  <div className="text-[11px] font-mono text-slate-300 font-bold">📄 VENDOR INVOICE #88491</div>
+                  <div className="text-[10px] text-slate-300 space-y-1">
+                    <div>• H100 Cloud GPU Units: $3,840.00</div>
+                    <div>• Dedicated Bandwidth: $450.00</div>
+                    <div className="text-orange-300 font-bold pt-1 border-t border-slate-800">TOTAL: $4,290.00</div>
+                  </div>
+                </div>
+
+                <div className="md:col-span-2 flex justify-center">
+                  <div className="w-12 h-12 rounded-full bg-orange-500/20 border-2 border-orange-400 flex items-center justify-center text-orange-300 animate-pulse text-lg">
+                    ⚡
+                  </div>
+                </div>
+
+                <div className={`md:col-span-5 p-4 rounded-2xl border-2 text-center space-y-2 transition-all ${
+                  stageKey === 'outcome' ? 'bg-emerald-950/70 border-emerald-400 scale-105 shadow-xl' : 'bg-slate-950/80 border-slate-800'
+                }`}>
+                  <DocumentCharacter size="md" />
+                  <div className="text-xs font-bold text-white">QuickBooks AP Ledger</div>
+                  <div className="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/20 py-1.5 rounded-lg border border-emerald-500/40">
+                    ✅ 100% BALANCED ($0 ERRORS)
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 5. 📥 EMAIL AGENT ANIMATED CLIP (PINK) */}
+            {activeClipId === 'email-agent' && (
+              <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
+                <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
+                  stageKey === 'problem' ? 'bg-rose-950/70 border-rose-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800'
+                }`}>
+                  <div className="text-3xl">📥</div>
+                  <div className="text-xs font-bold text-white">300+ Inbox Overflow</div>
+                  <div className="text-[10px] text-rose-400 font-mono font-bold">Unread Chaos</div>
+                </div>
+
+                <div className="md:col-span-4 flex flex-col gap-2">
+                  <div className="px-3 py-1.5 rounded-xl bg-pink-500/20 text-pink-300 border border-pink-500/40 text-[10px] font-bold flex items-center justify-between">
+                    <span>🔥 HOT PARTNERSHIP</span>
+                    <span>1-Click Draft</span>
+                  </div>
+                  <div className="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold flex items-center justify-between">
+                    <span>💳 PENDING INVOICE</span>
+                    <span>Verified</span>
+                  </div>
+                  <div className="px-3 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 text-[10px] font-bold flex items-center justify-between">
+                    <span>💬 VIP TICKET</span>
+                    <span>Triaged</span>
+                  </div>
+                </div>
+
+                <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
+                  stageKey === 'outcome' ? 'bg-emerald-950/70 border-emerald-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800'
+                }`}>
+                  <EmailCharacter size="md" />
+                  <div className="text-xs font-bold text-white">Zero Inbox Cleaned</div>
+                  <div className="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/20 py-1.5 rounded-lg border border-emerald-500/40">
+                    ⚡ 5 MIN TRIAGE
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* 6. 📅 APPOINTMENT AGENT ANIMATED CLIP (GREEN) */}
+            {activeClipId === 'appointment-agent' && (
+              <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
+                <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
+                  stageKey === 'problem' ? 'bg-rose-950/70 border-rose-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800'
+                }`}>
+                  <div className="text-3xl">⏳</div>
+                  <div className="text-xs font-bold text-white">5-Email Friction</div>
+                  <div className="text-[10px] text-rose-300 font-mono font-bold">Scheduling Friction</div>
+                </div>
+
+                <div className="md:col-span-4 flex flex-col items-center justify-center space-y-2">
+                  <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border-2 border-emerald-400 flex items-center justify-center text-2xl animate-pulse">
+                    📅
+                  </div>
+                  <span className="text-[10px] text-emerald-300 font-bold font-mono">3 DOCTOR CALENDARS</span>
+                </div>
+
+                <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
+                  stageKey === 'outcome' ? 'bg-emerald-950/70 border-emerald-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800'
+                }`}>
+                  <AppointmentCharacter size="md" />
+                  <div className="text-xs font-bold text-white">Slot Confirmed</div>
+                  <div className="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/20 py-1.5 rounded-lg border border-emerald-500/40">
+                    ✅ CALENDAR LOCKED
+                  </div>
+                </div>
+              </div>
+            )}
+
+          </div>
+        ) : (
+          <div className="rounded-3xl bg-[#030712] border-2 border-slate-800 p-6 min-h-[300px] font-mono text-xs text-slate-300 space-y-2">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-800 text-teal-400">
+              <span className="flex items-center gap-2">
+                <Terminal className="w-4 h-4" /> FORGE LIVE EXECUTION STREAM [{clip.sysId}]
+              </span>
+              <span className="text-[10px] text-slate-400">LATENCY: 14ms</span>
             </div>
-          )}
-
-          {/* 2. 🚀 SPEED-TO-LEAD ANIMATED CLIP */}
-          {activeClipId === 'lead-engine' && (
-            <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
-              <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
-                stageKey === 'problem' ? 'bg-amber-950/70 border-amber-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800 opacity-70'
-              }`}>
-                <div className="text-4xl">📝</div>
-                <div className="text-xs font-bold text-white">$1.4M Commercial Lead</div>
-                <div className="text-[10px] text-amber-300 font-mono font-bold">Web Form Arrived</div>
-              </div>
-
-              <div className="md:col-span-4 flex flex-col items-center justify-center space-y-2">
-                <div className="w-20 h-20 rounded-full border-4 border-dashed border-amber-400 flex flex-col items-center justify-center bg-dark-950 animate-spin" style={{ animationDuration: '4s' }}>
-                  <span className="text-xl font-black text-amber-300">96</span>
-                  <span className="text-[8px] font-bold text-slate-300">ICP FIT</span>
-                </div>
-                <span className="text-[10px] text-amber-400 font-bold font-mono">RADAR EVALUATED</span>
-              </div>
-
-              <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
-                stageKey === 'outcome' ? 'bg-emerald-950/70 border-emerald-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800 opacity-70'
-              }`}>
-                <LeadEngineCharacter size="md" />
-                <div className="text-xs font-bold text-white">2-Way SMS Fired</div>
-                <div className="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/20 py-1 rounded border border-emerald-500/40">
-                  ⚡ 38s VIP TOUR BOOKED
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* 3. 📄 DOCUMENT OCR ANIMATED CLIP */}
-          {activeClipId === 'document-engine' && (
-            <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
-              <div className={`md:col-span-5 relative p-4 rounded-2xl border-2 space-y-2 overflow-hidden transition-all ${
-                stageKey === 'problem' ? 'bg-rose-950/50 border-rose-400' : 'bg-slate-950/90 border-cyan-500/40'
-              }`}>
-                <div 
-                  className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-lg shadow-cyan-400 transition-all duration-150"
-                  style={{ top: `${laserY}%` }}
-                />
-                <div className="text-[11px] font-mono text-slate-300 font-bold">📄 VENDOR INVOICE #88491</div>
-                <div className="text-[10px] text-slate-300 space-y-1">
-                  <div>• H100 Cloud GPU Units: $3,840.00</div>
-                  <div>• Dedicated Bandwidth: $450.00</div>
-                  <div className="text-cyan-300 font-bold pt-1 border-t border-slate-800">TOTAL: $4,290.00</div>
-                </div>
-              </div>
-
-              <div className="md:col-span-2 flex justify-center">
-                <div className="w-12 h-12 rounded-full bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center text-cyan-300 animate-pulse text-lg">
-                  ⚡
-                </div>
-              </div>
-
-              <div className={`md:col-span-5 p-4 rounded-2xl border-2 text-center space-y-2 transition-all ${
-                stageKey === 'outcome' ? 'bg-emerald-950/70 border-emerald-400 scale-105 shadow-xl' : 'bg-slate-950/80 border-slate-800'
-              }`}>
-                <DocumentCharacter size="md" />
-                <div className="text-xs font-bold text-white">QuickBooks AP Ledger</div>
-                <div className="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/20 py-1.5 rounded-lg border border-emerald-500/40">
-                  ✅ 100% BALANCED ($0 ERRORS)
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* 4. 📥 EMAIL AGENT ANIMATED CLIP */}
-          {activeClipId === 'email-agent' && (
-            <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
-              <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
-                stageKey === 'problem' ? 'bg-rose-950/70 border-rose-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800'
-              }`}>
-                <div className="text-3xl">📥</div>
-                <div className="text-xs font-bold text-white">300+ Inbox Overflow</div>
-                <div className="text-[10px] text-rose-400 font-mono font-bold">Unread Chaos</div>
-              </div>
-
-              <div className="md:col-span-4 flex flex-col gap-2">
-                <div className="px-3 py-1.5 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-bold flex items-center justify-between">
-                  <span>🔥 HOT PARTNERSHIP</span>
-                  <span>1-Click Draft</span>
-                </div>
-                <div className="px-3 py-1.5 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold flex items-center justify-between">
-                  <span>💳 PENDING INVOICE</span>
-                  <span>Verified</span>
-                </div>
-                <div className="px-3 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 text-[10px] font-bold flex items-center justify-between">
-                  <span>💬 VIP TICKET</span>
-                  <span>Triaged</span>
-                </div>
-              </div>
-
-              <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
-                stageKey === 'outcome' ? 'bg-emerald-950/70 border-emerald-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800'
-              }`}>
-                <EmailCharacter size="md" />
-                <div className="text-xs font-bold text-white">Zero Inbox Cleaned</div>
-                <div className="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/20 py-1.5 rounded-lg border border-emerald-500/40">
-                  ⚡ 5 MIN TRIAGE
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* 5. 🧠 SUPPORT RAG ANIMATED CLIP */}
-          {activeClipId === 'support-agent' && (
-            <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
-              <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
-                stageKey === 'problem' ? 'bg-rose-950/70 border-rose-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800'
-              }`}>
-                <div className="text-3xl">❓</div>
-                <div className="text-xs font-bold text-white">Complex Contract SLA</div>
-                <div className="text-[10px] text-rose-300 font-mono font-bold">Clause Section 14</div>
-              </div>
-
-              <div className="md:col-span-4 flex flex-col items-center justify-center space-y-2">
-                <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 border-2 border-cyan-400 flex items-center justify-center text-2xl animate-pulse">
-                  🧠
-                </div>
-                <span className="text-[10px] text-cyan-300 font-bold font-mono">VECTOR RAG SEARCH</span>
-              </div>
-
-              <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
-                stageKey === 'outcome' ? 'bg-emerald-950/70 border-emerald-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800'
-              }`}>
-                <SupportCharacter size="md" />
-                <div className="text-xs font-bold text-white">Zero-Hallucination</div>
-                <div className="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/20 py-1.5 rounded-lg border border-emerald-500/40">
-                  ✅ CITATION VERIFIED
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* 6. 📅 APPOINTMENT AGENT ANIMATED CLIP */}
-          {activeClipId === 'appointment-agent' && (
-            <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-12 gap-4 items-center relative z-10">
-              <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
-                stageKey === 'problem' ? 'bg-rose-950/70 border-rose-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800'
-              }`}>
-                <div className="text-3xl">⏳</div>
-                <div className="text-xs font-bold text-white">5-Email Tag</div>
-                <div className="text-[10px] text-rose-300 font-mono font-bold">Scheduling Friction</div>
-              </div>
-
-              <div className="md:col-span-4 flex flex-col items-center justify-center space-y-2">
-                <div className="w-16 h-16 rounded-2xl bg-pink-500/10 border-2 border-pink-400 flex items-center justify-center text-2xl animate-pulse">
-                  📅
-                </div>
-                <span className="text-[10px] text-pink-300 font-bold font-mono">3 DOCTOR CALENDARS</span>
-              </div>
-
-              <div className={`md:col-span-4 p-4 rounded-2xl border text-center space-y-2 transition-all ${
-                stageKey === 'outcome' ? 'bg-emerald-950/70 border-emerald-400 scale-105 shadow-xl' : 'bg-slate-950/60 border-slate-800'
-              }`}>
-                <AppointmentCharacter size="md" />
-                <div className="text-xs font-bold text-white">Slot Confirmed</div>
-                <div className="text-[10px] font-mono text-emerald-300 font-bold bg-emerald-500/20 py-1.5 rounded-lg border border-emerald-500/40">
-                  ✅ CALENDAR LOCKED
-                </div>
-              </div>
-            </div>
-          )}
-
-        </div>
+            <div className="text-slate-400">[0.0s] Inbound trigger detected from external client...</div>
+            <div className="text-rose-400">[0.8s] Event: {clip.dialogue.problem}</div>
+            <div className="text-cyan-400">[2.1s] Policy check passed. AI Agent activated: {clip.productName}</div>
+            <div className="text-amber-400">[3.2s] Action payload dispatched: {clip.dialogue.action}</div>
+            <div className="text-emerald-400 font-bold">[4.9s] Success 200 OK: {clip.dialogue.outcome}</div>
+            <div className="text-slate-400">[5.5s] System state persisted to persistent database ledger.</div>
+          </div>
+        )}
 
         {/* 📜 DYNAMIC SCENE SCRIPT & STORYBOARD BOX */}
         <div className={`p-6 rounded-2xl border-2 transition-all duration-300 ${stageBadgeColor}`}>
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider mb-1.5">
             {stageKey === 'problem' && <span className="text-rose-400 font-mono">🚨 Stage 1: Bottleneck Occurs</span>}
-            {stageKey === 'action' && <span className="text-cyan-400 font-mono">⚡ Stage 2: FORGE AI Autonomous Processing</span>}
+            {stageKey === 'action' && <span className="font-mono">⚡ Stage 2: FORGE AI Autonomous Processing</span>}
             {stageKey === 'outcome' && <span className="text-emerald-400 font-mono">✅ Stage 3: Deterministic Business Outcome</span>}
           </div>
           <div className="text-sm sm:text-base font-bold text-white font-sans leading-relaxed">
@@ -529,6 +595,7 @@ export function ForgeDemoVideoPlayer({
         <div className="space-y-2">
           <div 
             onClick={(e) => {
+              forgeAudioSynth.playClick();
               const rect = e.currentTarget.getBoundingClientRect();
               const clickPos = (e.clientX - rect.left) / rect.width;
               setCurrentTime(+(clickPos * duration).toFixed(2));
@@ -542,19 +609,28 @@ export function ForgeDemoVideoPlayer({
           </div>
           <div className="flex justify-between text-[10px] font-mono text-slate-400 font-bold">
             <span 
-              onClick={() => setCurrentTime(0)} 
+              onClick={() => {
+                forgeAudioSynth.playClick();
+                setCurrentTime(0);
+              }} 
               className={`cursor-pointer hover:text-white ${currentTime < 1.8 ? 'text-rose-400 font-black' : ''}`}
             >
               0.0s Problem
             </span>
             <span 
-              onClick={() => setCurrentTime(1.8)} 
+              onClick={() => {
+                forgeAudioSynth.playClick();
+                setCurrentTime(1.8);
+              }} 
               className={`cursor-pointer hover:text-white ${currentTime >= 1.8 && currentTime < 3.8 ? 'text-cyan-400 font-black' : ''}`}
             >
               1.8s AI Works
             </span>
             <span 
-              onClick={() => setCurrentTime(3.8)} 
+              onClick={() => {
+                forgeAudioSynth.playSuccess();
+                setCurrentTime(3.8);
+              }} 
               className={`cursor-pointer hover:text-white ${currentTime >= 3.8 ? 'text-emerald-400 font-black' : ''}`}
             >
               3.8s Outcome
@@ -576,6 +652,7 @@ export function ForgeDemoVideoPlayer({
 
             <button
               onClick={() => {
+                forgeAudioSynth.playClick();
                 setCurrentTime(0);
                 setIsPlaying(true);
               }}
@@ -589,7 +666,10 @@ export function ForgeDemoVideoPlayer({
           <div className="flex items-center gap-2">
             {onTryLive && (
               <button
-                onClick={onTryLive}
+                onClick={() => {
+                  forgeAudioSynth.playSuccess();
+                  onTryLive();
+                }}
                 className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-850 text-teal-300 border border-teal-500/50 font-bold flex items-center gap-2 transition-all hover:scale-105 shadow-md"
               >
                 <span>Test Live in Sandbox</span>
@@ -612,6 +692,7 @@ export function ForgeDemoVideoPlayer({
                 <button
                   key={item.id}
                   onClick={() => {
+                    forgeAudioSynth.playClick();
                     setActiveClipId(item.id);
                     setCurrentTime(0);
                     setIsPlaying(true);
