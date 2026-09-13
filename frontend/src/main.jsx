@@ -6,7 +6,7 @@ import './index.css';
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false, error: null, errorInfo: null };
   }
 
   static getDerivedStateFromError(error) {
@@ -15,7 +15,18 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.error("FORGE Client Error caught by boundary:", error, errorInfo);
+    this.setState({ errorInfo });
   }
+
+  handleResetAndReload = () => {
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+    } catch (e) {
+      // ignore
+    }
+    window.location.href = window.location.origin + window.location.pathname;
+  };
 
   render() {
     if (this.state.hasError) {
@@ -33,7 +44,7 @@ class ErrorBoundary extends React.Component {
           textAlign: 'center'
         }}>
           <div style={{
-            maxWidth: '500px',
+            maxWidth: '560px',
             backgroundColor: '#0c1424',
             border: '2px solid rgba(20, 184, 166, 0.4)',
             borderRadius: '24px',
@@ -42,13 +53,33 @@ class ErrorBoundary extends React.Component {
           }}>
             <div style={{ fontSize: '48px', marginBottom: '16px' }}>⚡</div>
             <h2 style={{ fontSize: '24px', fontWeight: 900, marginBottom: '8px', color: '#fff' }}>
-              FORGE System Recovered
+              FORGE System Live Recovery
             </h2>
-            <p style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '24px', lineHeight: '1.6' }}>
-              A temporary interface state occurred. Click below to reload the high-velocity live workspace.
+            <p style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '18px', lineHeight: '1.6' }}>
+              Click below to reset cache and launch the high-velocity live workspace.
             </p>
+
+            {this.state.error && (
+              <div style={{
+                backgroundColor: 'rgba(0,0,0,0.6)',
+                border: '1px solid rgba(244,63,94,0.3)',
+                borderRadius: '12px',
+                padding: '12px',
+                marginBottom: '20px',
+                textAlign: 'left',
+                fontFamily: 'monospace',
+                fontSize: '11px',
+                color: '#fca5a5',
+                maxHeight: '120px',
+                overflow: 'auto',
+                wordBreak: 'break-all'
+              }}>
+                {this.state.error.toString()}
+              </div>
+            )}
+
             <button
-              onClick={() => window.location.reload()}
+              onClick={this.handleResetAndReload}
               style={{
                 background: 'linear-gradient(to right, #14b8a6, #06b6d4)',
                 color: '#020617',
@@ -61,7 +92,7 @@ class ErrorBoundary extends React.Component {
                 boxShadow: '0 10px 15px -3px rgba(20, 184, 166, 0.3)'
               }}
             >
-              RELOAD FORGE WORKSPACE ↺
+              LAUNCH LIVE FORGE WORKSPACE ↺
             </button>
           </div>
         </div>
