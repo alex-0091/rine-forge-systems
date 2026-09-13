@@ -18,6 +18,8 @@ import {
 } from './ForgeCharacterUniverse';
 import { speechEngine } from '../../../utils/speechEngine';
 import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
+import { ActionButton } from '../v4/ActionButton';
+import { AiStatusBadge } from '../v4/AiStatusBadge';
 
 // Live Demonstration Scenarios for the Hero Visual Workflow
 const HERO_SCENARIOS = [
@@ -149,34 +151,34 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
           {/* Primary High-Converting CTAs */}
           <div className="flex flex-col items-center justify-center gap-3 pt-3">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto font-mono text-xs">
-              {/* Primary CTA: Visually Dominant */}
-              <button
+              {/* Primary CTA: Visually Dominant with Tactile Response */}
+              <ActionButton
+                variant="primary"
+                size="lg"
                 onClick={() => {
-                  forgeAudioSynth.playSuccess();
                   if (onNavigate) onNavigate('audit');
                   else {
                     const el = document.getElementById('automation-calculator');
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
-                className="w-full sm:w-auto min-h-[48px] px-9 py-4 bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-300 hover:from-teal-300 hover:to-cyan-200 text-slate-950 font-black rounded-2xl transition-all shadow-2xl shadow-teal-500/30 flex items-center justify-center gap-2.5 hover:scale-105 active:scale-95 ring-2 ring-teal-300/60"
               >
-                <span className="text-sm font-black tracking-wide">GET YOUR FREE AI AUDIT</span>
-                <ArrowRight className="w-4 h-4 text-slate-950 stroke-[3]" />
-              </button>
+                GET YOUR FREE AI AUDIT
+              </ActionButton>
 
               {/* Secondary CTA */}
-              <button
+              <ActionButton
+                variant="secondary"
+                size="lg"
+                showIcon={false}
                 onClick={() => {
-                  forgeAudioSynth.playClick();
                   const el = document.getElementById('v3-video-experience') || document.getElementById('watch-demos');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                   else if (onNavigate) onNavigate('watch-demos');
                 }}
-                className="w-full sm:w-auto min-h-[48px] px-7 py-4 bg-slate-900/90 hover:bg-slate-800 text-slate-200 hover:text-white border-2 border-slate-700/80 hover:border-slate-500 font-bold rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 hover:scale-105 active:scale-95"
               >
-                <span>WATCH HOW IT WORKS</span>
-              </button>
+                WATCH HOW IT WORKS
+              </ActionButton>
             </div>
 
             {/* Small text underneath primary CTA */}
@@ -205,17 +207,23 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
           {/* Top Bar: Live Status & Industry Selector */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
             <div className="flex items-center gap-3">
-              <span className="w-3 h-3 rounded-full bg-emerald-400 animate-ping" />
-              <div>
-                <div className="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <span className="text-teal-400">● LIVE AI EMPLOYEE SIMULATION</span>
-                  <span className="px-2 py-0.5 rounded bg-teal-500/10 text-teal-300 text-[10px] font-bold border border-teal-500/30">
-                    REAL-TIME AUTOMATION
-                  </span>
-                </div>
-                <div className="text-[11px] text-slate-400 font-mono">
-                  Watch what happens when a customer contacts your business:
-                </div>
+              <AiStatusBadge 
+                status={
+                  scenarioStep === 0 ? 'online' :
+                  scenarioStep === 1 ? 'analyzing' :
+                  scenarioStep === 2 ? 'checking' :
+                  scenarioStep === 3 ? 'action' : 'completed'
+                }
+                customLabel={
+                  scenarioStep === 0 ? 'LIVE SIMULATION: READY' :
+                  scenarioStep === 1 ? 'AI READING INQUIRY' :
+                  scenarioStep === 2 ? 'CHECKING CALENDAR & DB' :
+                  scenarioStep === 3 ? 'DISPATCHING REPLY' : 'TASK COMPLETED ✓'
+                }
+                size="md"
+              />
+              <div className="text-[11px] text-slate-400 font-mono hidden sm:block">
+                Watch what happens when a customer contacts your business:
               </div>
             </div>
 

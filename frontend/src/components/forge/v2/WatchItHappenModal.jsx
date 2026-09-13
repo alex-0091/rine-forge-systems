@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Play, RotateCcw, CheckCircle2, Bot, Sparkles, ArrowRight, ShieldCheck, Zap, MessageSquare, Calendar, Building2 } from 'lucide-react';
 import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
+import { AiStatusBadge } from '../v4/AiStatusBadge';
+import { ActionButton } from '../v4/ActionButton';
 
 export function WatchItHappenModal({ isOpen, onClose, demoData }) {
   if (!isOpen || !demoData) return null;
@@ -75,10 +77,10 @@ export function WatchItHappenModal({ isOpen, onClose, demoData }) {
                 <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
                   {demoData.title}
                 </span>
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[9px] font-mono font-bold flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  AI ONLINE
-                </span>
+                <AiStatusBadge 
+                  status={currentStep === steps.length - 1 ? 'completed' : isRunning ? 'action' : 'online'} 
+                  size="sm" 
+                />
               </div>
               <p className="text-[11px] text-slate-400 font-sans mt-0.5">
                 {demoData.subtitle || 'Real-time Autonomous Workflow Demonstration'}
@@ -177,22 +179,28 @@ export function WatchItHappenModal({ isOpen, onClose, demoData }) {
             </div>
           </div>
 
-          <button
+          <ActionButton
+            variant="ghost"
+            size="sm"
             onClick={handleRestart}
-            className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-[10px] font-bold flex items-center gap-1.5 transition-all"
+            icon={RotateCcw}
+            iconPosition="left"
+            className="text-[10px] font-mono"
           >
-            <RotateCcw className="w-3 h-3" /> Replay
-          </button>
+            Replay
+          </ActionButton>
         </div>
 
         {/* Footer Close / Next */}
         <div className="flex items-center justify-end gap-3 pt-2 border-t border-slate-800">
-          <button
+          <ActionButton
+            variant="secondary"
+            size="md"
             onClick={onClose}
-            className="min-h-[44px] px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 font-mono text-xs font-bold transition-all flex items-center justify-center"
+            className="text-xs font-mono"
           >
             Close Demo
-          </button>
+          </ActionButton>
         </div>
 
       </div>

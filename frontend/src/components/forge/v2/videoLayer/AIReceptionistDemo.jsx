@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bot, User, CheckCircle2, Calendar, Clock, Sparkles, Send, ShieldCheck, ArrowRight, RotateCcw, Play, Check } from 'lucide-react';
 import { forgeAudioSynth } from '../../../../utils/forgeAudioSynth';
+import { AiStatusBadge } from '../../v4/AiStatusBadge';
+import { ActionButton } from '../../v4/ActionButton';
 
 export function AIReceptionistDemo({ onNextStep }) {
   const [videoLoaded, setVideoLoaded] = useState(false);
@@ -95,17 +97,14 @@ export function AIReceptionistDemo({ onNextStep }) {
         </div>
         
         <div className="flex items-center gap-2.5">
-          {/* Status Badge: 🟢 AI ONLINE */}
-          <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/40 text-[11px] font-mono font-bold flex items-center gap-1.5 shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>AI ONLINE</span>
-          </span>
-
-          {chatStep === 5 && (
-            <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400 text-[10px] font-bold flex items-center gap-1 shadow-md shadow-emerald-500/10">
-              <Check className="w-3 h-3 text-emerald-400" /> TASK COMPLETED ✓
-            </span>
-          )}
+          <AiStatusBadge 
+            status={
+              chatStep === 5 ? 'completed' :
+              chatStep >= 3 ? 'checking' :
+              chatStep >= 1 ? 'analyzing' : 'online'
+            }
+            size="md"
+          />
         </div>
       </div>
 
@@ -124,21 +123,27 @@ export function AIReceptionistDemo({ onNextStep }) {
 
           {/* Interactive Trigger Button */}
           {chatStep === 0 ? (
-            <button
+            <ActionButton
+              variant="primary"
+              size="md"
               onClick={startDemo}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-black text-xs font-mono tracking-wider uppercase transition-all shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 hover:scale-105 active:scale-95"
+              icon={Play}
+              iconPosition="left"
+              className="w-full sm:w-auto text-xs font-mono uppercase"
             >
-              <Play className="w-3.5 h-3.5 fill-current" />
-              <span>▶ SEE AI HANDLE A CUSTOMER</span>
-            </button>
+              SEE AI HANDLE A CUSTOMER
+            </ActionButton>
           ) : (
-            <button
+            <ActionButton
+              variant="secondary"
+              size="sm"
               onClick={chatStep === 5 ? startDemo : resetDemo}
-              className="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-emerald-500/40 text-emerald-300 font-bold text-xs font-mono flex items-center justify-center gap-1.5 transition-all"
+              icon={RotateCcw}
+              iconPosition="left"
+              className="w-full sm:w-auto text-xs font-mono"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>{chatStep === 5 ? '▶ REPLAY: SEE AI HANDLE A CUSTOMER' : 'Reset Simulation'}</span>
-            </button>
+              {chatStep === 5 ? 'REPLAY DEMO' : 'Reset Simulation'}
+            </ActionButton>
           )}
         </div>
 
@@ -314,16 +319,16 @@ export function AIReceptionistDemo({ onNextStep }) {
           </div>
           
           {onNextStep && (
-            <button
-              onClick={() => {
-                forgeAudioSynth.playSuccess();
-                onNextStep();
-              }}
-              className="w-full sm:w-auto px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs tracking-wider uppercase transition-all shadow-lg shadow-emerald-500/20 hover:scale-105 flex items-center justify-center gap-2 shrink-0 font-mono"
+            <ActionButton
+              variant="primary"
+              size="md"
+              onClick={onNextStep}
+              icon={ArrowRight}
+              iconPosition="right"
+              className="w-full sm:w-auto text-xs font-mono uppercase shrink-0"
             >
-              <span>See AI Sales Qualifier</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+              See AI Sales Qualifier
+            </ActionButton>
           )}
         </div>
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Bot, Target, MessageSquare, Settings2, ArrowRight, Sparkles, CheckCircle2, Zap } from 'lucide-react';
 import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
+import { AiStatusBadge } from '../v4/AiStatusBadge';
+import { ActionButton } from '../v4/ActionButton';
 
 export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee }) {
   const employees = [
@@ -199,16 +201,13 @@ export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee 
             return (
               <div
                 key={emp.id}
-                className={`rounded-2xl border ${emp.border} ${emp.bg} p-5 sm:p-6 flex flex-col justify-between space-y-4 transition-all duration-300 hover:scale-[1.02] shadow-xl ${emp.glow} group`}
+                className={`rounded-2xl border ${emp.border} ${emp.bg} p-5 sm:p-6 flex flex-col justify-between space-y-4 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl ${emp.glow} group`}
               >
                 <div>
                   {/* Top Bar: Emoji, Role & Online Status */}
                   <div className="flex items-center justify-between gap-2 mb-3">
                     <span className="text-2xl">{emp.emoji}</span>
-                    <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-mono font-bold flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      {emp.status}
-                    </span>
+                    <AiStatusBadge status="online" size="sm" />
                   </div>
 
                   <h3 className="text-sm font-black text-white font-mono tracking-wide uppercase">
@@ -227,13 +226,16 @@ export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee 
                 </div>
 
                 {/* Direct Action Trigger: WATCH DEMO → */}
-                <button
+                <ActionButton
+                  variant="secondary"
+                  size="md"
                   onClick={() => handleCardClick(emp)}
-                  className={`w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-slate-900/90 group-hover:bg-slate-800 border border-slate-700/80 text-xs font-mono font-bold ${emp.textColor} flex items-center justify-center gap-2 transition-all shadow-sm`}
+                  icon={ArrowRight}
+                  iconPosition="right"
+                  className="w-full text-xs font-mono"
                 >
-                  <span>WATCH DEMO</span>
-                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                </button>
+                  WATCH DEMO
+                </ActionButton>
               </div>
             );
           })}
@@ -244,16 +246,18 @@ export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee 
           <p className="text-xs sm:text-sm text-slate-300 font-sans">
             Ready to integrate custom AI agents into your business operations?
           </p>
-          <button
+          <ActionButton
+            variant="primary"
+            size="md"
             onClick={() => {
-              forgeAudioSynth.playClick();
               if (onBuildAiEmployee) onBuildAiEmployee();
             }}
-            className="w-full sm:w-auto min-h-[44px] px-6 py-3 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 border border-teal-500/30 hover:border-teal-400 font-mono font-bold text-xs flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-sm"
+            icon={ArrowRight}
+            iconPosition="right"
+            className="w-full sm:w-auto text-xs font-mono"
           >
-            <span>BUILD YOUR AI EMPLOYEE</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+            BUILD YOUR AI EMPLOYEE
+          </ActionButton>
         </div>
 
       </div>

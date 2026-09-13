@@ -5,6 +5,7 @@ import {
   Car, Utensils, Home, Stethoscope, Hotel, Layers, Zap 
 } from 'lucide-react';
 import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
+import { ActionButton } from '../v4/ActionButton';
 
 const INDUSTRIES = [
   {
@@ -513,13 +514,16 @@ export function WhatCouldYourBusinessAutomate({ onWatchServiceDemo, onSeeWhatWeC
               </div>
 
               {/* Requirement 5: WATCH IT HAPPEN → button on every service */}
-              <button
+              <ActionButton
+                variant="secondary"
+                size="md"
                 onClick={() => handleWatchService(serv)}
-                className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-slate-900/90 group-hover:bg-teal-500/10 border border-slate-700/80 group-hover:border-teal-500/50 text-xs font-mono font-bold text-teal-300 flex items-center justify-center gap-2 transition-all shadow-sm active:scale-95"
+                icon={ArrowRight}
+                iconPosition="right"
+                className="w-full text-xs font-mono"
               >
-                <span>WATCH IT HAPPEN</span>
-                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1 text-teal-400" />
-              </button>
+                WATCH IT HAPPEN
+              </ActionButton>
             </div>
           ))}
         </div>
@@ -529,16 +533,18 @@ export function WhatCouldYourBusinessAutomate({ onWatchServiceDemo, onSeeWhatWeC
           <p className="text-xs sm:text-sm text-slate-300 font-sans">
             Want to see how these automated workflows map to your specific business tools?
           </p>
-          <button
+          <ActionButton
+            variant="primary"
+            size="md"
             onClick={() => {
-              forgeAudioSynth.playClick();
               if (onSeeWhatWeCouldAutomate) onSeeWhatWeCouldAutomate(selectedIndustry.name);
             }}
-            className="w-full sm:w-auto min-h-[44px] px-6 py-3 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 hover:border-cyan-400 font-mono font-bold text-xs flex items-center justify-center gap-2 transition-all hover:scale-105 active:scale-95 shadow-sm"
+            icon={ArrowRight}
+            iconPosition="right"
+            className="w-full sm:w-auto text-xs font-mono"
           >
-            <span>SEE WHAT WE COULD AUTOMATE</span>
-            <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
-          </button>
+            SEE WHAT WE COULD AUTOMATE
+          </ActionButton>
         </div>
 
       </div>

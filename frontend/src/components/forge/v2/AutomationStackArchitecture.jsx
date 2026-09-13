@@ -4,6 +4,7 @@ import {
   ArrowRight, ArrowDown, Sparkles, Layers, ShieldCheck, Zap 
 } from 'lucide-react';
 import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
+import { WorkflowPipelineVisual } from '../v4/WorkflowPipelineVisual';
 
 export function AutomationStackArchitecture() {
   const [activeStep, setActiveStep] = useState(0);
@@ -103,6 +104,9 @@ export function AutomationStackArchitecture() {
             </span>
           </div>
         </div>
+
+        {/* Real-time Interactive Workflow Pipeline */}
+        <WorkflowPipelineVisual />
 
         {/* Visual Architecture Pipeline: 6 Interconnected Nodes */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-3 relative">

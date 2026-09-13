@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Target, Users, TrendingUp, CheckCircle2, Building2, DollarSign, Database, ArrowRight, RotateCcw, Sparkles, BarChart3, Play, Check, ShieldCheck } from 'lucide-react';
 import { forgeAudioSynth } from '../../../../utils/forgeAudioSynth';
+import { AiStatusBadge } from '../../v4/AiStatusBadge';
+import { ActionButton } from '../../v4/ActionButton';
 
 export function AISalesDemo({ onNextStep }) {
   const [videoLoaded, setVideoLoaded] = useState(false);
@@ -105,11 +107,14 @@ export function AISalesDemo({ onNextStep }) {
             <Sparkles className="w-3 h-3 text-violet-400" /> SPEED-TO-LEAD &lt; 45S
           </span>
 
-          {leadStep === 6 && (
-            <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400 text-[10px] font-bold flex items-center gap-1 shadow-md shadow-emerald-500/10">
-              <Check className="w-3 h-3 text-emerald-400" /> HIGH-QUALITY LEAD ✓
-            </span>
-          )}
+          <AiStatusBadge 
+            status={
+              leadStep === 6 ? 'completed' :
+              leadStep >= 4 ? 'action' :
+              leadStep >= 1 ? 'analyzing' : 'online'
+            }
+            size="sm"
+          />
         </div>
       </div>
 
@@ -128,21 +133,27 @@ export function AISalesDemo({ onNextStep }) {
 
           {/* Interactive Trigger Button */}
           {leadStep === 0 ? (
-            <button
+            <ActionButton
+              variant="primary"
+              size="md"
               onClick={startDemo}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-indigo-500 hover:from-violet-400 hover:to-indigo-400 text-white font-black text-xs font-mono tracking-wider uppercase transition-all shadow-lg shadow-violet-500/25 flex items-center justify-center gap-2 hover:scale-105 active:scale-95"
+              icon={Play}
+              iconPosition="left"
+              className="w-full sm:w-auto text-xs font-mono uppercase bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 border-violet-400"
             >
-              <Play className="w-3.5 h-3.5 fill-current" />
-              <span>▶ WATCH AI QUALIFY A LEAD</span>
-            </button>
+              WATCH AI QUALIFY A LEAD
+            </ActionButton>
           ) : (
-            <button
+            <ActionButton
+              variant="secondary"
+              size="sm"
               onClick={leadStep === 6 ? startDemo : resetDemo}
-              className="w-full sm:w-auto px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-violet-500/40 text-violet-300 font-bold text-xs font-mono flex items-center justify-center gap-1.5 transition-all"
+              icon={RotateCcw}
+              iconPosition="left"
+              className="w-full sm:w-auto text-xs font-mono"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>{leadStep === 6 ? '▶ REPLAY: WATCH AI QUALIFY A LEAD' : 'Reset Flow'}</span>
-            </button>
+              {leadStep === 6 ? 'REPLAY LEAD FLOW' : 'Reset Flow'}
+            </ActionButton>
           )}
         </div>
 
@@ -333,16 +344,16 @@ export function AISalesDemo({ onNextStep }) {
           </div>
           
           {onNextStep && (
-            <button
-              onClick={() => {
-                forgeAudioSynth.playClick();
-                onNextStep();
-              }}
-              className="w-full sm:w-auto px-5 py-2 rounded-xl bg-violet-500 hover:bg-violet-400 text-white font-bold text-xs tracking-wider uppercase transition-all shadow-lg shadow-violet-500/20 hover:scale-105 flex items-center justify-center gap-2 shrink-0 font-mono"
+            <ActionButton
+              variant="primary"
+              size="md"
+              onClick={onNextStep}
+              icon={ArrowRight}
+              iconPosition="right"
+              className="w-full sm:w-auto text-xs font-mono uppercase shrink-0 bg-violet-600 hover:bg-violet-500 border-violet-400"
             >
-              <span>See Before vs After Impact</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+              See Before vs After Impact
+            </ActionButton>
           )}
         </div>
 
