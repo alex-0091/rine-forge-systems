@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Zap, Bot, Send, FileText, MessageSquare, Search, 
   Play, ArrowRight, CheckCircle2, RefreshCw, Sparkles, 
   Terminal, ShieldCheck, Check, CornerDownRight, Database, 
-  Mail, Calendar, Video 
+  Mail, Calendar, Video, Mic, MicOff, Volume2, VolumeX 
 } from 'lucide-react';
 import { SYSTEMS_CATALOG } from '../../data/forgePlatformConfig';
 import { InteractiveEmailAgentDemo } from './InteractiveEmailAgentDemo';
 import { InteractiveDocumentEngineDemo } from './InteractiveDocumentEngineDemo';
 import { InteractiveAppointmentDemo } from './InteractiveAppointmentDemo';
+import { speechEngine } from '../../utils/speechEngine';
 
 export function LiveSystemsShowcase({ onNavigate, onWatchTenSecDemo }) {
   const [activeSystemId, setActiveSystemId] = useState('lead-agent');
@@ -18,8 +19,21 @@ export function LiveSystemsShowcase({ onNavigate, onWatchTenSecDemo }) {
   const [isRunning, setIsRunning] = useState(false);
   const [executionResult, setExecutionResult] = useState(activeSystem.demoConfig?.sampleOutput || {});
   const [executionStep, setExecutionStep] = useState(4);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isSpeakingOutput, setIsSpeakingOutput] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      speechEngine.stopListening();
+      speechEngine.stopSpeaking();
+    };
+  }, []);
 
   const handleSystemChange = (id) => {
+    speechEngine.stopSpeaking();
+    speechEngine.stopListening();
+    setIsRecording(false);
+    setIsSpeakingOutput(false);
     setActiveSystemId(id);
     const sys = SYSTEMS_CATALOG.find(s => s.id === id);
     if (sys && sys.demoConfig) {
@@ -29,8 +43,59 @@ export function LiveSystemsShowcase({ onNavigate, onWatchTenSecDemo }) {
     }
   };
 
+  const handleToggleVoiceInput = () => {
+    if (isRecording) {
+      speechEngine.stopListening();
+      setIsRecording(false);
+    } else {
+      setIsRecording(true);
+      speechEngine.startListening({
+        onResult: ({ text }) => {
+          setInputVal(text);
+        },
+        onEnd: () => {
+          setIsRecording(false);
+        },
+        onError: (err) => {
+          console.warn('Voice input error:', err);
+          setIsRecording(false);
+        }
+      });
+    }
+  };
+
+  const handleSpeakOutput = () => {
+    if (isSpeakingOutput) {
+      speechEngine.stopSpeaking();
+      setIsSpeakingOutput(false);
+      return;
+    }
+
+    // Compose spoken text from execution output
+    let spokenText = '';
+    if (executionResult.spokenResponse) {
+      spokenText = executionResult.spokenResponse;
+    } else if (executionResult.summary) {
+      spokenText = executionResult.summary;
+    } else if (executionResult.emailTriage && executionResult.emailTriage.recommendedAction) {
+      spokenText = `Recommended Action: ${executionResult.emailTriage.recommendedAction}`;
+    } else {
+      const firstEntry = Object.entries(executionResult)[0];
+      spokenText = firstEntry ? `${firstEntry[0]}: ${typeof firstEntry[1] === 'object' ? JSON.stringify(firstEntry[1]) : firstEntry[1]}` : 'System execution complete.';
+    }
+
+    setIsSpeakingOutput(true);
+    speechEngine.speak(spokenText, {
+      accent: 'en-US',
+      onEnd: () => setIsSpeakingOutput(false),
+      onError: () => setIsSpeakingOutput(false)
+    });
+  };
+
   const handleRunDemo = (e) => {
     if (e) e.preventDefault();
+    speechEngine.stopSpeaking();
+    setIsSpeakingOutput(false);
     setIsRunning(true);
     setExecutionStep(1);
 
@@ -184,15 +249,36 @@ export function LiveSystemsShowcase({ onNavigate, onWatchTenSecDemo }) {
                     <label className="text-xs font-mono font-bold text-slate-300 flex items-center gap-1.5">
                       <Terminal className="w-3.5 h-3.5 text-teal-400" /> Test Input
                     </label>
-                    <span className="text-[10px] text-slate-500 font-mono">Editable Sandbox</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={handleToggleVoiceInput}
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold transition-all border ${
+                          isRecording 
+                            ? 'bg-rose-500/20 text-rose-300 border-rose-500/50 animate-pulse' 
+                            : 'bg-slate-900 text-teal-400 border-slate-700 hover:border-teal-500/50'
+                        }`}
+                        title="Free Speech-to-Text Dictation"
+                      >
+                        {isRecording ? <MicOff className="w-3 h-3 text-rose-400" /> : <Mic className="w-3 h-3 text-teal-400" />}
+                        <span>{isRecording ? 'Listening...' : 'Voice Dictate'}</span>
+                      </button>
+                      <span className="text-[10px] text-slate-500 font-mono">Editable</span>
+                    </div>
                   </div>
                   <textarea
                     rows={5}
                     value={inputVal}
                     onChange={(e) => setInputVal(e.target.value)}
-                    placeholder="Enter sample text, inquiry or URL..."
+                    placeholder="Enter sample text, inquiry or URL (or click Voice Dictate to speak)..."
                     className="w-full bg-[#05080f] border border-slate-800 focus:border-teal-500 focus:outline-none rounded-2xl p-4 text-xs font-mono text-slate-200 placeholder-slate-600 leading-relaxed"
                   />
+                  {isRecording && (
+                    <div className="text-[10px] font-mono text-rose-400 flex items-center gap-1.5 bg-rose-500/10 p-2 rounded-lg border border-rose-500/20">
+                      <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+                      <span>Microphone active • Speak your inquiry directly...</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-3">
@@ -216,7 +302,7 @@ export function LiveSystemsShowcase({ onNavigate, onWatchTenSecDemo }) {
 
                   <div className="text-[10px] font-mono text-slate-400 text-center flex items-center justify-center gap-1.5">
                     <ShieldCheck className="w-3.5 h-3.5 text-teal-400" />
-                    <span>Sandbox execution • No external accounts modified</span>
+                    <span>Sandbox execution • Zero budget • $0 spent native audio</span>
                   </div>
                 </div>
               </div>
@@ -227,7 +313,21 @@ export function LiveSystemsShowcase({ onNavigate, onWatchTenSecDemo }) {
                   <label className="text-xs font-mono font-bold text-slate-300 flex items-center gap-1.5">
                     <Database className="w-3.5 h-3.5 text-cyan-400" /> Structured System Output
                   </label>
-                  <span className="text-[10px] font-mono text-emerald-400">● 99.4% Confidence</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleSpeakOutput}
+                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold transition-all border ${
+                        isSpeakingOutput
+                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 animate-pulse'
+                          : 'bg-slate-900 text-slate-300 border-slate-700 hover:border-teal-500/50 hover:text-teal-300'
+                      }`}
+                    >
+                      {isSpeakingOutput ? <VolumeX className="w-3 h-3 text-amber-400" /> : <Volume2 className="w-3 h-3 text-teal-400" />}
+                      <span>{isSpeakingOutput ? 'Stop Audio' : '🔊 Read Aloud'}</span>
+                    </button>
+                    <span className="text-[10px] font-mono text-emerald-400">● 99.4% Confidence</span>
+                  </div>
                 </div>
 
                 <div className="p-5 rounded-2xl bg-[#05080f] border border-slate-800 font-mono text-xs space-y-3 min-h-[220px]">

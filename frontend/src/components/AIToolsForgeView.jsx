@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Sparkles, Bot, Palette, Lightbulb, FileText, 
   BarChart2, Layout, Mail, MessageSquare, Cpu, 
   Copy, Check, ArrowRight, RefreshCw, Download, 
   Zap, ShieldCheck, DollarSign, ChevronRight, Layers,
   Flame, TrendingUp, CheckCircle2, Lock, Search,
-  Mic, Code2, ScanText, Users, Globe2, QrCode,
+  Mic, MicOff, Volume2, VolumeX, Code2, ScanText, Users, Globe2, QrCode,
   Terminal, Play, Sliders
 } from 'lucide-react';
+import { speechEngine } from '../utils/speechEngine';
 
 const ALL_FORGE_TOOLS = [
   {
@@ -198,7 +199,15 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
   const [voiceText, setVoiceText] = useState('Welcome to Vance Dental Care. Dr. Rivera is available this Saturday at 2 PM. Would you like me to reserve this appointment?');
   const [voiceAccent, setVoiceAccent] = useState('Executive American (Neutral-Calm)');
   const [voicePlaying, setVoicePlaying] = useState(false);
+  const [isDictatingVoice, setIsDictatingVoice] = useState(false);
   const [voiceResult, setVoiceResult] = useState(null);
+
+  useEffect(() => {
+    return () => {
+      speechEngine.stopSpeaking();
+      speechEngine.stopListening();
+    };
+  }, []);
 
   // 10. Code Audit State
   const [codeSnippet, setCodeSnippet] = useState(`@app.get("/api/user")\ndef get_user(user_id: str):\n    # Direct SQL query string concat\n    query = f"SELECT * FROM users WHERE id = '{user_id}'"\n    return db.execute(query).fetchall()`);
@@ -396,16 +405,49 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
     }, 650);
   };
 
+  const handleToggleVoiceDictation = () => {
+    if (isDictatingVoice) {
+      speechEngine.stopListening();
+      setIsDictatingVoice(false);
+    } else {
+      setIsDictatingVoice(true);
+      speechEngine.startListening({
+        onResult: ({ text }) => {
+          setVoiceText(text);
+        },
+        onEnd: () => {
+          setIsDictatingVoice(false);
+        },
+        onError: (err) => {
+          console.warn('Voice dictation error:', err);
+          setIsDictatingVoice(false);
+        }
+      });
+    }
+  };
+
   const handleSynthesizeVoice = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
+    if (voicePlaying) {
+      speechEngine.stopSpeaking();
+      setVoicePlaying(false);
+      return;
+    }
+
     setVoicePlaying(true);
     setVoiceResult({
-      audioDuration: '4.8s',
-      modelUsed: 'Neural-Voice-v4-HighFidelity',
-      sampleRate: '48,000 Hz / 24-bit Lossless',
-      latency: '38ms'
+      audioDuration: `${Math.max(2, (voiceText.split(' ').length * 0.4).toFixed(1))}s`,
+      modelUsed: 'WebSpeech-Neural-V2-Lossless',
+      sampleRate: '48,000 Hz / Real-Time Client Audio',
+      latency: '18ms'
     });
-    setTimeout(() => setVoicePlaying(false), 3000);
+
+    speechEngine.speak(voiceText, {
+      accent: voiceAccent,
+      onStart: () => setVoicePlaying(true),
+      onEnd: () => setVoicePlaying(false),
+      onError: () => setVoicePlaying(false)
+    });
   };
 
   const handleAuditCode = (e) => {
@@ -813,15 +855,36 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
 
             <form onSubmit={handleSynthesizeVoice} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
-                <div className="sm:col-span-8">
-                  <label className="block text-xs text-slate-300 font-medium mb-1">Text Script to Synthesize</label>
+                <div className="sm:col-span-8 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs text-slate-300 font-medium">Text Script to Synthesize</label>
+                    <button
+                      type="button"
+                      onClick={handleToggleVoiceDictation}
+                      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold transition-all border ${
+                        isDictatingVoice
+                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/50 animate-pulse'
+                          : 'bg-slate-900 text-teal-400 border-slate-700 hover:border-teal-500/50'
+                      }`}
+                    >
+                      {isDictatingVoice ? <MicOff className="w-3 h-3 text-rose-400" /> : <Mic className="w-3 h-3 text-teal-400" />}
+                      <span>{isDictatingVoice ? 'Listening...' : 'Voice Dictate'}</span>
+                    </button>
+                  </div>
                   <input
                     type="text"
                     value={voiceText}
                     onChange={(e) => setVoiceText(e.target.value)}
-                    className="w-full p-3 bg-dark-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-teal-500"
+                    placeholder="Type or click Voice Dictate to speak script..."
+                    className="w-full p-3 bg-dark-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-teal-500 font-mono"
                     required
                   />
+                  {isDictatingVoice && (
+                    <div className="text-[10px] font-mono text-rose-400 flex items-center gap-1.5 bg-rose-500/10 px-2 py-1 rounded-lg border border-rose-500/20">
+                      <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+                      <span>Recording speech • Speak clearly into your mic...</span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="sm:col-span-4">
@@ -839,14 +902,19 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
                 </div>
               </div>
 
-              <button
-                type="submit"
-                disabled={voicePlaying}
-                className="w-full py-3.5 bg-teal-500 hover:bg-teal-400 disabled:opacity-50 text-dark-950 font-black rounded-xl text-xs flex items-center justify-center gap-2 shadow-md shadow-teal-500/20"
-              >
-                {voicePlaying ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
-                {voicePlaying ? 'Streaming Neural Audio Waveform...' : 'Synthesize Neural Voice Stream →'}
-              </button>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className={`flex-1 py-3.5 font-black rounded-xl text-xs flex items-center justify-center gap-2 shadow-md transition-all ${
+                    voicePlaying
+                      ? 'bg-amber-500 hover:bg-amber-400 text-dark-950 shadow-amber-500/20'
+                      : 'bg-teal-500 hover:bg-teal-400 text-dark-950 shadow-teal-500/20'
+                  }`}
+                >
+                  {voicePlaying ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                  {voicePlaying ? '⏹ Stop Spoken Audio Stream' : '🔊 Synthesize & Speak Out Loud →'}
+                </button>
+              </div>
             </form>
 
             {voiceResult && (

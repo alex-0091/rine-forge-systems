@@ -2,16 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { 
   Bot, Sparkles, Send, X, ArrowRight, CheckCircle2, 
   Layers, Zap, MessageSquare, Play, ChevronUp, ChevronDown, 
-  Terminal, Building2, ShieldCheck, Flame 
+  Terminal, Building2, ShieldCheck, Flame, Mic, MicOff, Volume2, VolumeX 
 } from 'lucide-react';
 
 import { ForgeCoreMascot } from './v2/ForgeCharacterUniverse';
+import { speechEngine } from '../../utils/speechEngine';
 
 export function ForgeHumanControl({ onNavigate, onLaunchSystemDemo }) {
   const [isOpen, setIsOpen] = useState(false);
   const [queryInput, setQueryInput] = useState('');
   const [aiResponse, setAiResponse] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [sttError, setSttError] = useState('');
 
   // 6 Tactile Visual Action Cards
   const visualActions = [
@@ -22,6 +26,45 @@ export function ForgeHumanControl({ onNavigate, onLaunchSystemDemo }) {
     { label: 'BOOK APPOINTMENTS', icon: '📅', query: 'I want to automate calendar scheduling and eliminate back-and-forth emails.', sysId: 'appointment-agent' },
     { label: 'BUILD A SYSTEM', icon: '🧠', query: 'I want to design a custom multi-agent workflow for my proprietary operations.', sysId: 'app-builder' }
   ];
+
+  const handleToggleVoiceInput = () => {
+    if (isListening) {
+      speechEngine.stopListening();
+      setIsListening(false);
+      return;
+    }
+
+    setSttError('');
+    speechEngine.startListening({
+      onStart: () => setIsListening(true),
+      onResult: ({ text, isFinal }) => {
+        setQueryInput(text);
+        if (isFinal && text.trim()) {
+          setIsListening(false);
+          handleProcessQuery(text);
+        }
+      },
+      onError: (err) => {
+        setIsListening(false);
+        setSttError('Microphone permission required or browser unsupported.');
+      },
+      onEnd: () => setIsListening(false)
+    });
+  };
+
+  const handleReadAloud = (text) => {
+    if (isSpeaking) {
+      speechEngine.stopSpeaking();
+      setIsSpeaking(false);
+      return;
+    }
+
+    speechEngine.speak(text, {
+      onStart: () => setIsSpeaking(true),
+      onEnd: () => setIsSpeaking(false),
+      onError: () => setIsSpeaking(false)
+    });
+  };
 
   // Quick suggestion chips
   const suggestionChips = [
@@ -292,7 +335,7 @@ export function ForgeHumanControl({ onNavigate, onLaunchSystemDemo }) {
                   <div className="text-[10px] text-teal-400 font-mono">{aiResponse.workflowSequence}</div>
                 </div>
 
-                <div className="pt-1 flex gap-2">
+                <div className="pt-1 flex gap-2 items-center">
                   <button
                     onClick={() => handleLaunch(aiResponse.targetSystemId)}
                     className="flex-1 py-2.5 bg-teal-500 hover:bg-teal-400 text-dark-950 font-black rounded-xl text-xs font-mono transition-all shadow-md flex items-center justify-center gap-1.5"
@@ -300,6 +343,17 @@ export function ForgeHumanControl({ onNavigate, onLaunchSystemDemo }) {
                     <span>LAUNCH SYSTEM DEMO</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
+
+                  <button
+                    onClick={() => handleReadAloud(`${aiResponse.title}. Recommended starting system is ${aiResponse.bestStart}. Estimated impact is ${aiResponse.impact}.`)}
+                    className={`p-2.5 rounded-xl border transition-all ${
+                      isSpeaking ? 'bg-cyan-500 text-dark-950 border-cyan-400 animate-pulse' : 'bg-dark-950 text-slate-300 border-slate-800 hover:border-slate-700'
+                    }`}
+                    title={isSpeaking ? 'Stop speaking' : 'Read aloud with AI Voice'}
+                  >
+                    {isSpeaking ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-teal-400" />}
+                  </button>
+
                   <button
                     onClick={() => {
                       setAiResponse(null);
@@ -314,23 +368,44 @@ export function ForgeHumanControl({ onNavigate, onLaunchSystemDemo }) {
               </div>
             )}
 
+            {sttError && (
+              <div className="p-2.5 bg-rose-950/40 border border-rose-500/30 rounded-xl text-rose-300 font-mono text-[10px]">
+                {sttError}
+              </div>
+            )}
+
           </div>
 
-          {/* Input Form Bar */}
+          {/* Input Form Bar with Microphone Speech-to-Text */}
           <form 
             onSubmit={(e) => {
               e.preventDefault();
               handleProcessQuery(queryInput);
             }} 
-            className="p-3 bg-[#05080e] border-t border-slate-800 flex gap-2"
+            className="p-3 bg-[#05080e] border-t border-slate-800 flex items-center gap-2"
           >
+            {/* 100% Free Speech-to-Text Button */}
+            <button
+              type="button"
+              onClick={handleToggleVoiceInput}
+              className={`p-2.5 rounded-xl border transition-all shrink-0 flex items-center justify-center ${
+                isListening
+                  ? 'bg-rose-500 text-white border-rose-400 animate-pulse shadow-lg shadow-rose-500/30'
+                  : 'bg-dark-900 text-slate-300 hover:text-teal-300 border-slate-800 hover:border-teal-500/40'
+              }`}
+              title={isListening ? 'Listening to your voice... (Click to stop)' : 'Talk to FORGE with Voice (Free Web Speech API)'}
+            >
+              {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4 text-teal-400" />}
+            </button>
+
             <input
               type="text"
-              placeholder="e.g. I run a plumbing company and need after-hours dispatch..."
+              placeholder={isListening ? "Listening... Speak your business workflow now..." : "e.g. I run a dental clinic and miss patient calls..."}
               value={queryInput}
               onChange={(e) => setQueryInput(e.target.value)}
               className="flex-1 px-3 py-2 bg-dark-900 border border-slate-800 focus:border-teal-500 rounded-xl text-white text-xs font-mono focus:outline-none placeholder-slate-500"
             />
+
             <button
               type="submit"
               disabled={isTyping || !queryInput.trim()}
