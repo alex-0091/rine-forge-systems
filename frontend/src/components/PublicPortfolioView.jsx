@@ -7,7 +7,7 @@ import {
   Activity, Play, Flame, BarChart3, Database, Globe,
   Briefcase, DollarSign, School, CheckCircle, AlertTriangle,
   CreditCard, Wallet, Lock, Landmark, CheckCheck, FlaskConical,
-  LayoutDashboard 
+  LayoutDashboard, Video 
 } from 'lucide-react';
 
 // Forge Marketing & Discovery Components (Experience A)
@@ -41,6 +41,12 @@ import { ForgeAiLab } from './forge/ForgeAiLab';
 import { ForgeExperienceView } from './forge/ForgeExperienceView';
 import { PersonalizedIndustryView } from './forge/PersonalizedIndustryView';
 
+// Interactive Human Interface & 10s Demo Modals
+import { ForgeHumanControl } from './forge/ForgeHumanControl';
+import { TenSecondDemoModal } from './forge/TenSecondDemoModal';
+import { AutonomousReactionBanner } from './forge/AutonomousReactionBanner';
+import { GlobalTryForgeModal } from './forge/GlobalTryForgeModal';
+
 // Product Platform & Operating System Components (Experience B)
 import { AppLayout } from './app/AppLayout';
 import { AppDashboard } from './app/AppDashboard';
@@ -56,15 +62,14 @@ import { AdminPanel } from './app/AdminPanel';
 // Ancillary Modals
 import { PaymentPortalModal } from './PaymentPortalModal';
 import { AIToolsForgeView } from './AIToolsForgeView';
-import { FloatingAIAssistant } from './FloatingAIAssistant';
-import { InteractiveVideoPlayerModal } from './InteractiveVideoPlayerModal';
 
 export function PublicPortfolioView() {
   const [currentView, setCurrentView] = useState('home');
   const [selectedAgentForModal, setSelectedAgentForModal] = useState(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [selectedPackageForModal, setSelectedPackageForModal] = useState('ai-receptionist');
-  const [activeVideoModal, setActiveVideoModal] = useState(null);
+  const [activeTenSecDemoSysId, setActiveTenSecDemoSysId] = useState(null);
+  const [isGlobalTryModalOpen, setIsGlobalTryModalOpen] = useState(false);
   const [trialCreditsUsed, setTrialCreditsUsed] = useState(32);
 
   // Check URL pathname, search params or hash on load
@@ -105,6 +110,11 @@ export function PublicPortfolioView() {
   }, []);
 
   const handleNavigate = (target) => {
+    if (target === 'try-forge-modal') {
+      setIsGlobalTryModalOpen(true);
+      return;
+    }
+
     if (target.startsWith('app-')) {
       setCurrentView(target);
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -123,6 +133,19 @@ export function PublicPortfolioView() {
         const el = document.getElementById(target);
         if (el) el.scrollIntoView({ behavior: 'smooth' });
       }
+    }
+  };
+
+  const handleLaunchSystemSandbox = (sysId) => {
+    if (currentView !== 'home') {
+      setCurrentView('home');
+      setTimeout(() => {
+        const el = document.getElementById('try-ai');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      const el = document.getElementById('try-ai');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -194,14 +217,20 @@ export function PublicPortfolioView() {
       <main>
         {currentView === 'home' && (
           <>
-            {/* 1. Immersive Hero with Interactive FORGE Engine Visualization */}
-            <ForgeHero onNavigate={handleNavigate} />
+            {/* 1. Immersive Hero with Interactive FORGE Engine Visualization & Clickable Nodes */}
+            <ForgeHero 
+              onNavigate={handleNavigate} 
+              onLaunchSystemDemo={handleLaunchSystemSandbox}
+            />
 
             {/* 2. Live System Activity Stream */}
             <LiveActivityStream onNavigate={handleNavigate} />
 
-            {/* 3. Try AI Now / Interactive Live Systems Showcase */}
-            <LiveSystemsShowcase onNavigate={handleNavigate} />
+            {/* 3. Try AI Now / Interactive Live Systems Showcase with 10s Demo Triggers */}
+            <LiveSystemsShowcase 
+              onNavigate={handleNavigate}
+              onWatchTenSecDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
+            />
 
             {/* 4. Business Problems & Breakdowns */}
             <ProblemSection onNavigate={handleNavigate} />
@@ -326,7 +355,49 @@ export function PublicPortfolioView() {
       {/* Global Footer */}
       <ForgeFooter onNavigate={handleNavigate} />
 
-      {/* Modals & Overlays */}
+      {/* Persistent Human Interface (FORGE CONTROL) */}
+      <ForgeHumanControl 
+        onNavigate={handleNavigate}
+        onLaunchSystemDemo={handleLaunchSystemSandbox}
+      />
+
+      {/* Inactivity Observer Prompt */}
+      <AutonomousReactionBanner
+        onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
+        onOpenHumanControl={() => {
+          const el = document.getElementById('try-ai');
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }}
+      />
+
+      {/* 10-Second Video Demo Modal */}
+      {activeTenSecDemoSysId && (
+        <TenSecondDemoModal
+          systemId={activeTenSecDemoSysId}
+          onClose={() => setActiveTenSecDemoSysId(null)}
+          onTryLive={(sysId) => {
+            setActiveTenSecDemoSysId(null);
+            handleLaunchSystemSandbox(sysId);
+          }}
+        />
+      )}
+
+      {/* Global "TRY FORGE" Modal */}
+      {isGlobalTryModalOpen && (
+        <GlobalTryForgeModal
+          isOpen={isGlobalTryModalOpen}
+          onClose={() => setIsGlobalTryModalOpen(false)}
+          onSelectDemo={(sysId) => {
+            if (sysId === 'app-builder') {
+              setCurrentView('app-builder');
+            } else {
+              handleLaunchSystemSandbox(sysId);
+            }
+          }}
+        />
+      )}
+
+      {/* Agent Workflow Modal */}
       {selectedAgentForModal && (
         <WorkflowModal 
           agent={selectedAgentForModal} 
@@ -338,6 +409,7 @@ export function PublicPortfolioView() {
         />
       )}
 
+      {/* 50% Deposit & Milestone Settlement Modal */}
       {isPaymentModalOpen && (
         <PaymentPortalModal
           isOpen={isPaymentModalOpen}
@@ -345,22 +417,6 @@ export function PublicPortfolioView() {
           initialService={selectedPackageForModal}
         />
       )}
-
-      {activeVideoModal && (
-        <InteractiveVideoPlayerModal
-          isOpen={!!activeVideoModal}
-          onClose={() => setActiveVideoModal(null)}
-          title={activeVideoModal.name}
-          videoHighlight={activeVideoModal.videoHighlight}
-          videoLength={activeVideoModal.videoLength}
-        />
-      )}
-
-      {/* Floating 24/7 AI Concierge */}
-      <FloatingAIAssistant onOpenPaymentModal={(pkg) => {
-        setSelectedPackageForModal(pkg || 'ai-receptionist');
-        setIsPaymentModalOpen(true);
-      }} />
 
     </div>
   );

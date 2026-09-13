@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { 
   ArrowRight, Sparkles, ShieldCheck, Terminal, 
-  Cpu, Database, Zap, Activity, Layers, Play 
+  Cpu, Database, Zap, Activity, Layers, Play, X, Bot, FileText, Mail, Calendar 
 } from 'lucide-react';
 
-const INBOUND_STREAMS = [
-  'LEADS', 'EMAIL', 'DOCUMENTS', 'CALLS', 'CUSTOMERS', 'CRM', 'WEBSITE', 'CALENDAR', 'DATA'
+const INBOUND_NODES = [
+  { id: 'calls', name: 'CALLS', system: 'AI RECEPTIONIST', icon: Bot, desc: 'Incoming phone call → Voice NLP → Urgency check → Calendar lookup → Slot lock → CRM update.', sysId: 'receptionist-agent' },
+  { id: 'leads', name: 'LEADS', system: 'LEAD ENGINE', icon: Zap, desc: 'Website/portal inquiry → Intent extraction → 0-100 ICP scoring → 2-way SMS follow-up.', sysId: 'lead-agent' },
+  { id: 'email', name: 'EMAIL', system: 'EMAIL AGENT', icon: Mail, desc: 'Inbox stream → Classification tag → Draft reply synthesis → 1-click human approve.', sysId: 'email-agent' },
+  { id: 'documents', name: 'DOCUMENTS', system: 'DOCUMENT ENGINE', icon: FileText, desc: 'PDF vendor invoice → Line item OCR → Mathematical sum check → QuickBooks AP commit.', sysId: 'document-processor' },
+  { id: 'website', name: 'WEBSITE', system: 'SUPPORT AGENT', icon: MessageSquare, desc: 'Live visitor question → Vector RAG search → Citation verified → Zero-hallucination reply.', sysId: 'support-agent' },
+  { id: 'calendar', name: 'CALENDAR', system: 'APPOINTMENT AGENT', icon: Calendar, desc: 'Consultation request → Availability check → Booking confirmed → Automated reminder.', sysId: 'appointment-agent' }
 ];
 
 const ENGINE_CORES = [
@@ -13,16 +18,22 @@ const ENGINE_CORES = [
 ];
 
 const OUTBOUND_ACTIONS = [
-  'LEAD QUALIFIED', 'EMAIL SENT', 'CALL BOOKED', 'DOC PROCESSED', 'CUSTOMER ANSWERED', 'CRM UPDATED'
+  { name: 'LEAD QUALIFIED', target: 'Sales Pipeline' },
+  { name: 'EMAIL SENT', target: 'Customer Inbox' },
+  { name: 'CALL BOOKED', target: 'Google Calendar' },
+  { name: 'DOC PROCESSED', target: 'QuickBooks AP' },
+  { name: 'CUSTOMER ANSWERED', target: 'Zendesk Ticket' },
+  { name: 'CRM UPDATED', target: 'HubSpot / Salesforce' }
 ];
 
-export function ForgeHero({ onNavigate }) {
+export function ForgeHero({ onNavigate, onLaunchSystemDemo }) {
   const [activeStreamIdx, setActiveStreamIdx] = useState(0);
+  const [selectedNodeModal, setSelectedNodeModal] = useState(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setActiveStreamIdx(prev => (prev + 1) % INBOUND_STREAMS.length);
-    }, 1800);
+      setActiveStreamIdx(prev => (prev + 1) % INBOUND_NODES.length);
+    }, 2000);
     return () => clearInterval(timer);
   }, []);
 
@@ -50,7 +61,7 @@ export function ForgeHero({ onNavigate }) {
           </h1>
 
           <p className="text-base sm:text-xl text-slate-300 leading-relaxed max-w-2xl mx-auto font-normal">
-            Explore, test and deploy intelligent systems built around real business workflows.
+            Explore, test and deploy intelligent systems built around the workflows that keep your business moving.
           </p>
 
           {/* Action CTAs */}
@@ -63,7 +74,7 @@ export function ForgeHero({ onNavigate }) {
               }}
               className="w-full sm:w-auto px-8 py-4 bg-teal-500 hover:bg-teal-400 text-dark-950 font-black rounded-xl text-xs font-mono transition-all shadow-xl shadow-teal-500/25 flex items-center justify-center gap-2 group"
             >
-              <span>EXPLORE AI SYSTEMS</span>
+              <span>EXPLORE SYSTEMS</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
 
@@ -76,7 +87,7 @@ export function ForgeHero({ onNavigate }) {
               className="w-full sm:w-auto px-8 py-4 bg-[#0c1322] hover:bg-slate-850 text-teal-300 border border-teal-500/40 font-bold rounded-xl text-xs font-mono transition-all shadow-md flex items-center justify-center gap-2"
             >
               <Play className="w-4 h-4 fill-current text-teal-400" />
-              <span>TRY AI NOW</span>
+              <span>TRY FORGE</span>
             </button>
 
             <button
@@ -89,7 +100,7 @@ export function ForgeHero({ onNavigate }) {
 
           <div className="text-xs font-mono text-slate-400 flex items-center justify-center gap-2 pt-1">
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>Start free. Experience the system before you buy.</span>
+            <span>Watch it. Touch it. Run it.</span>
           </div>
 
         </div>
@@ -99,10 +110,10 @@ export function ForgeHero({ onNavigate }) {
           <div className="flex items-center justify-between border-b border-slate-800 pb-4">
             <div className="flex items-center gap-2 text-white font-bold">
               <Cpu className="w-4 h-4 text-teal-400" />
-              <span>THE FORGE ENGINE • INPUT TO ACTION ARCHITECTURE</span>
+              <span>THE FORGE ENGINE • CLICK ANY NODE TO INSPECT WORKFLOW</span>
             </div>
             <span className="text-[10px] px-2.5 py-0.5 rounded bg-teal-500/10 text-teal-400 border border-teal-500/20 font-bold">
-              STREAM SYNCHRONIZED
+              INTERACTIVE REASONING TOPOLOGY
             </span>
           </div>
 
@@ -111,22 +122,26 @@ export function ForgeHero({ onNavigate }) {
             
             {/* Left Column: Business Inbound Streams (3 Cols) */}
             <div className="lg:col-span-3 space-y-2">
-              <div className="text-[10px] font-bold text-slate-500 uppercase pb-1">01. INBOUND STREAMS</div>
+              <div className="text-[10px] font-bold text-slate-500 uppercase pb-1">01. INBOUND INPUTS (CLICK TO TEST)</div>
               <div className="space-y-1.5">
-                {INBOUND_STREAMS.slice(0, 5).map((stream, idx) => {
-                  const isHighlighted = activeStreamIdx % 5 === idx;
+                {INBOUND_NODES.map((node, idx) => {
+                  const isHighlighted = activeStreamIdx === idx;
                   return (
-                    <div
-                      key={stream}
-                      className={`p-2.5 rounded-xl border text-xs transition-all flex items-center justify-between ${
+                    <button
+                      key={node.id}
+                      onClick={() => setSelectedNodeModal(node)}
+                      className={`w-full text-left p-2.5 rounded-xl border text-xs transition-all flex items-center justify-between ${
                         isHighlighted
                           ? 'border-teal-400 bg-teal-500/20 text-white font-bold shadow-md shadow-teal-500/10'
-                          : 'border-slate-850 bg-dark-950/60 text-slate-400'
+                          : 'border-slate-850 bg-dark-950/60 text-slate-400 hover:border-slate-700 hover:text-white'
                       }`}
                     >
-                      <span>{stream}</span>
-                      <span className="text-[10px] text-teal-400">→</span>
-                    </div>
+                      <span className="flex items-center gap-1.5 font-bold">
+                        <node.icon className="w-3.5 h-3.5 text-teal-400" />
+                        <span>{node.name}</span>
+                      </span>
+                      <span className="text-[10px] text-teal-400 font-mono">Inspect →</span>
+                    </button>
                   );
                 })}
               </div>
@@ -138,7 +153,7 @@ export function ForgeHero({ onNavigate }) {
                 F
               </div>
               <div>
-                <div className="text-base font-black text-white tracking-wider">FORGE AUTONOMOUS CORE</div>
+                <div className="text-base font-black text-white tracking-wider">FORGE AUTONOMOUS ENGINE</div>
                 <div className="text-[10px] text-teal-300">Continuous Multi-Agent Reasoning & Execution</div>
               </div>
 
@@ -161,11 +176,11 @@ export function ForgeHero({ onNavigate }) {
             <div className="lg:col-span-3 space-y-2">
               <div className="text-[10px] font-bold text-slate-500 uppercase pb-1">02. EXECUTED ACTIONS</div>
               <div className="space-y-1.5">
-                {OUTBOUND_ACTIONS.slice(0, 5).map((action, idx) => {
-                  const isHighlighted = activeStreamIdx % 5 === idx;
+                {OUTBOUND_ACTIONS.map((action, idx) => {
+                  const isHighlighted = activeStreamIdx === idx;
                   return (
                     <div
-                      key={action}
+                      key={action.name}
                       className={`p-2.5 rounded-xl border text-xs transition-all flex items-center justify-between ${
                         isHighlighted
                           ? 'border-emerald-400 bg-emerald-500/20 text-white font-bold shadow-md shadow-emerald-500/10'
@@ -173,7 +188,10 @@ export function ForgeHero({ onNavigate }) {
                       }`}
                     >
                       <span className="text-[10px] text-emerald-400">✓</span>
-                      <span>{action}</span>
+                      <div className="text-right">
+                        <div className="font-bold text-white text-[11px]">{action.name}</div>
+                        <div className="text-[9px] text-slate-500">{action.target}</div>
+                      </div>
                     </div>
                   );
                 })}
@@ -190,6 +208,46 @@ export function ForgeHero({ onNavigate }) {
         </div>
 
       </div>
+
+      {/* Node Inspector Modal */}
+      {selectedNodeModal && (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 font-sans animate-fadeIn">
+          <div className="w-full max-w-md bg-[#090e18] border border-teal-500/40 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl font-mono text-xs text-slate-100">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <selectedNodeModal.icon className="w-4 h-4 text-teal-400" />
+                <span className="text-base font-bold text-white font-sans">{selectedNodeModal.name} NODE</span>
+              </div>
+              <button
+                onClick={() => setSelectedNodeModal(null)}
+                className="p-1 rounded-lg bg-dark-900 text-slate-400 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <div className="text-[10px] text-teal-400 font-bold uppercase">ASSOCIATED AUTONOMOUS SYSTEM:</div>
+              <div className="text-sm font-bold text-white font-sans">{selectedNodeModal.system}</div>
+              <p className="text-xs text-slate-300 font-sans leading-relaxed">{selectedNodeModal.desc}</p>
+            </div>
+
+            <button
+              onClick={() => {
+                const id = selectedNodeModal.sysId;
+                setSelectedNodeModal(null);
+                if (onLaunchSystemDemo) onLaunchSystemDemo(id);
+                else if (onNavigate) onNavigate('try-ai');
+              }}
+              className="w-full py-3 bg-teal-500 hover:bg-teal-400 text-dark-950 font-black rounded-xl text-xs font-mono transition-all shadow-md flex items-center justify-center gap-2"
+            >
+              <span>TRY THIS SYSTEM LIVE</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
     </section>
   );
 }
