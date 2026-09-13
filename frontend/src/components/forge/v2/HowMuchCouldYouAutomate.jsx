@@ -291,9 +291,14 @@ export function HowMuchCouldYouAutomate({ onOpenAuditModal }) {
             </button>
           </div>
 
-          <p className="text-xs text-slate-400 font-mono">
-            Zero commitment • 48-hour delivery • Completely tailored to your software stack
-          </p>
+          <div className="space-y-1 font-mono text-xs text-slate-300">
+            <p className="font-semibold text-white">
+              No long-term commitment just to see what's possible.
+            </p>
+            <p className="text-teal-300 font-bold">
+              Start with a free automation audit.
+            </p>
+          </div>
         </div>
 
       </div>

@@ -57,6 +57,11 @@ import { WatchItHappenModal } from './forge/v2/WatchItHappenModal';
 import { HowMuchCouldYouAutomate } from './forge/v2/HowMuchCouldYouAutomate';
 import { BuiltForRealBusinessWork } from './forge/v2/BuiltForRealBusinessWork';
 import { SimpleAuditContactModal } from './forge/v2/SimpleAuditContactModal';
+import { RealSystemsProofSection } from './forge/v2/RealSystemsProofSection';
+import { AutomationStackArchitecture } from './forge/v2/AutomationStackArchitecture';
+import { WhyForgeSection_v2 } from './forge/v2/WhyForgeSection_v2';
+import { ProcessTimelineSection } from './forge/v2/ProcessTimelineSection';
+import { BuiltWithModernTechnology } from './forge/v2/BuiltWithModernTechnology';
 
 // Interactive Human Interface & 10s Demo Modals
 import { ForgeHumanControl } from './forge/ForgeHumanControl';
@@ -312,11 +317,32 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
               onSelectSystem={handleLaunchSystemSandbox}
             />
 
-            {/* 8. HOW IT WORKS: 5-Stage Implementation Framework with Video Demos */}
-            <HowItWorksSection 
-              onNavigate={handleNavigate} 
-              onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
+            {/* V3 PHASE 4: THE AUTOMATION STACK ARCHITECTURE */}
+            <AutomationStackArchitecture />
+
+            {/* V3 PHASE 4: REAL SYSTEMS. REAL AUTOMATION. (ORACLE AI & PROTOTYPES) */}
+            <RealSystemsProofSection 
+              onViewSystem={(sysId) => {
+                if (sysId === 'oracle-ai') {
+                  const el = document.getElementById('tools-forge') || document.getElementById('automation-calculator');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                  handleLaunchSystemSandbox(sysId);
+                }
+              }}
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
+
+            {/* V3 PHASE 4: WHY FORGE? (4 CONCISE VISUAL POINTS) */}
+            <WhyForgeSection_v2 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            />
+
+            {/* V3 PHASE 4: FROM IDEA -> AI SYSTEM (PROCESS TIMELINE) */}
+            <ProcessTimelineSection />
+
+            {/* V3 PHASE 4: BUILT WITH MODERN TECHNOLOGY */}
+            <BuiltWithModernTechnology />
 
             {/* V3 PHASE 3: BUILT FOR REAL BUSINESS WORK (HONEST TECH STACK) */}
             <BuiltForRealBusinessWork />
