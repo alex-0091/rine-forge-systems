@@ -51,6 +51,9 @@ import { WhatForgeCanDo } from './forge/v2/WhatForgeCanDo';
 import { InteractiveAiDemoWidget } from './forge/v2/InteractiveAiDemoWidget';
 import { TrustAndTechStack } from './forge/v2/TrustAndTechStack';
 import { ForgeVideoExperienceLayer } from './forge/v2/videoLayer/ForgeVideoExperienceLayer';
+import { MeetAiEmployeesSection } from './forge/v2/MeetAiEmployeesSection';
+import { WhatCouldYourBusinessAutomate } from './forge/v2/WhatCouldYourBusinessAutomate';
+import { WatchItHappenModal } from './forge/v2/WatchItHappenModal';
 
 // Interactive Human Interface & 10s Demo Modals
 import { ForgeHumanControl } from './forge/ForgeHumanControl';
@@ -84,6 +87,7 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
   const [activeTenSecDemoSysId, setActiveTenSecDemoSysId] = useState(null);
   const [isGlobalTryModalOpen, setIsGlobalTryModalOpen] = useState(false);
   const [trialCreditsUsed, setTrialCreditsUsed] = useState(32);
+  const [activeWatchItHappenData, setActiveWatchItHappenData] = useState(null);
 
   // Check URL pathname, search params or hash on load
   useEffect(() => {
@@ -251,6 +255,16 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
 
             {/* V3 PHASE 1: 6-STAGE CINEMATIC VIDEO & VISUAL STORYTELLING LAYER */}
             <ForgeVideoExperienceLayer onNavigate={handleNavigate} />
+
+            {/* V3 PHASE 2: MEET YOUR NEW AI EMPLOYEES */}
+            <MeetAiEmployeesSection 
+              onWatchEmployeeDemo={(demoData) => setActiveWatchItHappenData(demoData)} 
+            />
+
+            {/* V3 PHASE 2: WHAT COULD YOUR BUSINESS AUTOMATE? (INDUSTRY SWITCHER) */}
+            <WhatCouldYourBusinessAutomate 
+              onWatchServiceDemo={(demoData) => setActiveWatchItHappenData(demoData)} 
+            />
 
             {/* 2. LIVE SYSTEM TELEMETRY: FORGE AI Network Active Status & Live Counters */}
             <LiveActivityStream onNavigate={handleNavigate} />
@@ -449,6 +463,13 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
           initialService={selectedPackageForModal}
         />
       )}
+
+      {/* Universal V3 Phase 2 "Watch It Happen" Modal */}
+      <WatchItHappenModal 
+        isOpen={Boolean(activeWatchItHappenData)}
+        onClose={() => setActiveWatchItHappenData(null)}
+        demoData={activeWatchItHappenData}
+      />
 
     </div>
   );
