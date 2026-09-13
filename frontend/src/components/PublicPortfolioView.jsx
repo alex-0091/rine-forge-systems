@@ -50,6 +50,7 @@ import { ForgeCommandCenter } from './forge/v2/ForgeCommandCenter';
 import { WhatForgeCanDo } from './forge/v2/WhatForgeCanDo';
 import { InteractiveAiDemoWidget } from './forge/v2/InteractiveAiDemoWidget';
 import { TrustAndTechStack } from './forge/v2/TrustAndTechStack';
+import { ForgeVideoExperienceLayer } from './forge/v2/videoLayer/ForgeVideoExperienceLayer';
 
 // Interactive Human Interface & 10s Demo Modals
 import { ForgeHumanControl } from './forge/ForgeHumanControl';
@@ -247,6 +248,9 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
               onLaunchSystemDemo={handleLaunchSystemSandbox}
               onWatchTenSecDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
             />
+
+            {/* V3 PHASE 1: 6-STAGE CINEMATIC VIDEO & VISUAL STORYTELLING LAYER */}
+            <ForgeVideoExperienceLayer onNavigate={handleNavigate} />
 
             {/* 2. LIVE SYSTEM TELEMETRY: FORGE AI Network Active Status & Live Counters */}
             <LiveActivityStream onNavigate={handleNavigate} />

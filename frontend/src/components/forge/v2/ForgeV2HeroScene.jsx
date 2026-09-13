@@ -151,7 +151,7 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
             <button
               onClick={() => {
                 forgeAudioSynth.playClick();
-                const el = document.getElementById('watch-demos');
+                const el = document.getElementById('v3-video-experience') || document.getElementById('watch-demos');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
                 else if (onNavigate) onNavigate('watch-demos');
               }}
