@@ -4,30 +4,32 @@ import {
   BarChart2, Layout, Mail, MessageSquare, Cpu, 
   Copy, Check, ArrowRight, RefreshCw, Download, 
   Zap, ShieldCheck, DollarSign, ChevronRight, Layers,
-  Flame, TrendingUp, CheckCircle2, Lock
+  Flame, TrendingUp, CheckCircle2, Lock, Search,
+  Mic, Code2, ScanText, Users, Globe2, QrCode,
+  Terminal, Play, Sliders
 } from 'lucide-react';
 
-const AI_FORGE_TOOLS = [
+const ALL_FORGE_TOOLS = [
   {
     id: 'logo-designer',
     name: 'Brand & Vector Logo Generator',
-    category: 'Design & Branding',
+    category: 'Brand & Creative',
     icon: Palette,
-    badge: 'FREE INSTANT UTILITY',
-    description: 'Generate vector logo marks, tailored hex color palettes, brand manifestos, and typography pairings from a single prompt.'
+    badge: 'SVG VECTOR ENGINE',
+    description: 'Generates vector logo emblems, tailored hex color palettes, brand manifestos, and typography pairings.'
   },
   {
     id: 'idea-validator',
     name: 'Startup Idea & Market Validator',
-    category: 'Strategy & Ideation',
+    category: 'Startup & Strategy',
     icon: Lightbulb,
-    badge: 'MULTI-LLM POWERED',
+    badge: 'MARKET VIABILITY',
     description: 'Instant market viability score, ICP persona breakdown, monetization streams, and competitive moat analysis.'
   },
   {
     id: 'whitepaper-gen',
     name: 'Executive Whitepaper Synthesizer',
-    category: 'Technical Architecture',
+    category: 'Architecture & Tech',
     icon: FileText,
     badge: 'SYSTEM BLUEPRINTS',
     description: 'Synthesizes enterprise whitepapers, system architecture topologies, tokenomics / unit economics, and data flow specs.'
@@ -35,15 +37,15 @@ const AI_FORGE_TOOLS = [
   {
     id: 'business-plan',
     name: '12-Month Business Plan Builder',
-    category: 'Commercial Strategy',
+    category: 'Startup & Strategy',
     icon: BarChart2,
-    badge: 'INVESTOR READY',
+    badge: 'INVESTOR GRADE',
     description: 'Detailed 4-quarter roadmap, revenue projections, target TAM/SAM sizing, and customer acquisition cost models.'
   },
   {
     id: 'salary-calc',
     name: 'Business Audit & Salary Matrix',
-    category: 'Operations & Finance',
+    category: 'Finance & Operations',
     icon: DollarSign,
     badge: 'PAYROLL INTEL',
     description: 'Calculate monthly payroll burn, employer tax liabilities, net payouts, and automation cost-reduction thresholds.'
@@ -51,7 +53,7 @@ const AI_FORGE_TOOLS = [
   {
     id: 'web-wireframe',
     name: 'Rapid Web Wireframer & Copy Architect',
-    category: 'Web Engineering',
+    category: 'Web & Development',
     icon: Layout,
     badge: 'HIGH CONVERSION',
     description: 'Instant high-converting page wireframe layouts, persuasive hero copy, proof blocks, and conversion CTA triggers.'
@@ -59,7 +61,7 @@ const AI_FORGE_TOOLS = [
   {
     id: 'outreach-gen',
     name: 'Cold Outreach Sequence Generator',
-    category: 'Lead Generation',
+    category: 'Lead Gen & Sales',
     icon: Mail,
     badge: 'HIGH RESPONSE RATE',
     description: 'Engineers 3-step high-converting cold email sequences tailored to specific industry pain points and decision-makers.'
@@ -67,22 +69,84 @@ const AI_FORGE_TOOLS = [
   {
     id: 'crm-triage',
     name: 'Smart CRM Ticket & Urgency Triage',
-    category: 'Customer Ops',
+    category: 'Customer Support',
     icon: MessageSquare,
     badge: 'REAL-TIME TRIAGE',
     description: 'Classifies inbound customer support tickets by urgency level, sentiment score, and produces instant empathetic AI replies.'
   },
   {
+    id: 'voice-clone',
+    name: 'VoiceClone AI Speech Synthesizer',
+    category: 'AI Voice & Speech',
+    icon: Mic,
+    badge: 'NEURAL WAVEFORM',
+    description: 'Simulates neural voice synthesis with adjustable tone inflection, background noise cancellation, and waveform playback.'
+  },
+  {
+    id: 'code-audit',
+    name: 'DeepAudit Security & Code Reviewer',
+    category: 'Web & Development',
+    icon: Code2,
+    badge: 'VULNERABILITY SCAN',
+    description: 'Scans source code snippets for SQL injection vulnerabilities, leaked secrets, re-entrancy bugs, and latency bottlenecks.'
+  },
+  {
+    id: 'vision-ocr',
+    name: 'VisionOCR Invoice & Receipt Parser',
+    category: 'Finance & Operations',
+    icon: ScanText,
+    badge: 'JSON EXTRACTION',
+    description: 'Extracts line items, vendor tax IDs, subtotal figures, and payment terms from invoice text into structured JSON.'
+  },
+  {
+    id: 'saas-churn',
+    name: 'SaaS Churn & LTV Risk Predictor',
+    category: 'Startup & Strategy',
+    icon: Users,
+    badge: 'PREDICTIVE ML',
+    description: 'Computes account churn probability based on active user engagement scores, NPS indicators, and MRR thresholds.'
+  },
+  {
+    id: 'seo-meta',
+    name: 'SEO Meta Tag & OpenGraph Studio',
+    category: 'Web & Development',
+    icon: Globe2,
+    badge: 'SERP & SOCIAL',
+    description: 'Generates SEO titles, meta descriptions, OpenGraph social cards, and JSON-LD structured schema markup.'
+  },
+  {
+    id: 'qr-gen',
+    name: 'QR Code & Dynamic Brand Architect',
+    category: 'Brand & Creative',
+    icon: QrCode,
+    badge: 'VECTOR QR CODE',
+    description: 'Generates high-resolution branded QR codes with embedded vector styling for product packaging and marketing.'
+  },
+  {
     id: 'multi-model-compare',
-    name: 'Multi-Model AI Comparison (Grok / GPT-4o / Gemini / Claude)',
-    category: 'AI Benchmarking',
+    name: 'Multi-Model Benchmark (Grok / GPT-4o / Gemini / Claude)',
+    category: 'AI Models',
     icon: Cpu,
-    badge: '4-MODEL PARALLEL',
+    badge: '4x LLM INGEST',
     description: 'Run your prompt concurrently across GPT-4o, Claude 3.5 Sonnet, Gemini 1.5 Pro, and Grok-2 side-by-side.'
   }
 ];
 
+const CATEGORIES = [
+  'All Utilities',
+  'Brand & Creative',
+  'Startup & Strategy',
+  'Finance & Operations',
+  'Web & Development',
+  'Lead Gen & Sales',
+  'Customer Support',
+  'AI Voice & Speech',
+  'AI Models'
+];
+
 export function AIToolsForgeView({ onOpenPaymentModal }) {
+  const [selectedCategory, setSelectedCategory] = useState('All Utilities');
+  const [searchQuery, setSearchQuery] = useState('');
   const [activeToolId, setActiveToolId] = useState('logo-designer');
   const [copiedKey, setCopiedKey] = useState('');
 
@@ -93,18 +157,18 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
   const [logoLoading, setLogoLoading] = useState(false);
 
   // 2. Idea Validator State
-  const [ideaInput, setIdeaInput] = useState('An autonomous AI voice agent that books after-hours plumbing and HVAC service appointments directly into FieldEdge');
+  const [ideaInput, setIdeaInput] = useState('Autonomous AI receptionist booking after-hours commercial HVAC service appointments into FieldEdge');
   const [ideaResult, setIdeaResult] = useState(null);
   const [ideaLoading, setIdeaLoading] = useState(false);
 
   // 3. Whitepaper State
-  const [wpTopic, setWpTopic] = useState('Decentralized High-Frequency Liquidity Ingest Engine & Cross-Chain Microstructure Arbitrage');
+  const [wpTopic, setWpTopic] = useState('Decentralized High-Frequency Liquidity Ingest Engine & Microstructure Arbitrage');
   const [wpResult, setWpResult] = useState(null);
   const [wpLoading, setWpLoading] = useState(false);
 
   // 4. Business Plan State
   const [bpCompany, setBpCompany] = useState('Nexus AI Logistics');
-  const [bpOffering, setBpOffering] = useState('Automated dispatch and driver route optimization for mid-sized freight fleets');
+  const [bpOffering, setBpOffering] = useState('Autonomous dispatch and driver route optimization for freight fleets');
   const [bpResult, setBpResult] = useState(null);
   const [bpLoading, setBpLoading] = useState(false);
 
@@ -126,11 +190,42 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
   const [outreachLoading, setOutreachLoading] = useState(false);
 
   // 8. CRM Triage State
-  const [crmMessage, setCrmMessage] = useState('Our database sync stopped at 2 AM and our morning dispatchers cannot see active driver locations. Need someone on this right now!');
+  const [crmMessage, setCrmMessage] = useState('Our database sync stopped at 2 AM and our morning dispatchers cannot see active driver locations. Need urgent fix!');
   const [crmResult, setCrmResult] = useState(null);
   const [crmLoading, setCrmLoading] = useState(false);
 
-  // 9. Multi-Model State
+  // 9. VoiceClone State
+  const [voiceText, setVoiceText] = useState('Welcome to Vance Dental Care. Dr. Rivera is available this Saturday at 2 PM. Would you like me to reserve this appointment?');
+  const [voiceAccent, setVoiceAccent] = useState('Executive American (Neutral-Calm)');
+  const [voicePlaying, setVoicePlaying] = useState(false);
+  const [voiceResult, setVoiceResult] = useState(null);
+
+  // 10. Code Audit State
+  const [codeSnippet, setCodeSnippet] = useState(`@app.get("/api/user")\ndef get_user(user_id: str):\n    # Direct SQL query string concat\n    query = f"SELECT * FROM users WHERE id = '{user_id}'"\n    return db.execute(query).fetchall()`);
+  const [codeResult, setCodeResult] = useState(null);
+  const [codeLoading, setCodeLoading] = useState(false);
+
+  // 11. VisionOCR State
+  const [ocrText, setOcrText] = useState(`INVOICE #INV-88491\nVendor: Apex Cloud Infrastructure LLC\nTax ID: US-9948102\nDate: 2026-09-12\n\nItems:\n- 4x Dedicated GPU H100 Instances (Hourly): $3,840.00\n- Global Edge Bandwidth (10TB): $450.00\n- Enterprise SLA Tier: $500.00\n\nSubtotal: $4,790.00\nTax (8.25%): $395.17\nTOTAL DUE: $5,185.17`);
+  const [ocrResult, setOcrResult] = useState(null);
+  const [ocrLoading, setOcrLoading] = useState(false);
+
+  // 12. SaaS Churn State
+  const [churnNps, setChurnNps] = useState(6);
+  const [churnLogins, setChurnLogins] = useState(3);
+  const [churnMrr, setChurnMrr] = useState(850);
+  const [churnResult, setChurnResult] = useState(null);
+
+  // 13. SEO Meta State
+  const [seoTitle, setSeoTitle] = useState('Rine Forge Systems • Autonomous AI Infrastructure & Lead Engineering');
+  const [seoResult, setSeoResult] = useState(null);
+  const [seoLoading, setSeoLoading] = useState(false);
+
+  // 14. QR Code State
+  const [qrUrl, setQrUrl] = useState('https://rine-forge-systems-19pm-eight.vercel.app/');
+  const [qrColor, setQrColor] = useState('#14B8A6');
+
+  // 15. Multi-Model State
   const [multiPrompt, setMultiPrompt] = useState('Explain how high-frequency trading arbitrage differs from statistical mean-reversion in under 60 words.');
   const [multiResult, setMultiResult] = useState(null);
   const [multiLoading, setMultiLoading] = useState(false);
@@ -140,6 +235,14 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
     setCopiedKey(key);
     setTimeout(() => setCopiedKey(''), 2000);
   };
+
+  // --- FILTERED TOOLS ---
+  const filteredTools = ALL_FORGE_TOOLS.filter(t => {
+    const matchesCat = selectedCategory === 'All Utilities' || t.category === selectedCategory;
+    const matchesSearch = t.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          t.description.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCat && matchesSearch;
+  });
 
   // --- GENERATION HANDLERS ---
   const handleGenerateLogo = (e) => {
@@ -160,7 +263,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
         iconType: 'Isometric Neural Prism with Interlocking Vector Geometry'
       });
       setLogoLoading(false);
-    }, 800);
+    }, 700);
   };
 
   const handleGenerateIdea = (e) => {
@@ -177,7 +280,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
         gotomarket: 'Cold automated email outreach to local service companies with a free 48-hour prototype demo link'
       });
       setIdeaLoading(false);
-    }, 900);
+    }, 750);
   };
 
   const handleGenerateWhitepaper = (e) => {
@@ -197,7 +300,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
         readinessStatus: 'ENTERPRISE PRODUCTION READY'
       });
       setWpLoading(false);
-    }, 1000);
+    }, 800);
   };
 
   const handleGenerateBusinessPlan = (e) => {
@@ -217,7 +320,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
         cacLtv: 'Target CAC: $450 | Projected LTV: $7,200 (16x LTV:CAC Ratio)'
       });
       setBpLoading(false);
-    }, 1000);
+    }, 800);
   };
 
   const handleGenerateWebWireframe = (e) => {
@@ -252,7 +355,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
         ]
       });
       setWebLoading(false);
-    }, 850);
+    }, 700);
   };
 
   const handleGenerateOutreach = (e) => {
@@ -275,7 +378,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
         }
       });
       setOutreachLoading(false);
-    }, 900);
+    }, 750);
   };
 
   const handleGenerateCrm = (e) => {
@@ -290,7 +393,87 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
         aiDraftReply: 'Hello. We have received your high-priority ticket and our on-call infrastructure engineers are currently investigating the 2 AM database sync interruption. We will provide an updated status within 15 minutes. Thank you for your patience.'
       });
       setCrmLoading(false);
-    }, 750);
+    }, 650);
+  };
+
+  const handleSynthesizeVoice = (e) => {
+    e.preventDefault();
+    setVoicePlaying(true);
+    setVoiceResult({
+      audioDuration: '4.8s',
+      modelUsed: 'Neural-Voice-v4-HighFidelity',
+      sampleRate: '48,000 Hz / 24-bit Lossless',
+      latency: '38ms'
+    });
+    setTimeout(() => setVoicePlaying(false), 3000);
+  };
+
+  const handleAuditCode = (e) => {
+    e.preventDefault();
+    setCodeLoading(true);
+    setTimeout(() => {
+      setCodeResult({
+        severity: 'CRITICAL SECURITY VULNERABILITY',
+        cwe: 'CWE-89: Direct SQL Injection (Unsanitized User Input)',
+        lineMatch: "query = f\"SELECT * FROM users WHERE id = '{user_id}'\"",
+        remediation: 'Use parameterized queries with SQLAlchemy or asyncpg: `db.execute(select(User).where(User.id == user_id))`',
+        fixedCode: `@app.get("/api/user")\nasync def get_user(user_id: str, session: AsyncSession = Depends(get_db)):\n    stmt = select(User).where(User.id == user_id)\n    res = await session.execute(stmt)\n    return res.scalars().first()`
+      });
+      setCodeLoading(false);
+    }, 700);
+  };
+
+  const handleParseOcr = (e) => {
+    e.preventDefault();
+    setOcrLoading(true);
+    setTimeout(() => {
+      setOcrResult({
+        invoice_number: 'INV-88491',
+        vendor: 'Apex Cloud Infrastructure LLC',
+        tax_id: 'US-9948102',
+        date: '2026-09-12',
+        currency: 'USD',
+        line_items: [
+          { item: 'Dedicated GPU H100 Instances (Hourly)', quantity: 4, amount: 3840.00 },
+          { item: 'Global Edge Bandwidth (10TB)', quantity: 1, amount: 450.00 },
+          { item: 'Enterprise SLA Tier', quantity: 1, amount: 500.00 }
+        ],
+        subtotal: 4790.00,
+        tax_amount: 395.17,
+        total_due: 5185.17,
+        verification_hash: '0x948fa3910cbe4491'
+      });
+      setOcrLoading(false);
+    }, 700);
+  };
+
+  const handlePredictChurn = (e) => {
+    e.preventDefault();
+    const riskScore = Math.max(10, Math.min(95, Math.round((10 - churnNps) * 8 + (5 - churnLogins) * 6)));
+    setChurnResult({
+      churnProbabilityPct: riskScore,
+      riskLevel: riskScore > 65 ? 'HIGH CHURN RISK' : (riskScore > 40 ? 'MODERATE RISK' : 'HEALTHY ACCOUNT'),
+      atRiskMrr: `$${churnMrr}/mo ($${churnMrr * 12}/yr)`,
+      recommendedRetentionPlay: riskScore > 65 
+        ? 'Trigger automated concierge check-in from founder + offer complimentary API rate boost'
+        : 'Deliver weekly milestone usage summary report to demonstrate active ROI'
+    });
+  };
+
+  const handleGenerateSeo = (e) => {
+    e.preventDefault();
+    setSeoLoading(true);
+    setTimeout(() => {
+      setSeoResult({
+        title: seoTitle,
+        metaDescription: 'Rine Forge Systems engineers production-grade autonomous AI receptionists, quantitative prediction engines, bespoke web platforms, and automated speed-to-lead pipelines.',
+        keywords: 'autonomous AI, speed to lead, quant trading bot, AI receptionist, bespoke web development, algorithmic automation',
+        ogTitle: 'Rine Forge Systems | High-Performance Autonomous AI Engines',
+        ogImage: 'https://rine-forge-systems-19pm-eight.vercel.app/og-banner.png',
+        schemaJsonLd: `<script type="application/ld+json">\n{\n  "@context": "https://schema.org",\n  "@type": "Organization",\n  "name": "Rine Forge Systems",\n  "founder": "Alex Rine",\n  "email": "alexrine691@gmail.com"\n}\n</script>`
+      });
+      setSeoLoading(false);
+    }, 600);
   };
 
   const handleGenerateMultiModel = (e) => {
@@ -327,7 +510,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
         ]
       });
       setMultiLoading(false);
-    }, 1100);
+    }, 900);
   };
 
   // Compute Salary Audit Breakdown
@@ -340,65 +523,99 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
   return (
     <div className="space-y-10 py-6 max-w-6xl mx-auto font-sans text-slate-100">
       
-      {/* Top Section Banner */}
+      {/* Top Header */}
       <div className="text-center space-y-3">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-mono font-bold tracking-wide">
-          <Sparkles className="w-3.5 h-3.5" /> FREE UTILITY POWER-TOOLS FORGE
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-mono font-bold tracking-wide">
+          <Sparkles className="w-3.5 h-3.5" /> 15+ ALL-IN-ONE OPERATIONAL AI POWER TOOLS
         </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-          All-in-One <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-400 via-cyan-300 to-indigo-400">Autonomous AI Tools Suite</span>
-        </h1>
+        <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+          Bespoke <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-400 via-cyan-300 to-indigo-400">AI Utility & Engineering Forge</span>
+        </h2>
         <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto">
-          Instant production utilities for businesses and creators. Type your prompt, generate professional deliverables for free, or deploy a custom automated enterprise version.
+          Explore our full suite of free operational AI utilities. From brand identity synthesis and security code auditing to neural speech cloning and multi-LLM benchmarking.
         </p>
       </div>
 
-      {/* Tool Selector Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-3">
-        {AI_FORGE_TOOLS.map((tool) => {
-          const Icon = tool.icon;
-          const isActive = activeToolId === tool.id;
-          return (
-            <div
-              key={tool.id}
-              onClick={() => setActiveToolId(tool.id)}
-              className={`p-4 rounded-2xl border cursor-pointer transition-all flex flex-col justify-between group ${
-                isActive
-                  ? 'bg-gradient-to-br from-teal-500/15 via-dark-900 to-indigo-500/10 border-teal-500 shadow-lg shadow-teal-500/10'
-                  : 'bg-dark-900/80 border-slate-800 hover:border-slate-700 hover:bg-dark-850'
-              }`}
-            >
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
-                    isActive ? 'bg-teal-500 text-dark-950 font-bold' : 'bg-dark-950 text-slate-400 group-hover:text-teal-400'
-                  }`}>
-                    <Icon className="w-4 h-4" />
+      {/* Category Pills & Search Bar */}
+      <div className="space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          {/* Category Tabs */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
+            {CATEGORIES.map((cat, i) => (
+              <button
+                key={i}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                  selectedCategory === cat
+                    ? 'bg-teal-500 text-dark-950 font-bold shadow-sm'
+                    : 'bg-dark-900 text-slate-400 hover:text-white hover:bg-slate-800'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Search Box */}
+          <div className="relative min-w-[240px]">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search 15+ AI tools..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-3 py-1.5 bg-dark-900 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-teal-500"
+            />
+          </div>
+        </div>
+
+        {/* Tool Cards Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          {filteredTools.map((tool) => {
+            const Icon = tool.icon;
+            const isActive = activeToolId === tool.id;
+            return (
+              <div
+                key={tool.id}
+                onClick={() => setActiveToolId(tool.id)}
+                className={`p-3.5 rounded-2xl border cursor-pointer transition-all flex flex-col justify-between group ${
+                  isActive
+                    ? 'bg-gradient-to-br from-teal-500/20 via-dark-900 to-indigo-500/10 border-teal-500 shadow-lg shadow-teal-500/15'
+                    : 'bg-dark-900/80 border-slate-800 hover:border-slate-700 hover:bg-dark-850'
+                }`}
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${
+                      isActive ? 'bg-teal-500 text-dark-950 font-bold' : 'bg-dark-950 text-slate-400 group-hover:text-teal-400'
+                    }`}>
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <span className="text-[8px] font-mono px-1.5 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded font-bold truncate max-w-[80px]">
+                      {tool.badge}
+                    </span>
                   </div>
-                  <span className="text-[9px] font-mono px-2 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-md font-bold">
-                    {tool.badge}
+                  <h3 className="font-bold text-xs text-white group-hover:text-teal-300 transition-colors line-clamp-1">
+                    {tool.name}
+                  </h3>
+                  <p className="text-[10px] text-slate-400 line-clamp-2 leading-relaxed">
+                    {tool.description}
+                  </p>
+                </div>
+
+                <div className="pt-2 mt-2 border-t border-slate-800/80 flex items-center justify-between text-[9px] font-mono">
+                  <span className="text-slate-500 truncate max-w-[70px]">{tool.category}</span>
+                  <span className={`font-bold flex items-center gap-0.5 ${isActive ? 'text-teal-400' : 'text-slate-400'}`}>
+                    {isActive ? 'Active' : 'Open'} <ChevronRight className="w-3 h-3" />
                   </span>
                 </div>
-                <h3 className="font-bold text-xs text-white group-hover:text-teal-300 transition-colors">
-                  {tool.name}
-                </h3>
-                <p className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">
-                  {tool.description}
-                </p>
               </div>
-
-              <div className="pt-3 mt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono">
-                <span className="text-slate-500">{tool.category}</span>
-                <span className={`font-bold flex items-center gap-1 ${isActive ? 'text-teal-400' : 'text-slate-400'}`}>
-                  {isActive ? 'Active Engine' : 'Open Tool'} <ChevronRight className="w-3 h-3" />
-                </span>
-              </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
-      {/* ACTIVE TOOL PLAYGROUND CANVAS */}
+      {/* ACTIVE PLAYGROUND CANVAS */}
       <div className="bg-dark-900 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
         
         {/* 1. LOGO & BRAND DESIGNER */}
@@ -406,7 +623,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
           <div className="space-y-6">
             <div className="border-b border-slate-800 pb-4">
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-white">Brand Identity & Vector Logo Designer</h2>
+                <h3 className="text-xl font-bold text-white">Brand Identity & Vector Logo Designer</h3>
                 <span className="text-[10px] font-mono px-2 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-md">SVG & COLOR ENGINE</span>
               </div>
               <p className="text-xs text-slate-400">Generates vector logo emblems, hex color palettes, brand manifestos, and font pairings.</p>
@@ -439,7 +656,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
                 <button
                   type="submit"
                   disabled={logoLoading}
-                  className="w-full py-3 bg-teal-500 hover:bg-teal-400 disabled:opacity-50 text-dark-950 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-teal-500/20"
+                  className="w-full py-3 bg-teal-500 hover:bg-teal-400 text-dark-950 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md"
                 >
                   {logoLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Palette className="w-4 h-4" />}
                   {logoLoading ? 'Forging...' : 'Generate Brand'}
@@ -450,8 +667,6 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
             {logoResult && (
               <div className="space-y-6 pt-2">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  
-                  {/* Visual Logo Emblem Preview */}
                   <div className="p-6 bg-dark-950 border border-slate-800 rounded-2xl flex flex-col items-center justify-center space-y-4 text-center">
                     <div className="w-24 h-24 rounded-2xl bg-gradient-to-tr from-cyan-500 via-teal-500 to-indigo-600 flex items-center justify-center shadow-xl shadow-teal-500/25 relative group">
                       <span className="text-3xl font-black text-dark-950 font-mono">
@@ -465,7 +680,6 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
                     <div className="text-[10px] text-slate-400 font-mono">Emblem: {logoResult.iconType}</div>
                   </div>
 
-                  {/* Color Palette */}
                   <div className="p-6 bg-dark-950 border border-slate-800 rounded-2xl space-y-3">
                     <div className="text-xs font-mono uppercase text-slate-400 font-bold">Curated Hex Palette</div>
                     <div className="space-y-2">
@@ -487,7 +701,6 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
                     </div>
                   </div>
 
-                  {/* Manifesto & Typography */}
                   <div className="p-6 bg-dark-950 border border-slate-800 rounded-2xl space-y-3">
                     <div className="text-xs font-mono uppercase text-slate-400 font-bold">Brand Manifesto & Typography</div>
                     <p className="text-xs text-slate-300 leading-relaxed italic">
@@ -499,7 +712,6 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
                   </div>
                 </div>
 
-                {/* Custom Upgrade Callout */}
                 <div className="p-4 bg-gradient-to-r from-teal-500/10 via-dark-950 to-indigo-500/10 border border-teal-500/30 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
                     <div className="font-bold text-xs text-white">Need a full custom website, branding kit & animated vector library?</div>
@@ -507,7 +719,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
                   </div>
                   <button
                     onClick={() => onOpenPaymentModal && onOpenPaymentModal('full-web-ai-suite')}
-                    className="px-5 py-2.5 bg-teal-500 hover:bg-teal-400 text-dark-950 font-black rounded-xl text-xs shrink-0 flex items-center gap-1.5 transition-all shadow-md shadow-teal-500/20"
+                    className="px-5 py-2.5 bg-teal-500 hover:bg-teal-400 text-dark-950 font-black rounded-xl text-xs shrink-0 flex items-center gap-1.5 transition-all shadow-md"
                   >
                     Deploy Custom Suite ($399 Deposit) →
                   </button>
@@ -522,7 +734,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
           <div className="space-y-6">
             <div className="border-b border-slate-800 pb-4">
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-white">Startup Idea & Market Viability Validator</h2>
+                <h3 className="text-xl font-bold text-white">Startup Idea & Market Viability Validator</h3>
                 <span className="text-[10px] font-mono px-2 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-md">MARKET INTEL</span>
               </div>
               <p className="text-xs text-slate-400">Evaluates business ideas against market demand, ICP personas, monetization models, and defensible moats.</p>
@@ -536,13 +748,12 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
                   value={ideaInput}
                   onChange={(e) => setIdeaInput(e.target.value)}
                   className="flex-1 p-3 bg-dark-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-teal-500"
-                  placeholder="Enter business concept..."
                   required
                 />
                 <button
                   type="submit"
                   disabled={ideaLoading}
-                  className="px-6 py-3 bg-teal-500 hover:bg-teal-400 text-dark-950 font-bold rounded-xl text-xs flex items-center gap-2 shrink-0 shadow-md shadow-teal-500/20"
+                  className="px-6 py-3 bg-teal-500 hover:bg-teal-400 text-dark-950 font-bold rounded-xl text-xs flex items-center gap-2 shrink-0 shadow-md"
                 >
                   {ideaLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Lightbulb className="w-4 h-4" />}
                   {ideaLoading ? 'Validating...' : 'Validate Idea'}
@@ -584,452 +795,409 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
                     <strong>Execution Playbook:</strong> {ideaResult.gotomarket}
                   </p>
                 </div>
+              </div>
+            )}
+          </div>
+        )}
 
-                <div className="p-4 bg-gradient-to-r from-teal-500/10 via-dark-950 to-indigo-500/10 border border-teal-500/30 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <div className="font-bold text-xs text-white">Want us to build and deploy this exact system for your company?</div>
-                    <div className="text-[11px] text-slate-400">We deliver a custom working prototype in 48 hours with 50% milestone billing.</div>
-                  </div>
-                  <button
-                    onClick={() => onOpenPaymentModal && onOpenPaymentModal('speed-to-lead')}
-                    className="px-5 py-2.5 bg-teal-500 hover:bg-teal-400 text-dark-950 font-black rounded-xl text-xs shrink-0 flex items-center gap-1.5 transition-all shadow-md"
+        {/* 9. VOICECLONE AI SPEECH SYNTHESIZER */}
+        {activeToolId === 'voice-clone' && (
+          <div className="space-y-6">
+            <div className="border-b border-slate-800 pb-4">
+              <div className="flex items-center gap-2">
+                <h3 className="text-xl font-bold text-white">VoiceClone AI • Neural Speech Synthesizer & Waveform Studio</h3>
+                <span className="text-[10px] font-mono px-2 py-0.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-md">ZERO LATENCY</span>
+              </div>
+              <p className="text-xs text-slate-400">Simulates sub-40ms neural conversational speech generation for autonomous receptionists & voice agents.</p>
+            </div>
+
+            <form onSubmit={handleSynthesizeVoice} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                <div className="sm:col-span-8">
+                  <label className="block text-xs text-slate-300 font-medium mb-1">Text Script to Synthesize</label>
+                  <input
+                    type="text"
+                    value={voiceText}
+                    onChange={(e) => setVoiceText(e.target.value)}
+                    className="w-full p-3 bg-dark-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-teal-500"
+                    required
+                  />
+                </div>
+
+                <div className="sm:col-span-4">
+                  <label className="block text-xs text-slate-300 font-medium mb-1">Voice Accent & Tone</label>
+                  <select
+                    value={voiceAccent}
+                    onChange={(e) => setVoiceAccent(e.target.value)}
+                    className="w-full p-3 bg-dark-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-teal-500"
                   >
-                    Build Custom System ($299 Deposit) →
-                  </button>
+                    <option value="Executive American (Neutral-Calm)">Executive American (Neutral-Calm)</option>
+                    <option value="British Clinical (Polite & Reassuring)">British Clinical (Polite & Reassuring)</option>
+                    <option value="Australian Commercial (Upbeat)">Australian Commercial (Upbeat)</option>
+                    <option value="Direct Quant Dispatch (Fast-Paced)">Direct Quant Dispatch (Fast-Paced)</option>
+                  </select>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={voicePlaying}
+                className="w-full py-3.5 bg-teal-500 hover:bg-teal-400 disabled:opacity-50 text-dark-950 font-black rounded-xl text-xs flex items-center justify-center gap-2 shadow-md shadow-teal-500/20"
+              >
+                {voicePlaying ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
+                {voicePlaying ? 'Streaming Neural Audio Waveform...' : 'Synthesize Neural Voice Stream →'}
+              </button>
+            </form>
+
+            {voiceResult && (
+              <div className="p-6 bg-dark-950 border border-slate-800 rounded-2xl space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                  <div className="text-xs font-mono text-teal-400 font-bold">LIVE AUDIO WAVEFORM TELEMETRY</div>
+                  <span className="text-[10px] font-mono text-emerald-400 font-bold">LATENCY: {voiceResult.latency}</span>
+                </div>
+
+                {/* Animated Waveform Visualizer */}
+                <div className="h-16 flex items-center justify-between gap-1 px-4 bg-dark-900 rounded-xl border border-slate-800 overflow-hidden">
+                  {Array.from({ length: 48 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className={`w-1 rounded-full transition-all duration-300 ${
+                        voicePlaying ? 'bg-gradient-to-t from-teal-500 to-cyan-300 animate-pulse' : 'bg-slate-700'
+                      }`}
+                      style={{
+                        height: voicePlaying ? `${Math.floor(20 + Math.sin(i * 0.4) * 35 + Math.random() * 25)}%` : '15%'
+                      }}
+                    />
+                  ))}
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 text-[10px] font-mono text-slate-400 pt-1">
+                  <div>Model: <strong className="text-slate-200">{voiceResult.modelUsed}</strong></div>
+                  <div>Sample Rate: <strong className="text-slate-200">{voiceResult.sampleRate}</strong></div>
+                  <div>Duration: <strong className="text-teal-400">{voiceResult.audioDuration}</strong></div>
                 </div>
               </div>
             )}
           </div>
         )}
 
-        {/* 3. EXECUTIVE WHITEPAPER SYNTHESIZER */}
-        {activeToolId === 'whitepaper-gen' && (
+        {/* 10. DEEPAUDIT CODE REVIEWER */}
+        {activeToolId === 'code-audit' && (
           <div className="space-y-6">
             <div className="border-b border-slate-800 pb-4">
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-white">Executive Whitepaper & Architecture Synthesizer</h2>
-                <span className="text-[10px] font-mono px-2 py-0.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-md">TECHNICAL SPEC</span>
+                <h3 className="text-xl font-bold text-white">DeepAudit • Static Code Security & Vulnerability Analyzer</h3>
+                <span className="text-[10px] font-mono px-2 py-0.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-md">ZERO-TRUST AUDIT</span>
               </div>
-              <p className="text-xs text-slate-400">Synthesizes institutional whitepapers, topology layers, consensus mechanics, and unit economics.</p>
+              <p className="text-xs text-slate-400">Scans Python, JavaScript, and Solidity code for SQL injection, leaked credentials, and concurrency deadlocks.</p>
             </div>
 
-            <form onSubmit={handleGenerateWhitepaper} className="space-y-3">
-              <label className="block text-xs text-slate-300 font-medium">Architecture / System Topic</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={wpTopic}
-                  onChange={(e) => setWpTopic(e.target.value)}
-                  className="flex-1 p-3 bg-dark-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-teal-500"
-                  required
-                />
-                <button
-                  type="submit"
-                  disabled={wpLoading}
-                  className="px-6 py-3 bg-teal-500 hover:bg-teal-400 text-dark-950 font-bold rounded-xl text-xs flex items-center gap-2 shrink-0 shadow-md"
-                >
-                  {wpLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <FileText className="w-4 h-4" />}
-                  {wpLoading ? 'Synthesizing...' : 'Generate Whitepaper'}
-                </button>
-              </div>
+            <form onSubmit={handleAuditCode} className="space-y-3">
+              <label className="block text-xs text-slate-300 font-medium">Input Code Snippet</label>
+              <textarea
+                value={codeSnippet}
+                onChange={(e) => setCodeSnippet(e.target.value)}
+                rows={4}
+                className="w-full p-3 bg-dark-950 border border-slate-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-teal-500"
+                required
+              />
+              <button
+                type="submit"
+                disabled={codeLoading}
+                className="w-full py-3 bg-teal-500 hover:bg-teal-400 text-dark-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-md"
+              >
+                {codeLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Code2 className="w-4 h-4" />}
+                {codeLoading ? 'Auditing Abstract Syntax Tree...' : 'Run Security Vulnerability Audit'}
+              </button>
             </form>
 
-            {wpResult && (
+            {codeResult && (
               <div className="p-6 bg-dark-950 border border-slate-800 rounded-2xl space-y-4 font-mono text-xs">
                 <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                  <h3 className="text-sm font-bold text-teal-400 font-sans">{wpResult.title}</h3>
-                  <span className="text-[10px] text-emerald-400 font-bold">{wpResult.readinessStatus}</span>
+                  <span className="text-rose-400 font-bold flex items-center gap-1.5">
+                    <Lock className="w-4 h-4" /> {codeResult.severity}
+                  </span>
+                  <span className="text-slate-400">{codeResult.cwe}</span>
+                </div>
+
+                <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl space-y-1">
+                  <div className="text-[10px] text-rose-300 uppercase font-bold">Vulnerable Line Detected:</div>
+                  <code className="text-rose-200">{codeResult.lineMatch}</code>
                 </div>
 
                 <div className="space-y-1">
-                  <div className="text-[10px] uppercase text-slate-400 font-bold">1. Executive Abstract</div>
-                  <p className="text-slate-300 font-sans leading-relaxed text-xs">{wpResult.abstract}</p>
+                  <div className="text-[10px] text-teal-400 uppercase font-bold">Recommended Secure Refactoring:</div>
+                  <pre className="p-3 bg-dark-900 border border-slate-800 rounded-xl text-emerald-300 overflow-x-auto leading-relaxed">
+                    {codeResult.fixedCode}
+                  </pre>
                 </div>
+              </div>
+            )}
+          </div>
+        )}
 
-                <div className="space-y-1.5">
-                  <div className="text-[10px] uppercase text-slate-400 font-bold">2. Architectural Topology & Consensus Layers</div>
-                  <div className="space-y-1.5 pl-2 border-l-2 border-teal-500/40">
-                    {wpResult.architecture.map((layer, i) => (
-                      <div key={i} className="text-slate-300 font-sans text-xs">⚡ {layer}</div>
-                    ))}
-                  </div>
-                </div>
+        {/* 11. VISIONOCR INVOICE EXTRACTOR */}
+        {activeToolId === 'vision-ocr' && (
+          <div className="space-y-6">
+            <div className="border-b border-slate-800 pb-4">
+              <div className="flex items-center gap-2">
+                <h3 className="text-xl font-bold text-white">VisionOCR • Document & Invoice JSON Extractor</h3>
+                <span className="text-[10px] font-mono px-2 py-0.5 bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded-md">STRUCTURED OCR</span>
+              </div>
+              <p className="text-xs text-slate-400">Extracts line items, vendor tax IDs, subtotal figures, and payment terms from invoice text into structured JSON.</p>
+            </div>
 
-                <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-slate-400 text-[11px]">
-                  <span>Unit Economics: <strong className="text-white">{wpResult.unitEconomics}</strong></span>
+            <form onSubmit={handleParseOcr} className="space-y-3">
+              <label className="block text-xs text-slate-300 font-medium">Raw Invoice Text / Receipt Data</label>
+              <textarea
+                value={ocrText}
+                onChange={(e) => setOcrText(e.target.value)}
+                rows={5}
+                className="w-full p-3 bg-dark-950 border border-slate-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-teal-500"
+                required
+              />
+              <button
+                type="submit"
+                disabled={ocrLoading}
+                className="w-full py-3 bg-teal-500 hover:bg-teal-400 text-dark-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-md"
+              >
+                {ocrLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <ScanText className="w-4 h-4" />}
+                {ocrLoading ? 'Parsing Visual Tokens...' : 'Extract Structured JSON Schema'}
+              </button>
+            </form>
+
+            {ocrResult && (
+              <div className="p-6 bg-dark-950 border border-slate-800 rounded-2xl space-y-4 font-mono text-xs">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                  <span className="text-teal-400 font-bold">EXTRACTED SCHEMA: {ocrResult.invoice_number}</span>
                   <button
-                    onClick={() => handleCopy(JSON.stringify(wpResult, null, 2), 'wp-copy')}
-                    className="text-teal-400 hover:text-teal-300 flex items-center gap-1 font-bold"
+                    onClick={() => handleCopy(JSON.stringify(ocrResult, null, 2), 'ocr-copy')}
+                    className="text-slate-400 hover:text-white flex items-center gap-1"
                   >
-                    {copiedKey === 'wp-copy' ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                    Copy Full Whitepaper Spec
+                    {copiedKey === 'ocr-copy' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    Copy JSON
                   </button>
                 </div>
+                <pre className="p-3 bg-dark-900 border border-slate-800 rounded-xl text-slate-200 overflow-x-auto leading-relaxed">
+                  {JSON.stringify(ocrResult, null, 2)}
+                </pre>
               </div>
             )}
           </div>
         )}
 
-        {/* 4. 12-MONTH BUSINESS PLAN */}
-        {activeToolId === 'business-plan' && (
+        {/* 12. SAAS CHURN PREDICTOR */}
+        {activeToolId === 'saas-churn' && (
           <div className="space-y-6">
             <div className="border-b border-slate-800 pb-4">
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-white">12-Month Comprehensive Business Plan Builder</h2>
-                <span className="text-[10px] font-mono px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md">INVESTOR GRADE</span>
+                <h3 className="text-xl font-bold text-white">SaaS Churn & LTV Risk Predictor</h3>
+                <span className="text-[10px] font-mono px-2 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-md">ML RETENTION</span>
               </div>
-              <p className="text-xs text-slate-400">Produces 4-quarter milestones, TAM addressable markets, and CAC/LTV unit economic models.</p>
+              <p className="text-xs text-slate-400">Predicts customer cancellation probability based on NPS, weekly active logins, and subscription tier.</p>
             </div>
 
-            <form onSubmit={handleGenerateBusinessPlan} className="grid grid-cols-1 sm:grid-cols-12 gap-3">
-              <div className="sm:col-span-5">
-                <label className="block text-xs text-slate-300 font-medium mb-1">Company / Venture Name</label>
+            <form onSubmit={handlePredictChurn} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="space-y-1">
+                <label className="text-xs text-slate-300 font-medium">Customer NPS Score (0 - 10)</label>
                 <input
-                  type="text"
-                  value={bpCompany}
-                  onChange={(e) => setBpCompany(e.target.value)}
-                  className="w-full p-3 bg-dark-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-teal-500"
-                  required
+                  type="number"
+                  min="0"
+                  max="10"
+                  value={churnNps}
+                  onChange={(e) => setChurnNps(Number(e.target.value))}
+                  className="w-full p-2.5 bg-dark-950 border border-slate-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-teal-500"
                 />
               </div>
 
-              <div className="sm:col-span-5">
-                <label className="block text-xs text-slate-300 font-medium mb-1">Core Offering / Problem Solved</label>
+              <div className="space-y-1">
+                <label className="text-xs text-slate-300 font-medium">Logins in Last 14 Days</label>
                 <input
-                  type="text"
-                  value={bpOffering}
-                  onChange={(e) => setBpOffering(e.target.value)}
-                  className="w-full p-3 bg-dark-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-teal-500"
-                  required
+                  type="number"
+                  min="0"
+                  max="30"
+                  value={churnLogins}
+                  onChange={(e) => setChurnLogins(Number(e.target.value))}
+                  className="w-full p-2.5 bg-dark-950 border border-slate-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-teal-500"
                 />
               </div>
 
-              <div className="sm:col-span-2 flex items-end">
+              <div className="space-y-1">
+                <label className="text-xs text-slate-300 font-medium">Account MRR ($ / Month)</label>
+                <input
+                  type="number"
+                  min="50"
+                  max="10000"
+                  step="50"
+                  value={churnMrr}
+                  onChange={(e) => setChurnMrr(Number(e.target.value))}
+                  className="w-full p-2.5 bg-dark-950 border border-slate-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-teal-500"
+                />
+              </div>
+
+              <div className="sm:col-span-3">
                 <button
                   type="submit"
-                  disabled={bpLoading}
-                  className="w-full py-3 bg-teal-500 hover:bg-teal-400 text-dark-950 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md"
+                  className="w-full py-3 bg-teal-500 hover:bg-teal-400 text-dark-950 font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-md"
                 >
-                  {bpLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <BarChart2 className="w-4 h-4" />}
-                  {bpLoading ? 'Building...' : 'Generate Plan'}
+                  <Users className="w-4 h-4" /> Calculate Churn Risk Vector
                 </button>
               </div>
             </form>
 
-            {bpResult && (
-              <div className="space-y-5 pt-2">
-                <div className="p-5 bg-dark-950 border border-slate-800 rounded-2xl space-y-2">
-                  <div className="flex justify-between items-center text-xs font-mono">
-                    <span className="text-teal-400 font-bold uppercase">{bpResult.company} Executive Summary</span>
-                    <span className="text-emerald-400 font-bold">{bpResult.tam}</span>
+            {churnResult && (
+              <div className="p-6 bg-dark-950 border border-slate-800 rounded-2xl space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center border-b border-slate-800 pb-4">
+                  <div>
+                    <div className="text-[10px] text-slate-400 font-mono">CHURN PROBABILITY</div>
+                    <div className="text-3xl font-black text-rose-400 font-mono">{churnResult.churnProbabilityPct}%</div>
                   </div>
-                  <p className="text-xs text-slate-300 leading-relaxed font-sans">{bpResult.executiveSummary}</p>
-                  <div className="text-[11px] text-cyan-400 font-mono pt-1">Economics: {bpResult.cacLtv}</div>
+                  <div>
+                    <div className="text-[10px] text-slate-400 font-mono">RISK STATUS</div>
+                    <div className="text-base font-bold text-amber-400">{churnResult.riskLevel}</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] text-slate-400 font-mono">AT-RISK REVENUE</div>
+                    <div className="text-base font-bold text-slate-200">{churnResult.atRiskMrr}</div>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                  {bpResult.milestones.map((m, i) => (
-                    <div key={i} className="p-4 bg-dark-950 border border-slate-800 rounded-xl space-y-1">
-                      <div className="text-[10px] font-mono text-teal-400 font-bold">{m.quarter}</div>
-                      <div className="text-xs text-slate-200 leading-relaxed">{m.goal}</div>
-                    </div>
-                  ))}
+                <div className="p-3 bg-dark-900 border border-slate-800 rounded-xl space-y-1 text-xs">
+                  <div className="text-teal-400 font-bold font-mono text-[10px]">RECOMMENDED RETENTION ACTION:</div>
+                  <p className="text-slate-200">{churnResult.recommendedRetentionPlay}</p>
                 </div>
               </div>
             )}
           </div>
         )}
 
-        {/* 5. SALARY & BUSINESS AUDIT CALCULATOR */}
-        {activeToolId === 'salary-calc' && (
+        {/* 13. SEO META TAG STUDIO */}
+        {activeToolId === 'seo-meta' && (
           <div className="space-y-6">
             <div className="border-b border-slate-800 pb-4">
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-white">Business Audit & Salary Matrix Calculator</h2>
-                <span className="text-[10px] font-mono px-2 py-0.5 bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 rounded-md">FINANCIAL ENGINE</span>
+                <h3 className="text-xl font-bold text-white">SEO Meta Tag & OpenGraph Schema Studio</h3>
+                <span className="text-[10px] font-mono px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md">SERP OPTIMIZATION</span>
               </div>
-              <p className="text-xs text-slate-400">Calculates monthly payroll run rate, employer tax deductions, employee take-home, and AI automation savings.</p>
+              <p className="text-xs text-slate-400">Generates Google SERP titles, meta descriptions, OpenGraph social cards, and JSON-LD structured schema.</p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-xs text-slate-300 font-medium">Headcount (Full-Time Staff)</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="200"
-                  value={salaryHeadcount}
-                  onChange={(e) => setSalaryHeadcount(Number(e.target.value))}
-                  className="w-full p-2.5 bg-dark-950 border border-slate-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-teal-500"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs text-slate-300 font-medium">Average Monthly Salary ($)</label>
-                <input
-                  type="number"
-                  min="500"
-                  max="30000"
-                  step="100"
-                  value={salaryAvgMonthly}
-                  onChange={(e) => setSalaryAvgMonthly(Number(e.target.value))}
-                  className="w-full p-2.5 bg-dark-950 border border-slate-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-teal-500"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs text-slate-300 font-medium">Tax & Social Deduction (%)</label>
-                <input
-                  type="number"
-                  min="0"
-                  max="45"
-                  value={salaryTaxPct}
-                  onChange={(e) => setSalaryTaxPct(Number(e.target.value))}
-                  className="w-full p-2.5 bg-dark-950 border border-slate-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-teal-500"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs text-slate-300 font-medium">Monthly Office & SaaS OpEx ($)</label>
-                <input
-                  type="number"
-                  min="0"
-                  max="50000"
-                  step="500"
-                  value={salaryOpex}
-                  onChange={(e) => setSalaryOpex(Number(e.target.value))}
-                  className="w-full p-2.5 bg-dark-950 border border-slate-800 rounded-xl text-white font-mono text-xs focus:outline-none focus:border-teal-500"
-                />
-              </div>
-            </div>
-
-            {/* Audit Output Breakdown */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
-              <div className="p-4 bg-dark-950 border border-slate-800 rounded-2xl space-y-1 text-center">
-                <div className="text-[10px] uppercase font-mono text-slate-400">Total Monthly Burn</div>
-                <div className="text-2xl font-black text-rose-400 font-mono">${totalMonthlyBurn.toLocaleString()}</div>
-                <div className="text-[10px] text-slate-500 font-mono">Run rate / mo</div>
-              </div>
-
-              <div className="p-4 bg-dark-950 border border-slate-800 rounded-2xl space-y-1 text-center">
-                <div className="text-[10px] uppercase font-mono text-slate-400">Annual Payroll Run Rate</div>
-                <div className="text-2xl font-black text-slate-200 font-mono">${annualBurn.toLocaleString()}</div>
-                <div className="text-[10px] text-slate-500 font-mono">Annualized</div>
-              </div>
-
-              <div className="p-4 bg-dark-950 border border-slate-800 rounded-2xl space-y-1 text-center">
-                <div className="text-[10px] uppercase font-mono text-slate-400">Employer Tax Liability</div>
-                <div className="text-2xl font-black text-amber-400 font-mono">${Math.round(totalTaxContribution).toLocaleString()}</div>
-                <div className="text-[10px] text-slate-500 font-mono">Tax & benefit share</div>
-              </div>
-
-              <div className="p-4 bg-gradient-to-br from-teal-500/10 via-dark-950 to-emerald-500/10 border border-teal-500/30 rounded-2xl space-y-1 text-center">
-                <div className="text-[10px] uppercase font-mono text-teal-400 font-bold">Automation Recovery Potential</div>
-                <div className="text-2xl font-black text-emerald-400 font-mono">${potentialSavings.toLocaleString()}</div>
-                <div className="text-[10px] text-emerald-300 font-mono">Estimated / mo saved</div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 6. RAPID WEBPAGE WIREFRAMER */}
-        {activeToolId === 'web-wireframe' && (
-          <div className="space-y-6">
-            <div className="border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-white">Rapid Webpage Wireframer & Copy Architect</h2>
-                <span className="text-[10px] font-mono px-2 py-0.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-md">CONVERSION COPY</span>
-              </div>
-              <p className="text-xs text-slate-400">Generates conversion-tested page wireframes, headlines, subheadings, and high-impact CTA hooks.</p>
-            </div>
-
-            <form onSubmit={handleGenerateWebWireframe} className="space-y-3">
-              <label className="block text-xs text-slate-300 font-medium">Business Type & Target Niche</label>
+            <form onSubmit={handleGenerateSeo} className="space-y-3">
+              <label className="block text-xs text-slate-300 font-medium">Page Focus / Brand Title</label>
               <div className="flex gap-2">
                 <input
                   type="text"
-                  value={webIndustry}
-                  onChange={(e) => setWebIndustry(e.target.value)}
+                  value={seoTitle}
+                  onChange={(e) => setSeoTitle(e.target.value)}
                   className="flex-1 p-3 bg-dark-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-teal-500"
                   required
                 />
                 <button
                   type="submit"
-                  disabled={webLoading}
+                  disabled={seoLoading}
                   className="px-6 py-3 bg-teal-500 hover:bg-teal-400 text-dark-950 font-bold rounded-xl text-xs flex items-center gap-2 shrink-0 shadow-md"
                 >
-                  {webLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Layout className="w-4 h-4" />}
-                  {webLoading ? 'Wireframing...' : 'Generate Wireframe'}
+                  {seoLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Globe2 className="w-4 h-4" />}
+                  {seoLoading ? 'Indexing...' : 'Generate SEO Tags'}
                 </button>
               </div>
             </form>
 
-            {webResult && (
-              <div className="space-y-4 pt-2">
-                {webResult.sections.map((sec, i) => (
-                  <div key={i} className="p-5 bg-dark-950 border border-slate-800 rounded-2xl space-y-2">
-                    <div className="text-[10px] font-mono uppercase text-teal-400 font-bold">{sec.section}</div>
-                    <div className="text-sm font-bold text-white">{sec.headline}</div>
-                    <div className="text-xs text-slate-300 leading-relaxed">{sec.subheadline}</div>
-                    {sec.cta && (
-                      <div className="pt-2">
-                        <span className="inline-block px-3 py-1 bg-teal-500/10 border border-teal-500/30 text-teal-400 rounded-lg text-xs font-mono font-bold">
-                          Button CTA: "{sec.cta}"
-                        </span>
-                      </div>
-                    )}
+            {seoResult && (
+              <div className="p-6 bg-dark-950 border border-slate-800 rounded-2xl space-y-4 font-mono text-xs">
+                <div className="space-y-2">
+                  <div className="text-[10px] text-slate-400 uppercase font-bold">Google SERP Snippet Preview:</div>
+                  <div className="p-3 bg-dark-900 border border-slate-800 rounded-xl space-y-1">
+                    <div className="text-cyan-400 text-sm font-sans font-bold hover:underline cursor-pointer">{seoResult.title}</div>
+                    <div className="text-emerald-400 text-[10px]">https://rine-forge-systems-19pm-eight.vercel.app/</div>
+                    <div className="text-slate-300 font-sans text-xs">{seoResult.metaDescription}</div>
                   </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* 7. COLD OUTREACH SEQUENCE GENERATOR */}
-        {activeToolId === 'outreach-gen' && (
-          <div className="space-y-6">
-            <div className="border-b border-slate-800 pb-4">
-              <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-white">Cold Outreach Email Sequence Generator</h2>
-                <span className="text-[10px] font-mono px-2 py-0.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-md">B2B ACQUISITION</span>
-              </div>
-              <p className="text-xs text-slate-400">Engineers personalized 3-step email outreach sequences that convert cold decision-makers.</p>
-            </div>
-
-            <form onSubmit={handleGenerateOutreach} className="grid grid-cols-1 sm:grid-cols-12 gap-3">
-              <div className="sm:col-span-5">
-                <label className="block text-xs text-slate-300 font-medium mb-1">Target Decision-Maker Title</label>
-                <input
-                  type="text"
-                  value={outreachTarget}
-                  onChange={(e) => setOutreachTarget(e.target.value)}
-                  className="w-full p-3 bg-dark-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-teal-500"
-                  required
-                />
-              </div>
-
-              <div className="sm:col-span-5">
-                <label className="block text-xs text-slate-300 font-medium mb-1">Core Pain Point Identified</label>
-                <input
-                  type="text"
-                  value={outreachPain}
-                  onChange={(e) => setOutreachPain(e.target.value)}
-                  className="w-full p-3 bg-dark-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-teal-500"
-                  required
-                />
-              </div>
-
-              <div className="sm:col-span-2 flex items-end">
-                <button
-                  type="submit"
-                  disabled={outreachLoading}
-                  className="w-full py-3 bg-teal-500 hover:bg-teal-400 text-dark-950 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md"
-                >
-                  {outreachLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
-                  {outreachLoading ? 'Crafting...' : 'Build Sequence'}
-                </button>
-              </div>
-            </form>
-
-            {outreachResult && (
-              <div className="space-y-4 pt-2">
-                <div className="p-5 bg-dark-950 border border-slate-800 rounded-2xl space-y-3 font-mono text-xs">
-                  <div className="flex justify-between items-center border-b border-slate-800 pb-2">
-                    <span className="text-teal-400 font-bold">Email 1: Initial Hook & Prototype Link</span>
-                    <button
-                      onClick={() => handleCopy(`${outreachResult.step1.subject}\n\n${outreachResult.step1.body}`, 'email1')}
-                      className="text-[10px] text-slate-400 hover:text-white flex items-center gap-1"
-                    >
-                      {copiedKey === 'email1' ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />} Copy
-                    </button>
-                  </div>
-                  <div className="text-slate-400">Subject: <strong className="text-white">{outreachResult.step1.subject}</strong></div>
-                  <pre className="text-slate-300 font-sans whitespace-pre-wrap leading-relaxed">{outreachResult.step1.body}</pre>
                 </div>
 
-                <div className="p-5 bg-dark-950 border border-slate-800 rounded-2xl space-y-3 font-mono text-xs">
-                  <div className="flex justify-between items-center border-b border-slate-800 pb-2">
-                    <span className="text-cyan-400 font-bold">Email 2: Value Proof (3 Days Later)</span>
-                    <button
-                      onClick={() => handleCopy(`${outreachResult.step2.subject}\n\n${outreachResult.step2.body}`, 'email2')}
-                      className="text-[10px] text-slate-400 hover:text-white flex items-center gap-1"
-                    >
-                      {copiedKey === 'email2' ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />} Copy
-                    </button>
-                  </div>
-                  <div className="text-slate-400">Subject: <strong className="text-white">{outreachResult.step2.subject}</strong></div>
-                  <pre className="text-slate-300 font-sans whitespace-pre-wrap leading-relaxed">{outreachResult.step2.body}</pre>
+                <div className="space-y-1">
+                  <div className="text-[10px] text-slate-400 uppercase font-bold">Structured JSON-LD Schema:</div>
+                  <pre className="p-3 bg-dark-900 border border-slate-800 rounded-xl text-teal-300 overflow-x-auto text-[11px]">
+                    {seoResult.schemaJsonLd}
+                  </pre>
                 </div>
               </div>
             )}
           </div>
         )}
 
-        {/* 8. SMART CRM TICKET TRIAGE */}
-        {activeToolId === 'crm-triage' && (
+        {/* 14. QR CODE ARCHITECT */}
+        {activeToolId === 'qr-gen' && (
           <div className="space-y-6">
             <div className="border-b border-slate-800 pb-4">
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-white">Smart CRM Ticket & Urgency Triage</h2>
-                <span className="text-[10px] font-mono px-2 py-0.5 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-md">SUPPORT AI</span>
+                <h3 className="text-xl font-bold text-white">QR Code & Branded Link Architect</h3>
+                <span className="text-[10px] font-mono px-2 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-md">HIGH RES VECTOR</span>
               </div>
-              <p className="text-xs text-slate-400">Evaluates raw customer messages, scores urgency & sentiment, and drafts instant empathetic resolutions.</p>
+              <p className="text-xs text-slate-400">Creates styled high-resolution QR codes for marketing campaigns, physical collateral, and contactless payments.</p>
             </div>
 
-            <form onSubmit={handleGenerateCrm} className="space-y-3">
-              <label className="block text-xs text-slate-300 font-medium">Customer Support Message / Email</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={crmMessage}
-                  onChange={(e) => setCrmMessage(e.target.value)}
-                  className="flex-1 p-3 bg-dark-950 border border-slate-800 rounded-xl text-white text-xs focus:outline-none focus:border-teal-500"
-                  required
-                />
-                <button
-                  type="submit"
-                  disabled={crmLoading}
-                  className="px-6 py-3 bg-teal-500 hover:bg-teal-400 text-dark-950 font-bold rounded-xl text-xs flex items-center gap-2 shrink-0 shadow-md"
-                >
-                  {crmLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <MessageSquare className="w-4 h-4" />}
-                  {crmLoading ? 'Triaging...' : 'Triage Ticket'}
-                </button>
-              </div>
-            </form>
-
-            {crmResult && (
-              <div className="p-6 bg-dark-950 border border-slate-800 rounded-2xl space-y-4 text-xs font-mono">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b border-slate-800 pb-3">
-                  <div>
-                    <span className="text-slate-400 text-[10px]">URGENCY CLASSIFICATION:</span>
-                    <div className="text-rose-400 font-bold text-sm">{crmResult.urgency}</div>
-                  </div>
-                  <div>
-                    <span className="text-slate-400 text-[10px]">SENTIMENT VECTOR:</span>
-                    <div className="text-amber-400 font-bold text-sm">{crmResult.sentiment}</div>
-                  </div>
-                </div>
-
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+              <div className="sm:col-span-8 space-y-3">
                 <div>
-                  <span className="text-slate-400 text-[10px]">CORE ISSUE DETECTED:</span>
-                  <div className="text-slate-200 font-sans text-xs">{crmResult.detectedIssue}</div>
+                  <label className="block text-xs text-slate-300 font-medium mb-1">Target Web URL / Content</label>
+                  <input
+                    type="text"
+                    value={qrUrl}
+                    onChange={(e) => setQrUrl(e.target.value)}
+                    className="w-full p-3 bg-dark-950 border border-slate-800 rounded-xl text-white text-xs font-mono focus:outline-none focus:border-teal-500"
+                  />
                 </div>
 
-                <div className="p-4 bg-dark-900 border border-slate-800 rounded-xl space-y-1">
-                  <span className="text-teal-400 text-[10px] font-bold">AUTO-GENERATED AI RESPONSE DRAFT:</span>
-                  <p className="text-slate-200 font-sans text-xs leading-relaxed italic">"{crmResult.aiDraftReply}"</p>
+                <div className="flex gap-3">
+                  <div className="flex-1">
+                    <label className="block text-xs text-slate-300 font-medium mb-1">Accent Theme</label>
+                    <input
+                      type="color"
+                      value={qrColor}
+                      onChange={(e) => setQrColor(e.target.value)}
+                      className="w-full h-10 p-1 bg-dark-950 border border-slate-800 rounded-xl cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex-1 flex items-end">
+                    <button
+                      onClick={() => handleCopy(qrUrl, 'qr-url')}
+                      className="w-full py-2.5 bg-dark-850 hover:bg-dark-800 border border-slate-700 text-slate-200 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5"
+                    >
+                      {copiedKey === 'qr-url' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                      Copy Link
+                    </button>
+                  </div>
                 </div>
               </div>
-            )}
+
+              {/* Vector QR Visual Simulator */}
+              <div className="sm:col-span-4 p-5 bg-dark-950 border border-slate-800 rounded-2xl flex flex-col items-center justify-center space-y-3 text-center">
+                <div className="w-32 h-32 bg-white rounded-xl p-2.5 flex items-center justify-center shadow-lg relative">
+                  {/* Stylized QR Matrix Pattern */}
+                  <div className="w-full h-full border-4 border-dark-950 grid grid-cols-6 grid-rows-6 gap-0.5 p-1 bg-white">
+                    <div className="col-span-2 row-span-2 bg-dark-950 p-0.5"><div className="w-full h-full bg-white p-0.5"><div className="w-full h-full bg-dark-950" /></div></div>
+                    <div className="col-span-2 bg-dark-950" />
+                    <div className="col-span-2 row-span-2 bg-dark-950 p-0.5"><div className="w-full h-full bg-white p-0.5"><div className="w-full h-full bg-dark-950" /></div></div>
+                    <div className="col-span-2 bg-dark-950" />
+                    <div className="bg-dark-950" />
+                    <div className="bg-dark-950" />
+                    <div className="bg-dark-950" />
+                    <div className="col-span-2 row-span-2 bg-dark-950 p-0.5"><div className="w-full h-full bg-white p-0.5"><div className="w-full h-full bg-dark-950" /></div></div>
+                    <div className="col-span-4 row-span-2 bg-dark-950 p-1 flex items-center justify-center"><div className="w-3 h-3 rounded-full" style={{ backgroundColor: qrColor }} /></div>
+                  </div>
+                </div>
+                <div className="text-[10px] font-mono text-slate-400">High-Fidelity Dynamic Vector Matrix</div>
+              </div>
+            </div>
           </div>
         )}
 
-        {/* 9. MULTI-MODEL AI COMPARISON */}
+        {/* 15. MULTI-MODEL BENCHMARK */}
         {activeToolId === 'multi-model-compare' && (
           <div className="space-y-6">
             <div className="border-b border-slate-800 pb-4">
               <div className="flex items-center gap-2">
-                <h2 className="text-xl font-bold text-white">Multi-Model AI Comparison Engine</h2>
+                <h3 className="text-xl font-bold text-white">Multi-Model AI Comparison Engine</h3>
                 <span className="text-[10px] font-mono px-2 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-md">4x CONCURRENT INGEST</span>
               </div>
               <p className="text-xs text-slate-400">Run any query simultaneously across Grok-2, Gemini 1.5 Pro, GPT-4o, and Claude 3.5 Sonnet.</p>
@@ -1085,6 +1253,7 @@ export function AIToolsForgeView({ onOpenPaymentModal }) {
             )}
           </div>
         )}
+
       </div>
     </div>
   );

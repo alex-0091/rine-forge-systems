@@ -12,6 +12,10 @@ import {
 import { PaymentPortalModal } from './PaymentPortalModal';
 import { AIToolsForgeView } from './AIToolsForgeView';
 import { FloatingAIAssistant } from './FloatingAIAssistant';
+import { 
+  BrandLogo, OpenAILogo, GeminiLogo, AWSLogo, 
+  StripeLogo, PythonLogo, VercelLogo, SupabaseLogo 
+} from './TechLogos';
 
 const SHOWCASE_TABS = [
   { id: 'oracle-ai', name: 'Oracle AI Terminal', badge: 'Quant Microstructure', icon: Activity },
@@ -616,13 +620,11 @@ export function PublicPortfolioView() {
     <div className="space-y-24 py-8 max-w-6xl mx-auto font-sans text-slate-100">
       {/* Top Branding Banner */}
       <div className="flex items-center justify-between border-b border-slate-800 pb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 via-teal-500 to-indigo-600 flex items-center justify-center font-black text-dark-950 text-xl shadow-lg shadow-teal-500/20">
-            R
-          </div>
+        <div className="flex items-center gap-3.5">
+          <BrandLogo className="w-11 h-11" />
           <div>
             <div className="font-extrabold text-base tracking-wider text-white flex items-center gap-2">
-              RINE FORGE SYSTEMS <span className="text-[10px] font-mono px-2 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-md">ENGINEERING GRADE</span>
+              RINE FORGE SYSTEMS <span className="text-[10px] font-mono px-2 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-md font-bold">ENGINEERING GRADE</span>
             </div>
             <div className="text-xs text-slate-400 font-mono">Bespoke Autonomous AI Infrastructure & Lead Engineering</div>
           </div>
@@ -630,9 +632,9 @@ export function PublicPortfolioView() {
 
         <div className="hidden md:flex items-center gap-3 text-xs font-semibold">
           <a href="#tools-forge" className="text-teal-400 hover:text-teal-300 font-bold flex items-center gap-1 transition-colors">
-            <Sparkles className="w-3.5 h-3.5" /> Free AI Super-Suite
+            <Sparkles className="w-3.5 h-3.5" /> 15+ Free AI Utilities
           </a>
-          <a href="#showcase" className="text-slate-300 hover:text-white transition-colors">Live Projects</a>
+          <a href="#showcase" className="text-slate-300 hover:text-white transition-colors">Live Engines</a>
           <a href="#team" className="text-slate-300 hover:text-white transition-colors">Engineering Team</a>
           <a href="#accreditations" className="text-slate-300 hover:text-white transition-colors">Accreditations</a>
           <a href="#payment-terms" className="text-slate-300 hover:text-white transition-colors">Milestones</a>
@@ -674,7 +676,7 @@ export function PublicPortfolioView() {
             href="#tools-forge"
             className="px-7 py-3.5 bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-400 hover:to-cyan-300 text-dark-950 font-black rounded-xl text-sm transition-all shadow-xl shadow-teal-500/25 flex items-center gap-2"
           >
-            <Sparkles className="w-4 h-4" /> Use 9 Free AI Tools
+            <Sparkles className="w-4 h-4" /> Use 15+ Free AI Tools
           </a>
           <a
             href="#showcase"
@@ -712,14 +714,29 @@ export function PublicPortfolioView() {
           ))}
         </div>
 
-        {/* Tech Partners Ticker */}
-        <div className="flex flex-wrap items-center justify-center gap-4 pt-2 text-[11px] font-mono text-slate-400 border-t border-slate-800/60 pt-4">
-          <span className="text-slate-500">Core Tech Ecosystem:</span>
-          {TECH_PARTNERS.map((tech, i) => (
-            <span key={i} className="px-2.5 py-1 bg-dark-950 border border-slate-800 rounded-lg text-slate-300">
-              {tech}
-            </span>
-          ))}
+        {/* Tech Partners Vector Ticker */}
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-4 border-t border-slate-800/60">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-dark-950 border border-slate-800 rounded-xl text-xs text-slate-300 font-mono">
+            <OpenAILogo className="w-4 h-4 text-teal-400" /> <span>OpenAI</span>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-dark-950 border border-slate-800 rounded-xl text-xs text-slate-300 font-mono">
+            <GeminiLogo className="w-4 h-4 text-cyan-400" /> <span>Google Gemini</span>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-dark-950 border border-slate-800 rounded-xl text-xs text-slate-300 font-mono">
+            <AWSLogo className="w-4 h-4 text-amber-400" /> <span>AWS Cloud</span>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-dark-950 border border-slate-800 rounded-xl text-xs text-slate-300 font-mono">
+            <StripeLogo className="w-4 h-4 text-indigo-400" /> <span>Stripe Billing</span>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-dark-950 border border-slate-800 rounded-xl text-xs text-slate-300 font-mono">
+            <PythonLogo className="w-4 h-4 text-blue-400" /> <span>Python FastAsync</span>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-dark-950 border border-slate-800 rounded-xl text-xs text-slate-300 font-mono">
+            <VercelLogo className="w-4 h-4 text-white" /> <span>Vercel Edge</span>
+          </div>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-dark-950 border border-slate-800 rounded-xl text-xs text-slate-300 font-mono">
+            <SupabaseLogo className="w-4 h-4 text-emerald-400" /> <span>Supabase</span>
+          </div>
         </div>
       </section>
 
