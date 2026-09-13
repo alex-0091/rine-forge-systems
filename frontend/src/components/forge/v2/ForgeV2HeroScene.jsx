@@ -257,32 +257,53 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
               
               {/* SCENE 1: OVERWHELMED CHAOS */}
               {activeStepIdx === 0 && (
-                <div className="flex flex-col items-center justify-center space-y-6 animate-fadeIn">
-                  <div className="relative">
+                <div className="flex flex-col items-center justify-center space-y-5 animate-fadeIn">
+                  <div className="relative flex flex-col items-center justify-center">
                     <BusinessOwnerAvatar size="lg" mood="overwhelmed" />
                     
-                    {/* Floating incoming chaos notifications around the owner */}
-                    <div className="absolute -top-4 -left-20 px-3 py-1.5 rounded-xl bg-rose-500/20 border-2 border-rose-400 text-rose-300 text-xs font-mono font-bold animate-bounce flex items-center gap-1.5 shadow-lg">
+                    {/* Desktop Floating Badges (Hidden on mobile to prevent overflow) */}
+                    <div className="hidden sm:flex absolute -top-4 -left-28 px-3 py-1.5 rounded-xl bg-rose-500/20 border-2 border-rose-400 text-rose-300 text-xs font-mono font-bold animate-bounce items-center gap-1.5 shadow-lg">
                       <PhoneCall className="w-3.5 h-3.5" />
                       <span>📞 MISSED CALL (10:45 PM)</span>
                     </div>
 
-                    <div className="absolute -top-4 -right-20 px-3 py-1.5 rounded-xl bg-amber-500/20 border-2 border-amber-400 text-amber-300 text-xs font-mono font-bold animate-bounce delay-100 flex items-center gap-1.5 shadow-lg">
+                    <div className="hidden sm:flex absolute -top-4 -right-28 px-3 py-1.5 rounded-xl bg-amber-500/20 border-2 border-amber-400 text-amber-300 text-xs font-mono font-bold animate-bounce delay-100 items-center gap-1.5 shadow-lg">
                       <Zap className="w-3.5 h-3.5" />
                       <span>🎯 $1.4M UNREAD LEAD</span>
                     </div>
 
-                    <div className="absolute -bottom-4 -left-24 px-3 py-1.5 rounded-xl bg-orange-500/20 border-2 border-orange-400 text-orange-300 text-xs font-mono font-bold animate-pulse flex items-center gap-1.5 shadow-lg">
+                    <div className="hidden sm:flex absolute -bottom-4 -left-32 px-3 py-1.5 rounded-xl bg-orange-500/20 border-2 border-orange-400 text-orange-300 text-xs font-mono font-bold animate-pulse items-center gap-1.5 shadow-lg">
                       <FileText className="w-3.5 h-3.5" />
                       <span>📄 120 PDF INVOICES</span>
                     </div>
 
-                    <div className="absolute -bottom-4 -right-24 px-3 py-1.5 rounded-xl bg-pink-500/20 border-2 border-pink-400 text-pink-300 text-xs font-mono font-bold animate-pulse delay-75 flex items-center gap-1.5 shadow-lg">
+                    <div className="hidden sm:flex absolute -bottom-4 -right-32 px-3 py-1.5 rounded-xl bg-pink-500/20 border-2 border-pink-400 text-pink-300 text-xs font-mono font-bold animate-pulse delay-75 items-center gap-1.5 shadow-lg">
                       <Mail className="w-3.5 h-3.5" />
                       <span>📩 300+ CHAOTIC EMAILS</span>
                     </div>
                   </div>
-                  <div className="text-xs font-mono text-rose-400 font-bold bg-rose-950/60 px-4 py-1.5 rounded-full border border-rose-500/40">
+
+                  {/* Mobile-Friendly Non-Overlapping Grid Badges */}
+                  <div className="grid grid-cols-2 gap-2 sm:hidden w-full max-w-xs pt-2">
+                    <div className="p-2 rounded-xl bg-rose-500/20 border border-rose-400 text-rose-300 text-[10px] font-mono font-bold flex items-center gap-1">
+                      <PhoneCall className="w-3 h-3 shrink-0" />
+                      <span className="truncate">📞 Missed Call</span>
+                    </div>
+                    <div className="p-2 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-300 text-[10px] font-mono font-bold flex items-center gap-1">
+                      <Zap className="w-3 h-3 shrink-0" />
+                      <span className="truncate">🎯 $1.4M Lead</span>
+                    </div>
+                    <div className="p-2 rounded-xl bg-orange-500/20 border border-orange-400 text-orange-300 text-[10px] font-mono font-bold flex items-center gap-1">
+                      <FileText className="w-3 h-3 shrink-0" />
+                      <span className="truncate">📄 120 Invoices</span>
+                    </div>
+                    <div className="p-2 rounded-xl bg-pink-500/20 border border-pink-400 text-pink-300 text-[10px] font-mono font-bold flex items-center gap-1">
+                      <Mail className="w-3 h-3 shrink-0" />
+                      <span className="truncate">📩 300+ Emails</span>
+                    </div>
+                  </div>
+
+                  <div className="text-xs font-mono text-rose-400 font-bold bg-rose-950/60 px-4 py-1.5 rounded-full border border-rose-500/40 text-center">
                     🚨 RESULT: $45,000/YR LOST IN MISSED APPOINTMENTS & DELAYED REPLIES
                   </div>
                 </div>
@@ -302,7 +323,7 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center justify-center gap-3 flex-wrap">
+                  <div className="flex items-center justify-center gap-2 flex-wrap">
                     <div className="px-3 py-1 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-400 text-[10px] font-mono font-bold">🔵 RECEPTIONIST</div>
                     <div className="px-3 py-1 rounded-xl bg-violet-500/20 text-violet-300 border border-violet-400 text-[10px] font-mono font-bold">🟣 LEAD ENGINE</div>
                     <div className="px-3 py-1 rounded-xl bg-blue-500/20 text-blue-300 border border-blue-400 text-[10px] font-mono font-bold">🔷 SUPPORT RAG</div>
@@ -319,42 +340,42 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
                   {/* 🔵 Receptionist */}
                   <div className="p-3.5 rounded-2xl bg-[#081824] border-2 border-cyan-400 text-center space-y-2 shadow-lg shadow-cyan-500/20">
                     <ReceptionistCharacter size="sm" />
-                    <div className="text-[10px] font-mono font-black text-cyan-300">🔵 RECEPTIONIST</div>
+                    <div className="text-[10px] font-mono font-black text-cyan-300 truncate">🔵 RECEPTIONIST</div>
                     <div className="text-[9px] text-slate-300 font-sans">📞 Answers in 2s</div>
                   </div>
 
                   {/* 🟣 Lead Engine */}
                   <div className="p-3.5 rounded-2xl bg-[#180d28] border-2 border-violet-400 text-center space-y-2 shadow-lg shadow-violet-500/20">
                     <LeadEngineCharacter size="sm" />
-                    <div className="text-[10px] font-mono font-black text-violet-300">🟣 LEAD ENGINE</div>
+                    <div className="text-[10px] font-mono font-black text-violet-300 truncate">🟣 LEAD ENGINE</div>
                     <div className="text-[9px] text-slate-300 font-sans">🎯 38s SMS VIP Tour</div>
                   </div>
 
                   {/* 🔷 Support Agent */}
                   <div className="p-3.5 rounded-2xl bg-[#0c1628] border-2 border-blue-400 text-center space-y-2 shadow-lg shadow-blue-500/20">
                     <SupportCharacter size="sm" />
-                    <div className="text-[10px] font-mono font-black text-blue-300">🔷 SUPPORT RAG</div>
+                    <div className="text-[10px] font-mono font-black text-blue-300 truncate">🔷 SUPPORT RAG</div>
                     <div className="text-[9px] text-slate-300 font-sans">💬 0% Hallucination</div>
                   </div>
 
                   {/* 🟠 Document Engine */}
                   <div className="p-3.5 rounded-2xl bg-[#241208] border-2 border-orange-400 text-center space-y-2 shadow-lg shadow-orange-500/20">
                     <DocumentCharacter size="sm" />
-                    <div className="text-[10px] font-mono font-black text-orange-300">🟠 DOCUMENT OCR</div>
+                    <div className="text-[10px] font-mono font-black text-orange-300 truncate">🟠 DOCUMENT OCR</div>
                     <div className="text-[9px] text-slate-300 font-sans">📄 $0 Typing Errors</div>
                   </div>
 
                   {/* 🩷 Email Agent */}
                   <div className="p-3.5 rounded-2xl bg-[#240818] border-2 border-pink-400 text-center space-y-2 shadow-lg shadow-pink-500/20">
                     <EmailCharacter size="sm" />
-                    <div className="text-[10px] font-mono font-black text-pink-300">🩷 EMAIL AGENT</div>
+                    <div className="text-[10px] font-mono font-black text-pink-300 truncate">🩷 EMAIL AGENT</div>
                     <div className="text-[9px] text-slate-300 font-sans">📩 5 Min Triage</div>
                   </div>
 
                   {/* 🟢 Appointment Agent */}
                   <div className="p-3.5 rounded-2xl bg-[#082414] border-2 border-emerald-400 text-center space-y-2 shadow-lg shadow-emerald-500/20">
                     <AppointmentCharacter size="sm" />
-                    <div className="text-[10px] font-mono font-black text-emerald-300">🟢 APPOINTMENT</div>
+                    <div className="text-[10px] font-mono font-black text-emerald-300 truncate">🟢 APPOINTMENT</div>
                     <div className="text-[9px] text-slate-300 font-sans">📅 Calendar Locked</div>
                   </div>
                 </div>
@@ -375,7 +396,7 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-3 font-mono text-xs">
+                  <div className="flex items-center gap-3 font-mono text-xs flex-wrap justify-center">
                     <button
                       onClick={() => {
                         forgeAudioSynth.playClick();
@@ -403,7 +424,7 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
             </div>
 
             {/* Bottom 4-Scene Selector Strip */}
-            <div className="grid grid-cols-4 gap-2 font-mono text-[10px] text-center pt-4 border-t border-slate-800/80">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-[10px] text-center pt-4 border-t border-slate-800/80">
               {FORGE_HERO_SCENES.map((sc, idx) => (
                 <button
                   key={idx}

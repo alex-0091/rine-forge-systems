@@ -4,7 +4,7 @@ import {
   Sparkles, CheckCircle2, ArrowRight, Play, RotateCcw, 
   Check, Volume2, VolumeX, ShieldCheck, Search, Clock, 
   Smartphone, MessageSquare, Database, ArrowUpRight, HandMetal,
-  Code2, Terminal, Download, Send, CheckCheck, RefreshCw
+  Code2, Terminal, Download, Send, CheckCheck, RefreshCw, HelpCircle
 } from 'lucide-react';
 import { speechEngine } from '../../../utils/speechEngine';
 import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
@@ -41,6 +41,17 @@ export const COMMAND_OPTIONS = [
     outcome: 'Respond while the lead is still interested.'
   },
   {
+    id: 'customer-support',
+    sysId: 'support-agent',
+    title: '🔷 Answer Support',
+    subtitle: 'Zero-Hallucination Grounded RAG',
+    color: 'border-blue-400 bg-blue-950/30 text-blue-300 hover:border-blue-300',
+    tagColor: 'bg-blue-500/20 text-blue-300 border-blue-500/40',
+    buttonColor: 'bg-blue-500 text-white hover:bg-blue-400',
+    character: SupportCharacter,
+    outcome: 'Answer customers without making them wait.'
+  },
+  {
     id: 'process-documents',
     sysId: 'document-processor',
     title: '📄 Process Documents',
@@ -72,17 +83,6 @@ export const COMMAND_OPTIONS = [
     buttonColor: 'bg-emerald-500 text-dark-950 hover:bg-emerald-400',
     character: AppointmentCharacter,
     outcome: 'Turn conversations into booked appointments.'
-  },
-  {
-    id: 'build-ai-system',
-    sysId: 'support-agent',
-    title: '🧠 Build an AI System',
-    subtitle: 'Custom Policy-Bound Multi-Agent Architecture',
-    color: 'border-blue-400 bg-blue-950/30 text-blue-300 hover:border-blue-300',
-    tagColor: 'bg-blue-500/20 text-blue-300 border-blue-500/40',
-    buttonColor: 'bg-blue-500 text-white hover:bg-blue-400',
-    character: SupportCharacter,
-    outcome: 'Answer customers without making them wait.'
   }
 ];
 
@@ -95,6 +95,7 @@ export function ForgeCommandCenter({ onNavigate, onLaunchSandbox, onWatchDemo })
   const [dialpadNumber, setDialpadNumber] = useState('555-0199');
   const [leadBudget, setLeadBudget] = useState(1400000);
   const [leadScore, setLeadScore] = useState(96);
+  const [supportQuery, setSupportQuery] = useState('sla'); // 'sla' | 'refund' | 'security'
   const [emailStatus, setEmailStatus] = useState('draft_ready'); // 'draft_ready' | 'sent'
   const [appointmentConfirmed, setAppointmentConfirmed] = useState(true);
 
@@ -126,6 +127,16 @@ export function ForgeCommandCenter({ onNavigate, onLaunchSandbox, onWatchDemo })
             'Twilio 2-Way SMS Dispatched: 420ms'
           ],
           sms_delivered: true
+        }, null, 2);
+      case 'customer-support':
+        return JSON.stringify({
+          agent: 'SUPPORT_KNOWLEDGE_RAG_V3',
+          query: supportQuery === 'sla' ? 'Section 14 SLA early-termination penalty' : 'Security SOC2 compliance bounds',
+          rag_source: 'Master_Service_Agreement_2025.pdf',
+          citation: 'Page 42, Paragraph 3b',
+          hallucination_score: 0.00,
+          latency_ms: 12,
+          answer: 'Early termination fee is capped at 1.5x monthly retainer within the first 60 days.'
         }, null, 2);
       case 'process-documents':
         return JSON.stringify({
@@ -419,7 +430,66 @@ export function ForgeCommandCenter({ onNavigate, onLaunchSandbox, onWatchDemo })
                 </div>
               )}
 
-              {/* SIMULATION 3: 📄 PROCESS DOCUMENTS (ORANGE) */}
+              {/* SIMULATION 3: 🔷 ANSWER SUPPORT (BLUE) */}
+              {activeTabId === 'customer-support' && (
+                <div className="space-y-6">
+                  <div className="p-4 rounded-2xl bg-dark-950 border border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                    <div className="text-slate-300">
+                      <span className="font-bold text-white">Simulate Knowledge Base Query:</span> Choose inquiry:
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() => {
+                          forgeAudioSynth.playClick();
+                          setSupportQuery('sla');
+                          speechEngine.speak('Section 14 SLA early termination fee is capped at 1.5 times monthly retainer.', { accent: 'en-US' });
+                        }}
+                        className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all ${
+                          supportQuery === 'sla' ? 'bg-blue-500 text-white border-blue-300' : 'bg-slate-900 text-slate-300 border-slate-800'
+                        }`}
+                      >
+                        📄 SLA Termination Clause
+                      </button>
+                      <button
+                        onClick={() => {
+                          forgeAudioSynth.playClick();
+                          setSupportQuery('security');
+                          speechEngine.speak('FORGE enterprise systems are strictly SOC2 Type II compliant with zero data retention for model training.', { accent: 'en-US' });
+                        }}
+                        className={`px-3 py-1.5 rounded-xl border text-xs font-bold transition-all ${
+                          supportQuery === 'security' ? 'bg-blue-500 text-white border-blue-300' : 'bg-slate-900 text-slate-300 border-slate-800'
+                        }`}
+                      >
+                        🔒 SOC2 Security Bounds
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="p-6 rounded-2xl bg-[#09152a] border-2 border-blue-400/60 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                    <div className="md:col-span-3 text-center space-y-2">
+                      <SupportCharacter size="md" />
+                      <div className="text-xs font-bold text-white">FORGE Support RAG</div>
+                      <div className="text-[10px] text-blue-300 font-bold">Vector RAG Search</div>
+                    </div>
+
+                    <div className="md:col-span-9 space-y-3 font-sans">
+                      <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 space-y-1 font-mono">
+                        <div className="text-blue-400 font-bold">🧠 ZERO-HALLUCINATION KNOWLEDGE CITATION:</div>
+                        <div>• Indexed Source: Master_Service_Agreement_2025.pdf (Page 42, Para 3)</div>
+                        <div>• Hallucination Score: <span className="text-emerald-400 font-bold">0.00% (Strictly Grounded)</span></div>
+                        <div className="text-emerald-400 font-bold">• Query Response Time: 12ms</div>
+                      </div>
+                      <div className="text-xs text-white font-medium bg-blue-950/40 p-3 rounded-xl border border-blue-500/30">
+                        💬 Grounded AI Answer: {supportQuery === 'sla' 
+                          ? '"According to Section 14.2 of your Master Agreement, early termination fees are capped at 1.5x monthly retainer within the first 60 days of onboarding."' 
+                          : '"All client data is encrypted via AES-256 in transit and at rest with dedicated tenant isolation and strict zero-model-training policy."'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* SIMULATION 4: 📄 PROCESS DOCUMENTS (ORANGE) */}
               {activeTabId === 'process-documents' && (
                 <div className="space-y-6">
                   <div className="p-6 rounded-2xl bg-[#1e1008] border-2 border-orange-400/60 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
@@ -442,7 +512,7 @@ export function ForgeCommandCenter({ onNavigate, onLaunchSandbox, onWatchDemo })
                 </div>
               )}
 
-              {/* SIMULATION 4: 📩 HANDLE EMAIL (PINK) */}
+              {/* SIMULATION 5: 📩 HANDLE EMAIL (PINK) */}
               {activeTabId === 'handle-email' && (
                 <div className="space-y-6">
                   <div className="p-6 rounded-2xl bg-[#1e0816] border-2 border-pink-400/60 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
@@ -460,14 +530,14 @@ export function ForgeCommandCenter({ onNavigate, onLaunchSandbox, onWatchDemo })
                         <div className="text-emerald-400 font-bold">• 1-Click Human Approve: Review and dispatch in under 5 minutes.</div>
                       </div>
 
-                      <div className="flex items-center justify-between p-3 rounded-xl bg-pink-950/40 border border-pink-500/30">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 rounded-xl bg-pink-950/40 border border-pink-500/30">
                         <span className="text-xs text-white">Draft: "Thank you for the proposal. Our security SLA policy requires Section 14 review..."</span>
                         <button
                           onClick={() => {
                             forgeAudioSynth.playSuccess();
                             setEmailStatus('sent');
                           }}
-                          className={`px-3 py-1.5 rounded-lg text-xs font-bold font-mono transition-all flex items-center gap-1 ${
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold font-mono transition-all flex items-center gap-1 shrink-0 ${
                             emailStatus === 'sent' ? 'bg-emerald-500 text-dark-950' : 'bg-pink-500 text-white hover:bg-pink-400'
                           }`}
                         >
@@ -480,7 +550,7 @@ export function ForgeCommandCenter({ onNavigate, onLaunchSandbox, onWatchDemo })
                 </div>
               )}
 
-              {/* SIMULATION 5: 📅 BOOK APPOINTMENTS (GREEN) */}
+              {/* SIMULATION 6: 📅 BOOK APPOINTMENTS (GREEN) */}
               {activeTabId === 'book-appointments' && (
                 <div className="space-y-6">
                   <div className="p-6 rounded-2xl bg-[#081e10] border-2 border-emerald-400/60 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
@@ -496,28 +566,6 @@ export function ForgeCommandCenter({ onNavigate, onLaunchSandbox, onWatchDemo })
                         <div>• Scanned 3 Doctor Operatories across Google Calendar & Dentrix</div>
                         <div>• Timezone and buffer rules evaluated</div>
                         <div className="text-emerald-400 font-bold">• Confirmed Saturday 11:00 AM slot locked with zero double-booking risk.</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* SIMULATION 6: 🧠 BUILD AN AI SYSTEM (BLUE) */}
-              {activeTabId === 'build-ai-system' && (
-                <div className="space-y-6">
-                  <div className="p-6 rounded-2xl bg-[#081224] border-2 border-blue-400/60 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                    <div className="md:col-span-3 text-center space-y-2">
-                      <SupportCharacter size="md" />
-                      <div className="text-xs font-bold text-white">FORGE Knowledge RAG</div>
-                      <div className="text-[10px] text-blue-300 font-bold">Zero-Hallucination</div>
-                    </div>
-
-                    <div className="md:col-span-9 space-y-3 font-sans">
-                      <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-xs text-slate-300 space-y-1 font-mono">
-                        <div className="text-blue-400 font-bold">🧠 ENTERPRISE MULTI-AGENT ARCHITECTURE:</div>
-                        <div>• Private Vector Database index on 500-page verified master agreement</div>
-                        <div>• Strict human governance & permission boundary enforcement</div>
-                        <div className="text-emerald-400 font-bold">• Instant citation verification with zero hallucination.</div>
                       </div>
                     </div>
                   </div>

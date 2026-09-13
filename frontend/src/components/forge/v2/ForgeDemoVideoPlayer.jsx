@@ -334,7 +334,7 @@ export function ForgeDemoVideoPlayer({
 
         {/* 🎨 THE ANIMATED VIDEO STAGE */}
         {activeTab === 'canvas' ? (
-          <div className="relative rounded-3xl bg-gradient-to-tr from-[#080e1c] via-[#0c162a] to-[#060a14] border-2 border-slate-800 p-6 sm:p-8 min-h-[300px] flex items-center justify-center overflow-hidden shadow-inner">
+          <div className="relative rounded-3xl bg-gradient-to-tr from-[#080e1c] via-[#0c162a] to-[#060a14] border-2 border-slate-800 p-6 sm:p-8 min-h-[360px] sm:min-h-[300px] flex items-center justify-center overflow-hidden shadow-inner">
             
             <div className="absolute inset-0 bg-[radial-gradient(#06b6d415_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none opacity-80" />
             
@@ -597,7 +597,7 @@ export function ForgeDemoVideoPlayer({
             onClick={(e) => {
               forgeAudioSynth.playClick();
               const rect = e.currentTarget.getBoundingClientRect();
-              const clickPos = (e.clientX - rect.left) / rect.width;
+              const clickPos = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
               setCurrentTime(+(clickPos * duration).toFixed(2));
             }}
             className="w-full h-3 bg-slate-900 rounded-full overflow-hidden border border-slate-800 cursor-pointer relative"
