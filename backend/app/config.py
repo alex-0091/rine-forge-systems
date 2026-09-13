@@ -10,8 +10,12 @@ class Settings(BaseSettings):
     PORT: int = 8000
     HOST: str = "0.0.0.0"
 
-    # Database
-    DATABASE_URL: str = "sqlite+aiosqlite:///./outreach_ai.db"
+    # Database - in Vercel Serverless / Lambda use /tmp/ directory
+    DATABASE_URL: str = (
+        "sqlite+aiosqlite:////tmp/outreach_ai.db"
+        if (os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"))
+        else "sqlite+aiosqlite:///./outreach_ai.db"
+    )
 
     # AI / LLM
     GEMINI_API_KEY: Optional[str] = None

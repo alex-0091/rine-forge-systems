@@ -25,15 +25,18 @@ logger = logging.getLogger("owais_outreach_ai")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("🚀 Starting OWAIS OUTREACH AI Platform...")
-    await init_db()
-    logger.info(f"Database initialized. Operating Mode: DRY_RUN={settings.DRY_RUN}, LLM_PROVIDER={settings.LLM_PROVIDER}")
+    logger.info("🚀 Starting RINE FORGE SYSTEMS Platform...")
+    try:
+        await init_db()
+        logger.info(f"Database initialized. Operating Mode: DRY_RUN={settings.DRY_RUN}, LLM_PROVIDER={settings.LLM_PROVIDER}")
+    except Exception as e:
+        logger.warning(f"Database initialization warning in serverless: {e}")
     yield
-    logger.info("🛑 Shutting down OWAIS OUTREACH AI Platform...")
+    logger.info("🛑 Shutting down RINE FORGE SYSTEMS Platform...")
 
 app = FastAPI(
-    title="OWAIS OUTREACH AI",
-    description="Autonomous B2B Lead Discovery, Business Intelligence, Personalized Outreach & Reply Assistant",
+    title="RINE FORGE SYSTEMS",
+    description="Production AI Systems Platform & Client Acquisition OS",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -61,7 +64,7 @@ app.include_router(public_router)
 async def health_check():
     return {
         "status": "healthy",
-        "platform": "OWAIS OUTREACH AI",
+        "platform": "RINE FORGE SYSTEMS",
         "dry_run": settings.DRY_RUN,
         "environment": settings.ENVIRONMENT
     }
@@ -69,11 +72,25 @@ async def health_check():
 # Mount frontend/dist if built
 import os
 from pathlib import Path
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, HTMLResponse
 
-frontend_dist = Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
-if frontend_dist.exists():
-    app.mount("/assets", StaticFiles(directory=frontend_dist / "assets"), name="assets")
+candidates = [
+    Path(__file__).resolve().parent.parent.parent / "frontend" / "dist",
+    Path("/var/task/frontend/dist"),
+    Path("./frontend/dist"),
+    Path("./dist")
+]
+
+frontend_dist = None
+for p in candidates:
+    if p.exists() and (p / "index.html").exists():
+        frontend_dist = p
+        break
+
+if frontend_dist:
+    assets_dir = frontend_dist / "assets"
+    if assets_dir.exists():
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
 
     @app.get("/{full_path:path}")
     async def serve_spa(full_path: str):
@@ -81,3 +98,11 @@ if frontend_dist.exists():
         if file_path.is_file():
             return FileResponse(file_path)
         return FileResponse(frontend_dist / "index.html")
+else:
+    @app.get("/")
+    async def fallback_root():
+        return {
+            "status": "RINE FORGE SYSTEMS API Online",
+            "docs": "/docs",
+            "health": "/api/health"
+        }
