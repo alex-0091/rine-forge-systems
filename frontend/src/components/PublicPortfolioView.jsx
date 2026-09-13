@@ -46,6 +46,7 @@ import { ChaosToOrderStory } from './forge/v2/ChaosToOrderStory';
 import { VisualIndustrySelector } from './forge/v2/VisualIndustrySelector';
 import { BeforeAfterComparison } from './forge/v2/BeforeAfterComparison';
 import { DontReadJustWatch } from './forge/v2/DontReadJustWatch';
+import { ForgeCommandCenter } from './forge/v2/ForgeCommandCenter';
 
 // Interactive Human Interface & 10s Demo Modals
 import { ForgeHumanControl } from './forge/ForgeHumanControl';
@@ -253,9 +254,16 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
               onLaunchSandbox={handleLaunchSystemSandbox}
             />
 
-            {/* 4. V2 THE FORGE WORKFORCE Multi-Agent Interactive Map */}
-            <ForgeWorkforceMap 
+            {/* 4. V2 TOUCH FORGE: Master Interactive Command Center */}
+            <ForgeCommandCenter 
               onNavigate={handleNavigate}
+              onLaunchSandbox={handleLaunchSystemSandbox}
+              onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
+            />
+
+            {/* 5. V2 THE FORGE WORKFORCE Multi-Agent Interactive Map */}
+            <ForgeWorkforceMap 
+              onNavigate={handleNavigate} 
               onLaunchSystemDemo={handleLaunchSystemSandbox}
               onWatchTenSecDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
             />
