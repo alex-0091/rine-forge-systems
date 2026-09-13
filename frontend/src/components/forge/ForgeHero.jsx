@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   ArrowRight, Sparkles, ShieldCheck, Terminal, 
-  Cpu, Database, Zap, Activity, Layers, Play, X, Bot, FileText, Mail, Calendar 
+  Cpu, Database, Zap, Activity, Layers, Play, X, Bot, FileText, Mail, Calendar, MessageSquare 
 } from 'lucide-react';
 
 const INBOUND_NODES = [
