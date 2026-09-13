@@ -315,7 +315,10 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
             <CaseStudiesSection onNavigate={handleNavigate} />
 
             {/* 12. 5-Stage How It Works Framework */}
-            <HowItWorksSection onNavigate={handleNavigate} />
+            <HowItWorksSection 
+              onNavigate={handleNavigate} 
+              onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
+            />
 
             {/* 13. Why FORGE Core Principles */}
             <WhyForgeSection />

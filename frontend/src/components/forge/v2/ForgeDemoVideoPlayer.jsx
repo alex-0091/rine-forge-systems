@@ -4,7 +4,8 @@ import {
   CheckCircle2, Volume2, VolumeX, ShieldCheck, Video, 
   Tv, Film, Sparkle, Zap, Bot, Mail, FileText, Calendar, 
   MessageSquare, Search, PhoneCall, Check, ExternalLink, Flame, Maximize2,
-  Clock, Smartphone, Database, CheckCheck, RefreshCw, Layers, Terminal
+  Clock, Smartphone, Database, CheckCheck, RefreshCw, Layers, Terminal, Code2,
+  Share2, Wand2
 } from 'lucide-react';
 import { speechEngine } from '../../../utils/speechEngine';
 import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
@@ -28,14 +29,19 @@ export const SYSTEM_ANIMATED_CLIPS = {
     tag: '24/7 Voice NLP',
     theme: 'cyan',
     colorBorder: 'border-cyan-400',
-    colorGlow: 'shadow-cyan-500/30',
+    colorGlow: 'shadow-[0_0_35px_rgba(6,182,212,0.25)]',
+    ambientGlow: 'from-cyan-500/15 via-teal-500/10 to-transparent',
     colorBadge: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
+    characterName: 'Dr. Evans Reception AI',
     dialogue: {
       problem: 'Alex calls at 10:45 PM: "Emergency root canal tomorrow?"',
       action: 'FORGE answers in 2s, verifies Delta Dental PPO, checks Dr. Evans chair.',
       outcome: 'Saturday 11:00 AM locked. SMS sent & Dentrix updated in 18s.'
     },
-    characterName: 'Dr. Evans Reception AI'
+    freeAiRecommendation: {
+      tool: 'Kling AI & Luma Ray 2',
+      prompt: 'Cinematic 3D animation of a glowing cyan robot receptionist with modern headset in an ultra-clean futuristic dental clinic at night, answering floating incoming holographic phone call with friendly animated expressions, vibrant turquoise lighting, 60fps, Pixar style.'
+    }
   },
   'lead-engine': {
     id: 'lead-engine',
@@ -46,14 +52,19 @@ export const SYSTEM_ANIMATED_CLIPS = {
     tag: 'Sub-45s Ingest',
     theme: 'violet',
     colorBorder: 'border-violet-400',
-    colorGlow: 'shadow-violet-500/30',
+    colorGlow: 'shadow-[0_0_35px_rgba(139,92,246,0.25)]',
+    ambientGlow: 'from-violet-500/15 via-purple-500/10 to-transparent',
     colorBadge: 'bg-violet-500/20 text-violet-300 border-violet-500/40',
+    characterName: 'Lead Velocity Bot',
     dialogue: {
       problem: 'Zillow $1.4M buyer lead arrives after hours.',
       action: 'FORGE evaluates 0-100 ICP (Score: 96) & triggers 2-way SMS questionnaire.',
       outcome: 'Buyer confirms on mobile. VIP Private Showing booked in 38s.'
     },
-    characterName: 'Lead Velocity Bot'
+    freeAiRecommendation: {
+      tool: 'Hailuo AI (MiniMax) & Kling AI',
+      prompt: 'Dynamic 3D stylized animated bot with glowing violet energy trails typing at high velocity on a holographic smartphone HUD, sub-45s countdown timer ticking from red to vibrant green, electric purple lightning accents, 4k 60fps.'
+    }
   },
   'support-agent': {
     id: 'support-agent',
@@ -64,14 +75,19 @@ export const SYSTEM_ANIMATED_CLIPS = {
     tag: 'Vector RAG Search',
     theme: 'blue',
     colorBorder: 'border-blue-400',
-    colorGlow: 'shadow-blue-500/30',
+    colorGlow: 'shadow-[0_0_35px_rgba(59,130,246,0.25)]',
+    ambientGlow: 'from-blue-500/15 via-indigo-500/10 to-transparent',
     colorBadge: 'bg-blue-500/20 text-blue-300 border-blue-500/40',
+    characterName: 'Knowledge RAG Core',
     dialogue: {
       problem: 'Client asks complex early-termination SLA penalty query.',
       action: 'Vector engine scans 500-page Master Agreement with zero hallucination.',
       outcome: 'Delivered exact answer with page & paragraph citation in 12ms.'
     },
-    characterName: 'Knowledge RAG Core'
+    freeAiRecommendation: {
+      tool: 'Luma Dream Machine & Runway Gen-3',
+      prompt: 'Futuristic 3D animated blue holographic shield hovering in dark tech sanctuary, digital laser scanner flipping through floating translucent contract pages, landing on verified gold checkmark, volumetric sapphire glow, 60fps.'
+    }
   },
   'document-engine': {
     id: 'document-engine',
@@ -82,14 +98,19 @@ export const SYSTEM_ANIMATED_CLIPS = {
     tag: 'Laser Optical OCR',
     theme: 'orange',
     colorBorder: 'border-orange-400',
-    colorGlow: 'shadow-orange-500/30',
+    colorGlow: 'shadow-[0_0_35px_rgba(249,115,22,0.25)]',
+    ambientGlow: 'from-orange-500/15 via-amber-500/10 to-transparent',
     colorBadge: 'bg-orange-500/20 text-orange-300 border-orange-500/40',
+    characterName: 'Quantum OCR Parser',
     dialogue: {
       problem: '120 PDF vendor invoices arrive with manual typing backlog.',
       action: 'Laser OCR extracts 14 line items & validates mathematical tax checksum ($4,290.00).',
       outcome: 'Committed to QuickBooks AP with zero human data entry errors.'
     },
-    characterName: 'Quantum OCR Parser'
+    freeAiRecommendation: {
+      tool: 'Hailuo AI & Pika 2.0',
+      prompt: 'Cyberpunk animated document scanner robot with dual glowing orange laser eyes scanning a stack of PDF invoices, numbers floating and balancing into an emerald green ledger, warm cinematic lighting, photorealistic 3D vector art.'
+    }
   },
   'email-agent': {
     id: 'email-agent',
@@ -100,14 +121,19 @@ export const SYSTEM_ANIMATED_CLIPS = {
     tag: 'Zero-Inbox AI',
     theme: 'pink',
     colorBorder: 'border-pink-400',
-    colorGlow: 'shadow-pink-500/30',
+    colorGlow: 'shadow-[0_0_35px_rgba(236,72,153,0.25)]',
+    ambientGlow: 'from-pink-500/15 via-rose-500/10 to-transparent',
     colorBadge: 'bg-pink-500/20 text-pink-300 border-pink-500/40',
+    characterName: 'Inbox Intelligence AI',
     dialogue: {
       problem: '300+ chaotic emails flooding executive inbox daily.',
       action: 'AI neural engine sorts into Hot Lead, Invoice, and VIP support buckets.',
       outcome: 'Contextual draft generated. 1-click human approved in 5 minutes.'
     },
-    characterName: 'Inbox Intelligence AI'
+    freeAiRecommendation: {
+      tool: 'Kling AI & Luma Ray 2',
+      prompt: 'Glowing magenta neon glass letters floating into sorted holographic buckets, sleek animated AI assistant tapping a single button to approve and dispatch, high contrast cyberpunk dark mode, 60fps.'
+    }
   },
   'appointment-agent': {
     id: 'appointment-agent',
@@ -118,14 +144,19 @@ export const SYSTEM_ANIMATED_CLIPS = {
     tag: 'Multi-Cal Sync',
     theme: 'green',
     colorBorder: 'border-emerald-400',
-    colorGlow: 'shadow-emerald-500/30',
+    colorGlow: 'shadow-[0_0_35px_rgba(16,185,129,0.25)]',
+    ambientGlow: 'from-emerald-500/15 via-teal-500/10 to-transparent',
     colorBadge: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+    characterName: 'Schedule Coordinator',
     dialogue: {
       problem: '5-email back-and-forth negotiation causing dropped meetings.',
       action: 'AI scans 3 doctor calendars and resolves timezone buffers in real-time.',
       outcome: 'Google Meet invite dispatched with prep notes & SMS reminder.'
     },
-    characterName: 'Schedule Coordinator'
+    freeAiRecommendation: {
+      tool: 'Runway Gen-3 Alpha & Hailuo',
+      prompt: 'Futuristic 3D animated holographic calendar cube rotating in emerald green light, schedule blocks snapping into place without conflicts, pulsing confirmation glow, sleek modern tech aesthetic, 4k 60fps.'
+    }
   }
 };
 
@@ -142,7 +173,8 @@ export function ForgeDemoVideoPlayer({
   const [isVoiceNarratorActive, setIsVoiceNarratorActive] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [laserY, setLaserY] = useState(25);
-  const [activeTab, setActiveTab] = useState('canvas');
+  const [activeTab, setActiveTab] = useState('canvas'); // 'canvas' | 'telemetry' | 'script'
+  const [copiedScript, setCopiedScript] = useState(false);
 
   const clip = SYSTEM_ANIMATED_CLIPS[activeClipId] || SYSTEM_ANIMATED_CLIPS['receptionist'];
   const duration = clip.duration;
@@ -223,6 +255,16 @@ export function ForgeDemoVideoPlayer({
     }
   };
 
+  const handleCopyDirectorScript = () => {
+    forgeAudioSynth.playSuccess();
+    const fullScript = `FORGE 5.5s Animated Clip: ${clip.productName}\n\n[0.0s - 1.8s] PROBLEM: ${clip.dialogue.problem}\n[1.8s - 3.8s] ACTION: ${clip.dialogue.action}\n[3.8s - 5.5s] OUTCOME: ${clip.dialogue.outcome}\n\nFREE AI VIDEO GENERATOR: ${clip.freeAiRecommendation.tool}\nAI PROMPT: ${clip.freeAiRecommendation.prompt}`;
+    if (navigator?.clipboard) {
+      navigator.clipboard.writeText(fullScript);
+      setCopiedScript(true);
+      setTimeout(() => setCopiedScript(false), 2500);
+    }
+  };
+
   let stageKey = 'problem';
   let stageLabel = '0.0s - 1.8s: THE INBOUND BOTTLENECK';
   let stageBadgeColor = 'bg-rose-500/20 text-rose-300 border-rose-500/40';
@@ -243,10 +285,13 @@ export function ForgeDemoVideoPlayer({
   const progressPercent = Math.min((currentTime / duration) * 100, 100);
 
   return (
-    <div className={`w-full rounded-3xl bg-gradient-to-b from-[#0c1424] via-[#090e1a] to-[#060a12] border-2 ${clip.colorBorder} transition-all overflow-hidden shadow-2xl font-mono text-xs`}>
+    <div className={`w-full rounded-3xl bg-gradient-to-b from-[#0c1424] via-[#090e1a] to-[#060a12] border-2 ${clip.colorBorder} ${clip.colorGlow} transition-all overflow-hidden shadow-2xl font-mono text-xs relative`}>
       
+      {/* Dynamic Ambient Background Glow */}
+      <div className={`absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-gradient-to-b ${clip.ambientGlow} blur-[120px] pointer-events-none rounded-full`} />
+
       {/* 🎬 TOP VIDEO PLAYER CHROME HEADER */}
-      <div className="px-6 py-4 bg-[#080d18] border-b border-slate-800 flex flex-wrap items-center justify-between gap-3">
+      <div className="px-6 py-4 bg-[#080d18] border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 relative z-10">
         <div className="flex items-center gap-3">
           <div className="flex gap-1.5">
             <span className="w-3 h-3 rounded-full bg-rose-500 shadow-sm shadow-rose-500/50 animate-pulse" />
@@ -263,14 +308,14 @@ export function ForgeDemoVideoPlayer({
         </div>
 
         {/* View Mode & Video Controls */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <div className="flex rounded-lg bg-dark-950 p-0.5 border border-slate-800">
             <button
               onClick={() => {
                 forgeAudioSynth.playClick();
                 setActiveTab('canvas');
               }}
-              className={`px-2.5 py-1 rounded-md text-[10px] font-bold ${
+              className={`px-2.5 py-1 rounded-md text-[10px] font-bold transition-all ${
                 activeTab === 'canvas' ? 'bg-slate-800 text-teal-300' : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -281,12 +326,24 @@ export function ForgeDemoVideoPlayer({
                 forgeAudioSynth.playClick();
                 setActiveTab('telemetry');
               }}
-              className={`px-2.5 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 ${
+              className={`px-2.5 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 transition-all ${
                 activeTab === 'telemetry' ? 'bg-slate-800 text-teal-300' : 'text-slate-400 hover:text-white'
               }`}
             >
               <Terminal className="w-3 h-3" />
               <span>Logs</span>
+            </button>
+            <button
+              onClick={() => {
+                forgeAudioSynth.playClick();
+                setActiveTab('script');
+              }}
+              className={`px-2.5 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 transition-all ${
+                activeTab === 'script' ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Wand2 className="w-3 h-3 text-amber-400" />
+              <span>AI Director Script</span>
             </button>
           </div>
 
@@ -317,7 +374,7 @@ export function ForgeDemoVideoPlayer({
       </div>
 
       {/* 🌟 60FPS BESPOKE ANIMATED VIDEO CANVAS */}
-      <div className="p-6 sm:p-8 space-y-6 relative bg-gradient-to-b from-[#090e1a]/90 via-[#070b14] to-[#05080f]">
+      <div className="p-6 sm:p-8 space-y-6 relative z-10 bg-gradient-to-b from-[#090e1a]/90 via-[#070b14] to-[#05080f]">
         
         {/* Stage Notification Banner */}
         <div className="flex items-center justify-between">
@@ -332,8 +389,8 @@ export function ForgeDemoVideoPlayer({
           </span>
         </div>
 
-        {/* 🎨 THE ANIMATED VIDEO STAGE */}
-        {activeTab === 'canvas' ? (
+        {/* 🎨 THE ANIMATED VIDEO STAGE (TAB 1: MOTION CANVAS) */}
+        {activeTab === 'canvas' && (
           <div className="relative rounded-3xl bg-gradient-to-tr from-[#080e1c] via-[#0c162a] to-[#060a14] border-2 border-slate-800 p-6 sm:p-8 min-h-[360px] sm:min-h-[300px] flex items-center justify-center overflow-hidden shadow-inner">
             
             <div className="absolute inset-0 bg-[radial-gradient(#06b6d415_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none opacity-80" />
@@ -562,7 +619,10 @@ export function ForgeDemoVideoPlayer({
             )}
 
           </div>
-        ) : (
+        )}
+
+        {/* TAB 2: LIVE TERMINAL LOGS */}
+        {activeTab === 'telemetry' && (
           <div className="rounded-3xl bg-[#030712] border-2 border-slate-800 p-6 min-h-[300px] font-mono text-xs text-slate-300 space-y-2">
             <div className="flex items-center justify-between pb-2 border-b border-slate-800 text-teal-400">
               <span className="flex items-center gap-2">
@@ -576,6 +636,56 @@ export function ForgeDemoVideoPlayer({
             <div className="text-amber-400">[3.2s] Action payload dispatched: {clip.dialogue.action}</div>
             <div className="text-emerald-400 font-bold">[4.9s] Success 200 OK: {clip.dialogue.outcome}</div>
             <div className="text-slate-400">[5.5s] System state persisted to persistent database ledger.</div>
+          </div>
+        )}
+
+        {/* TAB 3: AI VIDEO DIRECTOR SCRIPT & FREE GENERATOR PROMPT */}
+        {activeTab === 'script' && (
+          <div className="rounded-3xl bg-[#050b18] border-2 border-amber-500/40 p-6 min-h-[300px] space-y-4 text-xs font-mono">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <span className="text-amber-300 font-bold flex items-center gap-2 text-sm">
+                <Wand2 className="w-4 h-4 text-amber-400" />
+                <span>ChatGPT & Gemini Director Script: {clip.productName}</span>
+              </span>
+              <button
+                onClick={handleCopyDirectorScript}
+                className={`px-3 py-1.5 rounded-xl border text-[10px] font-bold flex items-center gap-1.5 transition-all ${
+                  copiedScript 
+                    ? 'bg-emerald-500 text-dark-950 border-emerald-400' 
+                    : 'bg-dark-950 text-slate-200 border-slate-800 hover:text-white'
+                }`}
+              >
+                {copiedScript ? <Check className="w-3.5 h-3.5" /> : <Share2 className="w-3.5 h-3.5" />}
+                <span>{copiedScript ? 'Copied Full Script & Prompt!' : 'Copy Script & Prompt'}</span>
+              </button>
+            </div>
+
+            {/* 3-Part Viral Script */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="p-3 rounded-2xl bg-rose-950/40 border border-rose-500/30 space-y-1">
+                <div className="text-[10px] text-rose-400 font-bold uppercase">1. Scene Hook (0.0s - 1.8s)</div>
+                <div className="text-xs text-white font-sans font-medium leading-relaxed">"{clip.dialogue.problem}"</div>
+              </div>
+              <div className="p-3 rounded-2xl bg-cyan-950/40 border border-cyan-500/30 space-y-1">
+                <div className="text-[10px] text-cyan-400 font-bold uppercase">2. AI Action (1.8s - 3.8s)</div>
+                <div className="text-xs text-white font-sans font-medium leading-relaxed">"{clip.dialogue.action}"</div>
+              </div>
+              <div className="p-3 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 space-y-1">
+                <div className="text-[10px] text-emerald-400 font-bold uppercase">3. Business Relief (3.8s - 5.5s)</div>
+                <div className="text-xs text-white font-sans font-medium leading-relaxed">"{clip.dialogue.outcome}"</div>
+              </div>
+            </div>
+
+            {/* Free AI Generator Prompt */}
+            <div className="p-4 rounded-2xl bg-dark-950 border border-slate-800 space-y-2">
+              <div className="flex items-center justify-between text-[10px] text-slate-400">
+                <span className="text-amber-400 font-bold">✨ READY FOR {clip.freeAiRecommendation.tool.toUpperCase()}:</span>
+                <span className="text-slate-400">4K 60FPS STYLIZED ANIMATION</span>
+              </div>
+              <p className="text-slate-300 italic text-[11px] leading-relaxed">
+                "{clip.freeAiRecommendation.prompt}"
+              </p>
+            </div>
           </div>
         )}
 
