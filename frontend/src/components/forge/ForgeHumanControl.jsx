@@ -5,11 +5,23 @@ import {
   Terminal, Building2, ShieldCheck, Flame 
 } from 'lucide-react';
 
+import { ForgeCoreMascot } from './v2/ForgeCharacterUniverse';
+
 export function ForgeHumanControl({ onNavigate, onLaunchSystemDemo }) {
   const [isOpen, setIsOpen] = useState(false);
   const [queryInput, setQueryInput] = useState('');
   const [aiResponse, setAiResponse] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
+
+  // 6 Tactile Visual Action Cards
+  const visualActions = [
+    { label: 'ANSWER CUSTOMERS', icon: '📞', query: 'I need an AI Receptionist to answer phone calls and book appointments 24/7.', sysId: 'receptionist-agent' },
+    { label: 'CAPTURE LEADS', icon: '🎯', query: 'I want sub-60 second lead qualification, ICP scoring, and 2-way SMS follow-ups.', sysId: 'lead-agent' },
+    { label: 'PROCESS DOCUMENTS', icon: '📄', query: 'I want to extract and validate PDF vendor invoices and receipts automatically.', sysId: 'document-processor' },
+    { label: 'HANDLE EMAIL', icon: '📧', query: 'I receive too many emails and need AI inbox triage with 1-click approval drafts.', sysId: 'email-agent' },
+    { label: 'BOOK APPOINTMENTS', icon: '📅', query: 'I want to automate calendar scheduling and eliminate back-and-forth emails.', sysId: 'appointment-agent' },
+    { label: 'BUILD A SYSTEM', icon: '🧠', query: 'I want to design a custom multi-agent workflow for my proprietary operations.', sysId: 'app-builder' }
+  ];
 
   // Quick suggestion chips
   const suggestionChips = [
@@ -207,14 +219,32 @@ export function ForgeHumanControl({ onNavigate, onLaunchSystemDemo }) {
           {/* Body Area */}
           <div className="p-4 overflow-y-auto space-y-4 max-h-[60vh] text-xs">
             
-            {/* Introductory Question */}
+            {/* Introductory Question & 6 Large Tactile Action Buttons */}
             {!aiResponse && !isTyping && (
-              <div className="space-y-3">
-                <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 text-slate-200 leading-relaxed font-sans">
-                  👋 <strong>Tell FORGE what your business does or where you lose the most time.</strong> We'll immediately structure your automation pipeline.
+              <div className="space-y-4">
+                <div className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 flex items-center gap-3">
+                  <ForgeCoreMascot state="idle" size="sm" />
+                  <div className="text-slate-200 leading-snug font-sans">
+                    <strong>WHAT DO YOU WANT FORGE TO DO?</strong>
+                    <div className="text-[11px] text-slate-400">Choose a workflow or describe your bottleneck below.</div>
+                  </div>
                 </div>
 
-                <div className="space-y-1.5">
+                {/* 6 Tactile Visual Action Buttons Grid */}
+                <div className="grid grid-cols-2 gap-2">
+                  {visualActions.map((action, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => handleProcessQuery(action.query)}
+                      className="p-3 rounded-xl bg-dark-950 hover:bg-teal-500/10 text-slate-200 hover:text-teal-300 border border-slate-800 hover:border-teal-500/40 text-left transition-all flex items-center gap-2 group"
+                    >
+                      <span className="text-lg group-hover:scale-110 transition-transform">{action.icon}</span>
+                      <span className="font-mono text-[10px] font-bold">{action.label}</span>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="space-y-1.5 pt-1">
                   <div className="text-[10px] font-mono text-slate-500 uppercase font-bold">Quick Inquiries:</div>
                   <div className="flex flex-wrap gap-1.5">
                     {suggestionChips.map((chip, idx) => (
