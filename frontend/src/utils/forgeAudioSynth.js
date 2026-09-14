@@ -1,10 +1,14 @@
-﻿// Web Audio API Zero-Dependency Sound Synthesizer for FORGE V3
-// Generates realistic sci-fi cyber telemetry, clicks, scans, success chimes, and telephony rings
+// Web Audio API Zero-Dependency Sound Synthesizer for FORGE V4
+// Sound Design System: Subtle, professional telemetry, muted by default with user toggle
+// Rules: MUTED BY DEFAULT. Low volume, soft frequencies, zero harsh beeps.
 
 class ForgeAudioSynth {
   constructor() {
     this.ctx = null;
-    this.isMuted = false;
+    // MUTED BY DEFAULT: Persist in localStorage if set, otherwise default to true (muted)
+    const stored = typeof window !== 'undefined' ? localStorage.getItem('forge_audio_muted') : null;
+    this.isMuted = stored !== null ? stored === 'true' : true;
+    this.listeners = new Set();
   }
 
   init() {
@@ -19,11 +23,31 @@ class ForgeAudioSynth {
     }
   }
 
-  setMuted(muted) {
-    this.isMuted = muted;
+  subscribe(listener) {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
   }
 
-  // Tactile cyber button click / toggle
+  notify() {
+    this.listeners.forEach(fn => {
+      try { fn(this.isMuted); } catch (e) {}
+    });
+  }
+
+  setMuted(muted) {
+    this.isMuted = Boolean(muted);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('forge_audio_muted', String(this.isMuted));
+    }
+    this.notify();
+  }
+
+  toggleMute() {
+    this.setMuted(!this.isMuted);
+    return this.isMuted;
+  }
+
+  // 1. Subtle tactile UI click (buttons, cards, tabs) - 800Hz -> 300Hz soft decay
   playClick() {
     if (this.isMuted) return;
     try {
@@ -47,6 +71,86 @@ class ForgeAudioSynth {
     } catch (e) {
       // Audio autoplay policy fallback
     }
+  }
+
+  // 2. AI thinking: low ambient pulse or soft tone
+  playThinking() {
+    if (this.isMuted) return;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(220, this.ctx.currentTime);
+      osc.frequency.linearRampToValueAtTime(260, this.ctx.currentTime + 0.12);
+
+      gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.14);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.15);
+    } catch (e) {}
+  }
+
+  // 3. Workflow execution / scan: brief soft sweep
+  playWorkflow() {
+    this.playScan();
+  }
+
+  // 4. Human handoff: gentle notification bell (dual harmonic chime)
+  playHandoff() {
+    if (this.isMuted) return;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const freqs = [659.25, 880]; // E5, A5
+      freqs.forEach((freq, idx) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const startTime = this.ctx.currentTime + idx * 0.08;
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, startTime);
+
+        gain.gain.setValueAtTime(0.05, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.4);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(startTime);
+        osc.stop(startTime + 0.42);
+      });
+    } catch (e) {}
+  }
+
+  // 5. Error / warning: soft low tone
+  playError() {
+    if (this.isMuted) return;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(180, this.ctx.currentTime);
+      osc.frequency.linearRampToValueAtTime(120, this.ctx.currentTime + 0.15);
+
+      gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.16);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.18);
+    } catch (e) {}
   }
 
   // Futuristic scanning sweep / OCR laser beam

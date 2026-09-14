@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Menu, X, ArrowRight, Sparkles, Layers, 
   Cpu, Building2, ShieldCheck, CheckCircle2, ChevronDown, 
-  FlaskConical, LayoutDashboard 
+  FlaskConical, LayoutDashboard, Volume2, VolumeX
 } from 'lucide-react';
+import { forgeAudioSynth } from '../../utils/forgeAudioSynth';
 
 export function ForgeNavbar({ onNavigate, currentView = 'home' }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMuted, setIsMuted] = useState(forgeAudioSynth.isMuted);
+
+  useEffect(() => {
+    return forgeAudioSynth.subscribe(setIsMuted);
+  }, []);
 
   const handleNav = (target) => {
     setMobileMenuOpen(false);
@@ -98,6 +104,24 @@ export function ForgeNavbar({ onNavigate, currentView = 'home' }) {
         {/* Right Action Buttons */}
         <div className="flex items-center gap-2 sm:gap-3">
           
+          {/* Audio Mute/Unmute Toggle Button */}
+          <button
+            onClick={() => {
+              const nextMuted = forgeAudioSynth.toggleMute();
+              if (!nextMuted) forgeAudioSynth.playClick();
+            }}
+            title={isMuted ? "Sound effects: MUTED by default. Click to unmute." : "Sound effects: ON. Click to mute."}
+            className={`p-2 rounded-xl border transition-all flex items-center gap-1.5 text-xs font-mono ${
+              isMuted 
+                ? 'bg-slate-900/80 border-slate-800 text-slate-400 hover:text-slate-200' 
+                : 'bg-teal-500/15 border-teal-500/40 text-teal-300 shadow-sm shadow-teal-500/20'
+            }`}
+            aria-label={isMuted ? "Unmute audio" : "Mute audio"}
+          >
+            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            <span className="hidden xl:inline text-[10px] font-bold uppercase">{isMuted ? 'Muted' : 'Sound On'}</span>
+          </button>
+
           {/* Direct Launch into App / Free Trial */}
           <button
             onClick={() => handleNav('app-dashboard')}
@@ -173,6 +197,16 @@ export function ForgeNavbar({ onNavigate, currentView = 'home' }) {
             About
           </button>
           <div className="pt-2 border-t border-slate-800 space-y-2">
+            <button
+              onClick={() => {
+                const nextMuted = forgeAudioSynth.toggleMute();
+                if (!nextMuted) forgeAudioSynth.playClick();
+              }}
+              className="w-full py-2.5 px-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 font-mono text-xs flex items-center justify-center gap-2"
+            >
+              {isMuted ? <VolumeX className="w-4 h-4 text-slate-400" /> : <Volume2 className="w-4 h-4 text-teal-400" />}
+              <span>{isMuted ? 'UI Audio: MUTED (Click to Unmute)' : 'UI Audio: ACTIVE (Click to Mute)'}</span>
+            </button>
             <button
               onClick={() => handleNav('app-dashboard')}
               className="w-full py-3 bg-slate-900 border border-slate-700 text-teal-300 font-bold rounded-xl text-center flex items-center justify-center gap-1.5"

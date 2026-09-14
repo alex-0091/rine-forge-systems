@@ -17,11 +17,14 @@ class Settings(BaseSettings):
         else "sqlite+aiosqlite:///./outreach_ai.db"
     )
 
-    # AI / LLM
+    # AI / LLM Providers (OpenAI, Gemini, Mock)
+    OPENAI_API_KEY: Optional[str] = None
+    OPENAI_MODEL: str = "gpt-4o-mini"
+    OPENAI_REASONING_MODEL: str = "gpt-4o"
     GEMINI_API_KEY: Optional[str] = None
-    LLM_PROVIDER: str = "gemini"  # "gemini" or "mock"
-    DEFAULT_MODEL: str = "gemini-1.5-flash"
-    REASONING_MODEL: str = "gemini-1.5-pro"
+    LLM_PROVIDER: str = "auto"  # "auto", "openai", "gemini", "mock"
+    DEFAULT_MODEL: str = "gpt-4o-mini"
+    REASONING_MODEL: str = "gpt-4o"
 
     # Operating Mode & Controls
     DRY_RUN: bool = True

@@ -358,6 +358,34 @@ class GeminiProvider(LLMProvider):
             return await self.fallback.generate_text(prompt, system_instruction, model, operation_name)
 
 def get_llm_provider() -> LLMProvider:
+    """
+    Returns configured AI provider with graceful fallback:
+    OpenAI (gpt-4o-mini / gpt-4o) -> Gemini (1.5-flash) -> Deterministic Mock / Offline Fallback.
+    """
+    mock_fallback = MockLLMProvider()
+
+    # Gemini fallback if available
+    gemini_fallback = (
+        GeminiProvider(api_key=settings.GEMINI_API_KEY, default_model=settings.DEFAULT_MODEL)
+        if settings.GEMINI_API_KEY
+        else mock_fallback
+    )
+
+    # 1. Preferred: OpenAI if key configured or provider is 'openai'
+    if settings.OPENAI_API_KEY:
+        try:
+            from backend.app.ai.openai_provider import OpenAIProvider
+            return OpenAIProvider(
+                api_key=settings.OPENAI_API_KEY,
+                default_model=settings.OPENAI_MODEL or "gpt-4o-mini",
+                fallback_provider=gemini_fallback
+            )
+        except Exception as e:
+            logger.warning(f"Could not load OpenAIProvider: {e}. Falling back to secondary.")
+
+    # 2. Secondary: Gemini if key configured
     if settings.GEMINI_API_KEY:
-        return GeminiProvider(api_key=settings.GEMINI_API_KEY, default_model=settings.DEFAULT_MODEL)
-    return MockLLMProvider()
+        return gemini_fallback
+
+    # 3. Deterministic Grounded Mock / Rule Fallback
+    return mock_fallback

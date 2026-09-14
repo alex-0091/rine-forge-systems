@@ -3,13 +3,15 @@ import { Bot, Target, MessageSquare, Settings2, ArrowRight, Sparkles, CheckCircl
 import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
 import { AiStatusBadge } from '../v4/AiStatusBadge';
 import { ActionButton } from '../v4/ActionButton';
+import { ForgeCharacterAvatar } from '../v4/ForgeCharacterAvatar';
 
 export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee, onTalkToReceptionist }) {
   const employees = [
     {
       id: 'receptionist',
-      emoji: '🤖',
+      name: 'ELENA',
       role: 'AI RECEPTIONIST',
+      specialty: 'Front-Desk & Triage',
       status: 'ONLINE',
       summary: 'Answers customers, handles enquiries and books appointments.',
       icon: Bot,
@@ -47,8 +49,9 @@ export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee,
     },
     {
       id: 'sales',
-      emoji: '🎯',
+      name: 'MARCUS',
       role: 'AI SALES AGENT',
+      specialty: 'Speed-to-Lead & Pipeline',
       status: 'ONLINE',
       summary: 'Responds to leads, qualifies prospects and schedules meetings.',
       icon: Target,
@@ -85,8 +88,9 @@ export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee,
     },
     {
       id: 'support',
-      emoji: '💬',
+      name: 'ARIA',
       role: 'AI SUPPORT AGENT',
+      specialty: '24/7 Verified Care',
       status: 'ONLINE',
       summary: 'Answers common questions and handles customer support.',
       icon: MessageSquare,
@@ -122,8 +126,9 @@ export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee,
     },
     {
       id: 'operations',
-      emoji: '⚙️',
+      name: 'KAEL',
       role: 'AI OPERATIONS AGENT',
+      specialty: 'Workflow & Doc Sync',
       status: 'ONLINE',
       summary: 'Moves information between systems and automates repetitive work.',
       icon: Settings2,
@@ -204,17 +209,27 @@ export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee,
                 className={`rounded-2xl border ${emp.border} ${emp.bg} p-5 sm:p-6 flex flex-col justify-between space-y-4 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl ${emp.glow} group`}
               >
                 <div>
-                  {/* Top Bar: Emoji, Role & Online Status */}
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="text-2xl">{emp.emoji}</span>
-                    <AiStatusBadge status="online" size="sm" />
+                  {/* Top Bar: Character Avatar, Name, Specialty & Status */}
+                  <div className="flex items-center gap-3 mb-3">
+                    <ForgeCharacterAvatar characterKey={emp.id} size="md" state="idle" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className={`text-xs font-mono font-black ${emp.textColor} tracking-wider`}>
+                          {emp.name}
+                        </span>
+                        <AiStatusBadge status="online" size="sm" />
+                      </div>
+                      <div className="text-[10px] font-mono text-slate-400 truncate">
+                        {emp.specialty}
+                      </div>
+                    </div>
                   </div>
 
                   <h3 className="text-sm font-black text-white font-mono tracking-wide uppercase">
                     {emp.role}
                   </h3>
 
-                  {/* Short 1-2 sentence description - NOT long text cards */}
+                  {/* Short 1-2 sentence description */}
                   <p className="text-xs text-slate-300 mt-2 font-sans leading-relaxed">
                     {emp.summary}
                   </p>

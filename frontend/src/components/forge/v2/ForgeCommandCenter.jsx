@@ -21,68 +21,80 @@ export const COMMAND_OPTIONS = [
   {
     id: 'answer-customers',
     sysId: 'receptionist-agent',
-    title: '📞 Answer Customers',
-    subtitle: '24/7 Voice & Web Telephony NLP',
+    title: 'AI Receptionist',
+    subtitle: 'Answers customers 24/7 and handles routine enquiries.',
+    techLabel: 'Grounded Multi-Turn NLP • Calendar Sync',
+    badgeText: 'REAL • PRODUCTION READY',
     color: 'border-cyan-400 bg-cyan-950/30 text-cyan-300 hover:border-cyan-300',
-    tagColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40',
-    buttonColor: 'bg-cyan-500 text-dark-950 hover:bg-cyan-400',
+    tagColor: 'bg-teal-500/20 text-teal-300 border-teal-500/40',
+    buttonColor: 'bg-teal-500 text-dark-950 hover:bg-teal-400',
     character: ReceptionistCharacter,
     outcome: 'Stop losing customers because nobody answered.'
   },
   {
     id: 'capture-leads',
     sysId: 'lead-agent',
-    title: '🎯 Capture Leads',
-    subtitle: 'Sub-45s Webhook to 2-Way SMS',
+    title: 'AI Sales & Follow-Up',
+    subtitle: 'Responds to new leads before they go cold.',
+    techLabel: 'Instant ICP Classifier • 2-Way Discovery',
+    badgeText: 'REAL • PRODUCTION READY',
     color: 'border-violet-400 bg-violet-950/30 text-violet-300 hover:border-violet-300',
     tagColor: 'bg-violet-500/20 text-violet-300 border-violet-500/40',
     buttonColor: 'bg-violet-500 text-white hover:bg-violet-400',
     character: LeadEngineCharacter,
-    outcome: 'Respond while the lead is still interested.'
+    outcome: 'Qualify and book leads while intent is highest.'
   },
   {
     id: 'customer-support',
     sysId: 'support-agent',
-    title: '🔷 Answer Support',
-    subtitle: 'Zero-Hallucination Grounded RAG',
+    title: 'AI Customer Support',
+    subtitle: 'Answers customers using your verified business knowledge.',
+    techLabel: 'Vector Knowledge Retrieval • Hallucination Audited',
+    badgeText: 'REAL • PRODUCTION READY',
     color: 'border-blue-400 bg-blue-950/30 text-blue-300 hover:border-blue-300',
     tagColor: 'bg-blue-500/20 text-blue-300 border-blue-500/40',
     buttonColor: 'bg-blue-500 text-white hover:bg-blue-400',
     character: SupportCharacter,
-    outcome: 'Answer customers without making them wait.'
+    outcome: 'Answer customers immediately with zero guessing.'
   },
   {
     id: 'process-documents',
     sysId: 'document-processor',
-    title: '📄 Process Documents',
-    subtitle: 'Laser Optical OCR & ERP Sync',
+    title: 'AI Document Processing',
+    subtitle: 'Extracts invoices, claims, and PDFs into your database.',
+    techLabel: 'Structured Schema Extraction • ERP Webhook',
+    badgeText: 'REAL • PRODUCTION READY',
     color: 'border-orange-400 bg-orange-950/30 text-orange-300 hover:border-orange-300',
     tagColor: 'bg-orange-500/20 text-orange-300 border-orange-500/40',
     buttonColor: 'bg-orange-500 text-dark-950 hover:bg-orange-400',
     character: DocumentCharacter,
-    outcome: 'Turn paperwork into structured work automatically.'
+    outcome: 'Turn paperwork into structured records automatically.'
   },
   {
     id: 'handle-email',
     sysId: 'email-agent',
-    title: '📩 Handle Email',
-    subtitle: 'Autonomous Inbox Classification & Drafts',
+    title: 'AI Operations Automation',
+    subtitle: 'Automates repetitive work and routing across your tools.',
+    techLabel: 'Deterministic Rules • Cross-Platform Webhooks',
+    badgeText: 'REAL • PRODUCTION READY',
     color: 'border-pink-400 bg-pink-950/30 text-pink-300 hover:border-pink-300',
     tagColor: 'bg-pink-500/20 text-pink-300 border-pink-500/40',
     buttonColor: 'bg-pink-500 text-white hover:bg-pink-400',
     character: EmailCharacter,
-    outcome: 'Turn your inbox into completed actions.'
+    outcome: 'Automate repetitive workflows without human bottlenecks.'
   },
   {
     id: 'book-appointments',
     sysId: 'appointment-agent',
-    title: '📅 Book Appointments',
-    subtitle: 'Multi-Calendar Conflict Resolver',
+    title: 'AI Appointment Automation',
+    subtitle: 'Finds open slots and locks appointments directly on calendar.',
+    techLabel: 'Slot Conflict Detection • Automated Reminders',
+    badgeText: 'REAL • PRODUCTION READY',
     color: 'border-emerald-400 bg-emerald-950/30 text-emerald-300 hover:border-emerald-300',
     tagColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
     buttonColor: 'bg-emerald-500 text-dark-950 hover:bg-emerald-400',
     character: AppointmentCharacter,
-    outcome: 'Turn conversations into booked appointments.'
+    outcome: 'Fill your calendar without endless email tag.'
   }
 ];
 
@@ -215,7 +227,7 @@ export function ForgeCommandCenter({ onNavigate, onLaunchSandbox, onWatchDemo })
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className={`text-[10px] font-mono px-2.5 py-0.5 rounded-full border font-bold ${opt.tagColor}`}>
-                      ACTIVE SIMULATOR
+                      {opt.badgeText}
                     </span>
                     <Character size="sm" />
                   </div>

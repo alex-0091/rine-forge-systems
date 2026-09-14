@@ -5,8 +5,10 @@ import {
   ArrowRight, MessageSquare, CornerDownLeft, RefreshCw 
 } from 'lucide-react';
 import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
+import { processClientReceptionistMessage } from '../../../utils/receptionistClientFallback';
 import { AiStatusBadge } from './AiStatusBadge';
 import { ActionButton } from './ActionButton';
+import { ForgeCharacterAvatar } from './ForgeCharacterAvatar';
 
 /**
  * RINE FORGE SYSTEMS — V4 REAL AI RECEPTIONIST CLIENT
@@ -150,6 +152,7 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
     setAiState('thinking');
     setStatusMessage('Checking verified business facts...');
 
+    let data;
     try {
       const response = await fetch('/api/receptionist/message', {
         method: 'POST',
@@ -166,8 +169,13 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
         throw new Error(`Server returned HTTP ${response.status}`);
       }
 
-      const data = await response.json();
+      data = await response.json();
+    } catch (netErr) {
+      console.warn('[Receptionist API] Offline/serverless failover active. Processing locally via grounded engine:', netErr);
+      data = processClientReceptionistMessage(text, messages);
+    }
 
+    try {
       // Store conversation ID for session memory
       if (data.conversation_id) {
         setConversationId(data.conversation_id);
@@ -208,23 +216,6 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
       };
 
       setMessages(prev => [...prev, assistantMsg]);
-    } catch (err) {
-      console.error('Error in receptionist communication:', err);
-      setErrorState(text);
-      setAiState('failed');
-      setStatusMessage('Connection failed');
-      
-      setMessages(prev => [
-        ...prev,
-        {
-          id: 'err-' + Date.now(),
-          role: 'assistant',
-          sender_type: 'SYSTEM',
-          content: "I'm having trouble connecting to our receptionist service right now. Please check your connection or try again.",
-          timestamp: new Date(),
-          isError: true
-        }
-      ]);
     } finally {
       setIsSending(false);
     }
@@ -250,15 +241,15 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
         {/* 1. TOP HEADER */}
         <div className="relative z-10 px-5 py-4 border-b border-slate-800 bg-[#060a12]/90 flex items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-teal-500 to-cyan-400 p-0.5 shadow-md shadow-teal-500/20">
-              <div className="w-full h-full rounded-[14px] bg-slate-950 flex items-center justify-center text-teal-300">
-                <Bot className="w-5 h-5" />
-              </div>
-            </div>
+            <ForgeCharacterAvatar 
+              characterKey="receptionist" 
+              size="md" 
+              state={isSending ? 'thinking' : aiState === 'action' ? 'speaking' : requiresHuman ? 'needs_human' : 'idle'} 
+            />
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-sm font-black text-white font-mono tracking-wide">
-                  FORGE AI RECEPTIONIST
+                  ELENA — AI RECEPTIONIST
                 </h3>
                 <AiStatusBadge status={aiState} size="sm" />
               </div>
@@ -316,8 +307,8 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
                 className={`flex gap-3 ${isAi ? 'justify-start' : 'justify-end'} animate-fadeIn`}
               >
                 {isAi && (
-                  <div className="w-8 h-8 rounded-xl bg-teal-500/20 border border-teal-500/30 flex items-center justify-center text-teal-300 shrink-0 mt-0.5">
-                    <Bot className="w-4 h-4" />
+                  <div className="shrink-0 mt-0.5">
+                    <ForgeCharacterAvatar characterKey="receptionist" size="sm" state="idle" showStatusDot={false} />
                   </div>
                 )}
 

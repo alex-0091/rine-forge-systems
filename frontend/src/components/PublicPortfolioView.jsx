@@ -124,6 +124,8 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
         setCurrentView(`app-${sub}`);
       } else if (path.includes('/lab')) {
         setCurrentView('lab');
+      } else if (path.includes('/tools') || path.includes('/toolkit')) {
+        setCurrentView('tools');
       } else if (path.includes('/experience')) {
         setCurrentView('experience');
       } else if (path.includes('/audit') || search.includes('audit=true')) {
@@ -177,8 +179,8 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
     if (target.startsWith('app-')) {
       setCurrentView(target);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (target === 'lab' || target === 'experience' || target === 'audit' || target === 'home' || target.startsWith('system-') || target.startsWith('for-') || target.startsWith('industry-') || target.startsWith('solution-')) {
-      setCurrentView(target);
+    } else if (target === 'lab' || target === 'tools' || target === 'toolkit' || target === 'experience' || target === 'audit' || target === 'home' || target.startsWith('system-') || target.startsWith('for-') || target.startsWith('industry-') || target.startsWith('solution-')) {
+      setCurrentView(target === 'toolkit' ? 'tools' : target);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       // Anchor scroll or return to home anchor
@@ -357,27 +359,55 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
             {/* 13. Frequently Asked Questions */}
             <FaqSection onNavigate={handleNavigate} />
 
-            {/* 14. 15+ Free Interactive AI Utilities Suite */}
-            <section id="tools-forge" className="py-20 border-t border-slate-800 bg-[#070c14]">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-                <div className="text-center space-y-3 max-w-3xl mx-auto">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-teal-500/10 border border-teal-500/20 text-teal-400 text-xs font-mono font-bold tracking-wider uppercase">
-                    <Sparkles className="w-3.5 h-3.5" /> 100% Free • Sandbox Browser Tools
-                  </div>
-                  <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                    The FORGE AI Utility Suite
-                  </h2>
-                  <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-                    Test our autonomous generators directly in your browser. From cold outreach synthesizers and invoice parsers to ROI estimators and regex sanitizers.
-                  </p>
+            {/* 14. Secondary Toolkit Sandbox Banner (Demoted from primary B2B flow) */}
+            <section id="tools-forge" className="py-12 border-t border-slate-900 bg-[#060a14]">
+              <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-4">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-400 text-xs font-mono font-bold tracking-wider uppercase">
+                  <Sparkles className="w-3.5 h-3.5 text-teal-400" /> EXPERIMENTAL UTILITY PLAYGROUND
                 </div>
-                <AIToolsForgeView />
+                <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                  Looking for our developer tools and generative sandbox?
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                  Our client-side AI utilities—including video script writers, prompt enhancers, regex parsers, and copy tools—are available in the Forge AI Toolkit sandbox.
+                </p>
+                <div>
+                  <button
+                    onClick={() => handleNavigate('tools')}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-850 border border-slate-700 text-teal-300 hover:text-teal-200 font-mono text-xs font-bold transition-all shadow-md"
+                  >
+                    <span>EXPLORE FORGE AI TOOLKIT (SANDBOX)</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             </section>
 
             {/* 15. High-Impact Agency Final CTA */}
             <FinalCtaSection onNavigate={handleNavigate} />
           </>
+        )}
+
+        {/* Dedicated Forge AI Toolkit Sandbox Subpage (/tools) */}
+        {currentView === 'tools' && (
+          <div className="py-12 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            <div className="text-center space-y-4 max-w-3xl mx-auto">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-mono font-bold tracking-wider uppercase">
+                <Sparkles className="w-3.5 h-3.5" /> FORGE AI TOOLKIT (SANDBOX)
+              </div>
+              <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+                Experimental AI Utilities Suite
+              </h1>
+              <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+                Test client-side autonomous generators directly in your browser.
+                For production B2B revenue and operations automation, return to our{' '}
+                <button onClick={() => handleNavigate('home')} className="text-teal-400 underline font-semibold hover:text-teal-300">
+                  Core AI Systems
+                </button>.
+              </p>
+            </div>
+            <AIToolsForgeView />
+          </div>
         )}
 
         {/* The AI Lab Subpage (/lab) */}
