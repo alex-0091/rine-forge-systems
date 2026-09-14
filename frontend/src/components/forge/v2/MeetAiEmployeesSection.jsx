@@ -4,7 +4,7 @@ import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
 import { AiStatusBadge } from '../v4/AiStatusBadge';
 import { ActionButton } from '../v4/ActionButton';
 
-export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee }) {
+export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee, onTalkToReceptionist }) {
   const employees = [
     {
       id: 'receptionist',
@@ -225,17 +225,39 @@ export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee 
                   {emp.visualSvg}
                 </div>
 
-                {/* Direct Action Trigger: WATCH DEMO → */}
-                <ActionButton
-                  variant="secondary"
-                  size="md"
-                  onClick={() => handleCardClick(emp)}
-                  icon={ArrowRight}
-                  iconPosition="right"
-                  className="w-full text-xs font-mono"
-                >
-                  WATCH DEMO
-                </ActionButton>
+                {/* Action Triggers */}
+                {emp.id === 'receptionist' && onTalkToReceptionist ? (
+                  <div className="space-y-2">
+                    <ActionButton
+                      variant="primary"
+                      size="md"
+                      onClick={() => onTalkToReceptionist()}
+                      icon={MessageSquare}
+                      iconPosition="left"
+                      className="w-full text-xs font-mono bg-gradient-to-r from-teal-500 to-cyan-400 text-slate-950 font-black shadow-md shadow-teal-500/20"
+                    >
+                      TALK TO RECEPTIONIST
+                    </ActionButton>
+                    <button
+                      onClick={() => handleCardClick(emp)}
+                      className="w-full py-1 text-[11px] font-mono text-slate-400 hover:text-cyan-300 transition-colors flex items-center justify-center gap-1"
+                    >
+                      <span>Watch Simulation</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
+                  </div>
+                ) : (
+                  <ActionButton
+                    variant="secondary"
+                    size="md"
+                    onClick={() => handleCardClick(emp)}
+                    icon={ArrowRight}
+                    iconPosition="right"
+                    className="w-full text-xs font-mono"
+                  >
+                    WATCH DEMO
+                  </ActionButton>
+                )}
               </div>
             );
           })}

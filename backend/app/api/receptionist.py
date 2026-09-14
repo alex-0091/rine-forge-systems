@@ -7,6 +7,7 @@ from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.app.database import get_db
+from backend.app.models.business import Business
 from backend.app.receptionist.orchestrator import receptionist_orchestrator
 from backend.app.receptionist.knowledge import business_knowledge_service
 from backend.app.models.receptionist import (
@@ -19,10 +20,97 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/receptionist", tags=["AI Receptionist"])
 
+DEMO_BUSINESS_ID = "00000000-0000-0000-0000-000000000001"
+
+async def ensure_demo_business(session: AsyncSession) -> Business:
+    """Ensures verified demo business exists with rich facts for public demonstrations."""
+    stmt = select(Business).where(Business.id == DEMO_BUSINESS_ID)
+    res = await session.execute(stmt)
+    biz = res.scalar_one_or_none()
+    if not biz:
+        biz = Business(
+            id=DEMO_BUSINESS_ID,
+            name="Rine Dental & Facial Aesthetics",
+            normalized_name="rinedentalfacialaesthetics",
+            industry="Dental & Healthcare",
+            country="USA",
+            city="Austin",
+            address="100 Innovation Way, Suite 400, Austin, TX",
+            primary_email="reception@rineforge.ai",
+            primary_phone="+1 (512) 555-0199",
+            source="demo_seed"
+        )
+        session.add(biz)
+        await session.flush()
+
+        knowledge_data = {
+            "business_name": "Rine Dental & Facial Aesthetics",
+            "industry": "Dental & Healthcare",
+            "description": "Premier restorative dentistry, laser teeth whitening, and facial aesthetics in Austin, TX.",
+            "services": [
+                {
+                    "name": "Comprehensive Dental Cleaning & Exam",
+                    "duration_minutes": 45,
+                    "price_estimate": "$120",
+                    "description": "Thorough ultrasonic plaque removal, polish, oral cancer screening, and digital X-ray scan."
+                },
+                {
+                    "name": "Professional In-Office Laser Teeth Whitening",
+                    "duration_minutes": 60,
+                    "price_estimate": "$350",
+                    "description": "Medical-grade LED laser whitening brightening smiles up to 8 shades in a single comfortable session."
+                },
+                {
+                    "name": "Dental Implants Consultation",
+                    "duration_minutes": 30,
+                    "price_estimate": "$80",
+                    "description": "Comprehensive 3D CBCT imaging, bone density evaluation, and restorative treatment plan."
+                },
+                {
+                    "name": "Invisalign Clear Aligners Assessment",
+                    "duration_minutes": 30,
+                    "price_estimate": "Complimentary",
+                    "description": "Digital smile simulation, bite assessment, and customized orthodontic alignment roadmap."
+                }
+            ],
+            "opening_hours": {
+                "monday": "08:30 - 17:30",
+                "tuesday": "08:30 - 17:30",
+                "wednesday": "08:30 - 17:30",
+                "thursday": "08:30 - 17:30",
+                "friday": "08:30 - 17:00",
+                "saturday": "09:00 - 16:00",
+                "sunday": "Closed (Emergency on-call only)"
+            },
+            "timezone": "America/Chicago",
+            "location_address": "100 Innovation Way, Suite 400, Austin, TX",
+            "contact_email": "reception@rineforge.ai",
+            "contact_phone": "+1 (512) 555-0199",
+            "policies": {
+                "cancellation": "24-hour advance notice requested to avoid a $25 late cancellation fee.",
+                "insurance": "We accept major PPO insurance plans including Delta Dental, Cigna, MetLife, Guardian, and Aetna.",
+                "emergencies": "Two daily acute walk-in slots reserved at 11:00 AM and 3:30 PM."
+            },
+            "faqs": [
+                {
+                    "question": "Is free parking available?",
+                    "answer": "Yes, complimentary underground and surface visitor parking is available at Innovation Plaza."
+                },
+                {
+                    "question": "Do you accept new patients?",
+                    "answer": "Yes, we are currently accepting new adult and pediatric patients with immediate availability this week."
+                }
+            ],
+            "custom_instructions": "Always maintain a warm, welcoming, and reassuring clinical tone. Inform patients that live calendar booking is currently being connected, and our team confirms requests promptly."
+        }
+        await business_knowledge_service.upsert_knowledge(session, DEMO_BUSINESS_ID, knowledge_data)
+        await session.commit()
+    return biz
+
 # --- Request / Response Schemas ---
 
 class ReceptionistMessageRequest(BaseModel):
-    business_id: str = Field(description="UUID of the target business")
+    business_id: Optional[str] = Field(default=DEMO_BUSINESS_ID, description="UUID of the target business")
     message: str = Field(min_length=1, description="Customer message text")
     conversation_id: Optional[str] = Field(default=None, description="Existing conversation UUID for multi-turn threads")
     customer_id: Optional[str] = None
@@ -51,6 +139,29 @@ class ResolveHandoffRequest(BaseModel):
 
 # --- Endpoints ---
 
+@router.get("/demo-business")
+async def get_demo_business_info(session: AsyncSession = Depends(get_db)):
+    """
+    Returns public demo business credentials, verified profile, and starter questions.
+    """
+    biz = await ensure_demo_business(session)
+    knowledge = await business_knowledge_service.get_knowledge(session, biz.id)
+
+    return {
+        "business_id": biz.id,
+        "business_name": biz.name,
+        "industry": biz.industry,
+        "city": biz.city,
+        "starter_prompts": [
+            "What are your opening hours on Saturday?",
+            "What services do you offer?",
+            "How much does teeth whitening cost?",
+            "I'd like to book an appointment tomorrow at 3pm.",
+            "Can I speak with a human receptionist?"
+        ],
+        "verified_services_count": len(knowledge.services) if knowledge else 0
+    }
+
 @router.post("/message")
 async def send_receptionist_message(
     req: ReceptionistMessageRequest,
@@ -61,9 +172,35 @@ async def send_receptionist_message(
     Receives customer message, loads memory, queries grounded knowledge,
     determines tools, and returns structured result.
     """
+    biz_id = req.business_id or DEMO_BUSINESS_ID
+    if biz_id in ["demo", "default", "forge-demo-clinic", DEMO_BUSINESS_ID]:
+        biz_id = DEMO_BUSINESS_ID
+        await ensure_demo_business(session)
+
+    # Public Demo Rate Limiting: Max 20 turns per conversation to prevent quota depletion
+    if req.conversation_id:
+        stmt_count = select(ReceptionistMessage).where(ReceptionistMessage.conversation_id == req.conversation_id)
+        res_count = await session.execute(stmt_count)
+        msg_count = len(res_count.scalars().all())
+        if msg_count >= 20:
+            return {
+                "conversation_id": req.conversation_id,
+                "business_id": biz_id,
+                "reply": "You have reached the demo session limit (20 messages). To deploy a dedicated custom AI Receptionist for your business with unlimited conversations, please request a free AI audit or contact our team.",
+                "intent": "GENERAL_QUESTION",
+                "confidence": 1.0,
+                "requires_human": True,
+                "human_reason": "Public demo conversation turn limit reached.",
+                "action": "sessionLimitReached",
+                "action_status": "LIMIT_REACHED",
+                "action_details": {"turns_used": msg_count, "max_allowed": 20},
+                "latency_ms": 12,
+                "metadata": {"status": "LIMIT_REACHED"}
+            }
+
     return await receptionist_orchestrator.handle_message(
         session=session,
-        business_id=req.business_id,
+        business_id=biz_id,
         message=req.message,
         conversation_id=req.conversation_id,
         customer_id=req.customer_id,

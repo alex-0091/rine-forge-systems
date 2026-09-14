@@ -68,7 +68,7 @@ const STAGES = [
   }
 ];
 
-export function ForgeVideoExperienceLayer({ onNavigate }) {
+export function ForgeVideoExperienceLayer({ onNavigate, onOpenLiveReceptionist }) {
   const [activeStageIdx, setActiveStageIdx] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(false);
   const [isAudioMuted, setIsAudioMuted] = useState(false);
@@ -236,6 +236,7 @@ export function ForgeVideoExperienceLayer({ onNavigate }) {
             onCtaClick={() => {
               if (onNavigate) onNavigate('audit');
             }}
+            onOpenLiveChat={onOpenLiveReceptionist}
           />
         </div>
 

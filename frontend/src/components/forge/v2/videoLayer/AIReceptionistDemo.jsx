@@ -4,7 +4,7 @@ import { forgeAudioSynth } from '../../../../utils/forgeAudioSynth';
 import { AiStatusBadge } from '../../v4/AiStatusBadge';
 import { ActionButton } from '../../v4/ActionButton';
 
-export function AIReceptionistDemo({ onNextStep }) {
+export function AIReceptionistDemo({ onNextStep, onOpenLiveChat }) {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
   
@@ -121,30 +121,45 @@ export function AIReceptionistDemo({ onNextStep }) {
             <span>Live Interactive Channel: WhatsApp & Web Telephony</span>
           </div>
 
-          {/* Interactive Trigger Button */}
-          {chatStep === 0 ? (
-            <ActionButton
-              variant="primary"
-              size="md"
-              onClick={startDemo}
-              icon={Play}
-              iconPosition="left"
-              className="w-full sm:w-auto text-xs font-mono uppercase"
-            >
-              SEE AI HANDLE A CUSTOMER
-            </ActionButton>
-          ) : (
-            <ActionButton
-              variant="secondary"
-              size="sm"
-              onClick={chatStep === 5 ? startDemo : resetDemo}
-              icon={RotateCcw}
-              iconPosition="left"
-              className="w-full sm:w-auto text-xs font-mono"
-            >
-              {chatStep === 5 ? 'REPLAY DEMO' : 'Reset Simulation'}
-            </ActionButton>
-          )}
+          {/* Interactive Trigger Buttons */}
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            {onOpenLiveChat && (
+              <ActionButton
+                variant="primary"
+                size="sm"
+                onClick={onOpenLiveChat}
+                icon={Sparkles}
+                iconPosition="left"
+                className="w-full sm:w-auto text-xs font-mono bg-gradient-to-r from-teal-500 to-cyan-400 text-slate-950 font-black shadow-lg shadow-teal-500/20"
+              >
+                TALK TO LIVE AI
+              </ActionButton>
+            )}
+
+            {chatStep === 0 ? (
+              <ActionButton
+                variant="secondary"
+                size="sm"
+                onClick={startDemo}
+                icon={Play}
+                iconPosition="left"
+                className="w-full sm:w-auto text-xs font-mono uppercase"
+              >
+                WATCH SIMULATION
+              </ActionButton>
+            ) : (
+              <ActionButton
+                variant="secondary"
+                size="sm"
+                onClick={chatStep === 5 ? startDemo : resetDemo}
+                icon={RotateCcw}
+                iconPosition="left"
+                className="w-full sm:w-auto text-xs font-mono"
+              >
+                {chatStep === 5 ? 'REPLAY SIM' : 'Reset Simulation'}
+              </ActionButton>
+            )}
+          </div>
         </div>
 
         {/* Dynamic Chat & Booking Visual Canvas */}
@@ -163,14 +178,25 @@ export function AIReceptionistDemo({ onNextStep }) {
                   Ready to test our autonomous receptionist?
                 </div>
                 <p className="text-xs text-slate-400 max-w-md mx-auto font-sans leading-relaxed">
-                  Click the button below to watch how FORGE handles patient inquiries, checks calendar availability in real-time, and locks the appointment with zero human delay.
+                  Chat directly with our live production AI Receptionist or watch the automated simulation handle inquiries in seconds.
                 </p>
-                <button
-                  onClick={startDemo}
-                  className="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs font-mono uppercase tracking-wider transition-all shadow-lg shadow-emerald-500/20 hover:scale-105"
-                >
-                  ▶ SEE AI HANDLE A CUSTOMER
-                </button>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1">
+                  {onOpenLiveChat && (
+                    <button
+                      onClick={onOpenLiveChat}
+                      className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-400 to-cyan-400 hover:from-teal-300 hover:to-cyan-300 text-slate-950 font-black text-xs font-mono uppercase tracking-wider transition-all shadow-lg shadow-teal-500/25 hover:scale-105 flex items-center justify-center gap-2"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-slate-950" />
+                      <span>💬 CHAT WITH REAL AI</span>
+                    </button>
+                  )}
+                  <button
+                    onClick={startDemo}
+                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-bold text-xs font-mono uppercase tracking-wider transition-all hover:scale-105"
+                  >
+                    ▶ SEE SIMULATION
+                  </button>
+                </div>
               </div>
             )}
 

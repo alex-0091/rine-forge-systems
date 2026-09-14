@@ -68,6 +68,7 @@ import { ForgeHumanControl } from './forge/ForgeHumanControl';
 import { TenSecondDemoModal } from './forge/TenSecondDemoModal';
 import { AutonomousReactionBanner } from './forge/AutonomousReactionBanner';
 import { GlobalTryForgeModal } from './forge/GlobalTryForgeModal';
+import { RealAiReceptionistChat } from './forge/v4/RealAiReceptionistChat';
 
 // Product Platform & Operating System Components (Experience B)
 import { AppLayout } from './app/AppLayout';
@@ -98,10 +99,17 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
   const [activeWatchItHappenData, setActiveWatchItHappenData] = useState(null);
   const [isSimpleAuditModalOpen, setIsSimpleAuditModalOpen] = useState(false);
   const [simpleAuditPreFill, setSimpleAuditPreFill] = useState({});
+  const [isReceptionistChatOpen, setIsReceptionistChatOpen] = useState(false);
+  const [receptionistInitialPrompt, setReceptionistInitialPrompt] = useState(null);
 
   const handleOpenSimpleAudit = (preFill = {}) => {
     setSimpleAuditPreFill(preFill);
     setIsSimpleAuditModalOpen(true);
+  };
+
+  const handleOpenReceptionistChat = (prompt = null) => {
+    setReceptionistInitialPrompt(prompt);
+    setIsReceptionistChatOpen(true);
   };
 
   // Check URL pathname, search params or hash on load
@@ -120,6 +128,8 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
         setCurrentView('experience');
       } else if (path.includes('/audit') || search.includes('audit=true')) {
         setCurrentView('audit');
+      } else if (path.includes('/receptionist') || search.includes('receptionist=true') || hash === 'receptionist') {
+        setIsReceptionistChatOpen(true);
       } else if (path.includes('/payment') || search.includes('payment=true')) {
         setIsPaymentModalOpen(true);
       } else if (path.includes('/systems/')) {
@@ -146,6 +156,11 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
   const handleNavigate = (target) => {
     if (target === 'try-forge-modal') {
       setIsGlobalTryModalOpen(true);
+      return;
+    }
+
+    if (target === 'receptionist' || target === 'try-receptionist' || target === 'ai-receptionist' || target === 'live-receptionist') {
+      handleOpenReceptionistChat();
       return;
     }
 
@@ -181,6 +196,10 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
   };
 
   const handleLaunchSystemSandbox = (sysId) => {
+    if (sysId === 'receptionist-agent' || sysId === 'ai-receptionist' || sysId === 'receptionist') {
+      handleOpenReceptionistChat();
+      return;
+    }
     if (currentView !== 'home') {
       setCurrentView('home');
       setTimeout(() => {
@@ -271,12 +290,14 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
             {/* 2. V3 PHASE 1: 6-STAGE CINEMATIC VIDEO & VISUAL STORYTELLING LAYER (WATCH IT WORK) */}
             <ForgeVideoExperienceLayer 
               onNavigate={(target) => target === 'audit' ? handleOpenSimpleAudit() : handleNavigate(target)} 
+              onOpenLiveReceptionist={handleOpenReceptionistChat}
             />
 
             {/* 3. V3 PHASE 2: MEET YOUR NEW AI EMPLOYEES (INTERACTIVE DIGITAL WORKERS) */}
             <MeetAiEmployeesSection 
               onWatchEmployeeDemo={(demoData) => setActiveWatchItHappenData(demoData)} 
               onBuildAiEmployee={() => handleOpenSimpleAudit({ whatToAutomate: 'Custom AI Employee for business operations' })}
+              onTalkToReceptionist={handleOpenReceptionistChat}
             />
 
             {/* 4. V3 PHASE 2: WHAT COULD YOUR BUSINESS AUTOMATE? (CHOOSE YOUR INDUSTRY) */}
@@ -486,6 +507,16 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
         isOpen={isSimpleAuditModalOpen}
         onClose={() => setIsSimpleAuditModalOpen(false)}
         initialData={simpleAuditPreFill}
+      />
+
+      {/* Genuine V4 AI Receptionist Live Backend Chat Modal */}
+      <RealAiReceptionistChat 
+        isOpen={isReceptionistChatOpen}
+        onClose={() => {
+          setIsReceptionistChatOpen(false);
+          setReceptionistInitialPrompt(null);
+        }}
+        initialPrompt={receptionistInitialPrompt}
       />
 
     </div>
