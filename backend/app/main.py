@@ -22,7 +22,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 )
-logger = logging.getLogger("owais_outreach_ai")
+logger = logging.getLogger("rine_forge_systems")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

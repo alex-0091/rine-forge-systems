@@ -103,16 +103,16 @@ export function SystemsMarketplace({ onNavigate }) {
                 {/* Operational Telemetry Tags */}
                 <div className="grid grid-cols-3 gap-2 py-2 border-y border-slate-800/80 font-mono text-[10px] text-center">
                   <div className="p-1.5 bg-slate-900/80 rounded-lg">
-                    <div className="text-slate-400">Success</div>
+                    <div className="text-slate-400">Target SLA</div>
                     <div className="font-bold text-emerald-400">{sys.successRate}</div>
                   </div>
                   <div className="p-1.5 bg-slate-900/80 rounded-lg">
-                    <div className="text-slate-400">Latency</div>
+                    <div className="text-slate-400">Bench Latency</div>
                     <div className="font-bold text-teal-300">{sys.avgLatency}</div>
                   </div>
                   <div className="p-1.5 bg-slate-900/80 rounded-lg">
-                    <div className="text-slate-400">Executions</div>
-                    <div className="font-bold text-slate-200">{(sys.executionsTotal / 1000).toFixed(1)}k</div>
+                    <div className="text-slate-400">Spec Capacity</div>
+                    <div className="font-bold text-slate-200">{(sys.executionsTotal / 1000).toFixed(1)}k/mo</div>
                   </div>
                 </div>
 

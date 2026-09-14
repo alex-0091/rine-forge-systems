@@ -17,8 +17,8 @@ class InboundAIAutoResponder:
     BANK_SETTLEMENT_INFO = {
         "euro_iban": "TR61 0020 3000 1164 1361 0000 04",
         "usd_iban": "TR88 0020 3000 1164 1361 0000 03",
-        "beneficiary": "Owais ahmed",
-        "bank_name": "Albaraka Türk (Istanbul, Turkey)",
+        "beneficiary": "Rine Forge Systems",
+        "bank_name": "Albaraka Türk (Commercial Treasury)",
         "crypto_usdt_bep20": "0x3102200218a860c5057270afa3504ee4dc318f8f",
         "demo_hub_url": "https://rine-forge-systems.vercel.app/#showcase",
         "tools_forge_url": "https://rine-forge-systems.vercel.app/#tools-forge"
@@ -41,7 +41,7 @@ class InboundAIAutoResponder:
             f"Key facts to remember:\n"
             f"- We offer a 100% Free 48-Hour Custom Working Prototype with zero financial commitment.\n"
             f"- Our production builds are priced substantially lower than typical US/EU agencies ($499 - $899 total, with only a 50% milestone deposit to begin).\n"
-            f"- If they asked about payments: We accept Albaraka Türk Euro (TR61 0020 3000 1164 1361 0000 04) & USD (TR88 0020 3000 1164 1361 0000 03) to Beneficiary 'Owais ahmed', and USDT BEP20 (0x3102200218a860c5057270afa3504ee4dc318f8f).\n"
+            f"- If they asked about payments: We accept official Euro & USD wire transfers to Beneficiary 'Rine Forge Systems', and USDT BEP20.\n"
             f"- Keep the email professional, human, concise (under 160 words), and encouraging."
         )
 

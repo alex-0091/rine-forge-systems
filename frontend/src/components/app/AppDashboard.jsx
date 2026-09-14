@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, Zap, Activity, CheckCircle2, Clock, 
   ArrowRight, ShieldCheck, AlertCircle, Sparkles, Bot, 
@@ -11,6 +11,29 @@ export function AppDashboard({ onNavigateApp, trialCreditsUsed = 32 }) {
     { ...SYSTEMS_CATALOG[0], isLive: true },
     { ...SYSTEMS_CATALOG[1], isLive: true }
   ]);
+  const [liveMetrics, setLiveMetrics] = useState(null);
+  const [isLoadingMetrics, setIsLoadingMetrics] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadMetrics() {
+      try {
+        const res = await fetch('/api/dashboard/metrics');
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted && data.metrics) {
+            setLiveMetrics(data.metrics);
+          }
+        }
+      } catch (err) {
+        console.warn('Could not load live dashboard metrics:', err);
+      } finally {
+        if (isMounted) setIsLoadingMetrics(false);
+      }
+    }
+    loadMetrics();
+    return () => { isMounted = false; };
+  }, []);
 
   const toggleSystemStatus = (id) => {
     setActiveSystems(prev => prev.map(s => s.id === id ? { ...s, isLive: !s.isLive } : s));
@@ -49,8 +72,8 @@ export function AppDashboard({ onNavigateApp, trialCreditsUsed = 32 }) {
             />
           </div>
           <div className="flex justify-between text-[10px] text-slate-400 pt-1">
-            <span>Estimated Savings</span>
-            <span className="text-emerald-400 font-bold">+$4,200</span>
+            <span>Operating State</span>
+            <span className="text-teal-400 font-bold">Sandbox Active</span>
           </div>
         </div>
       </div>
@@ -58,23 +81,29 @@ export function AppDashboard({ onNavigateApp, trialCreditsUsed = 32 }) {
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 font-mono text-xs">
         <div className="p-5 rounded-2xl bg-[#090e18] border border-slate-800 space-y-1">
-          <div className="text-slate-400 text-[10px] uppercase">Active Production Systems</div>
-          <div className="text-2xl font-black text-white">{activeSystems.filter(s => s.isLive).length} / 2</div>
+          <div className="text-slate-400 text-[10px] uppercase">Active Systems</div>
+          <div className="text-2xl font-black text-white">{activeSystems.filter(s => s.isLive).length} / {activeSystems.length}</div>
           <div className="text-[10px] text-teal-400 flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-teal-400" />
-            <span>Lead Agent & Receptionist Live</span>
+            <span>AI Receptionist & Lead Agent Live</span>
           </div>
         </div>
 
         <div className="p-5 rounded-2xl bg-[#090e18] border border-slate-800 space-y-1">
-          <div className="text-slate-400 text-[10px] uppercase">Automated Executions</div>
-          <div className="text-2xl font-black text-teal-400">{trialCreditsUsed}</div>
-          <div className="text-[10px] text-emerald-400">100% Success Rate in Staging</div>
+          <div className="text-slate-400 text-[10px] uppercase">Database Leads</div>
+          <div className="text-2xl font-black text-teal-400">
+            {liveMetrics ? liveMetrics.businesses_discovered : (isLoadingMetrics ? '...' : 'No data yet')}
+          </div>
+          <div className="text-[10px] text-slate-400">
+            {liveMetrics ? `${liveMetrics.qualified_leads} ICP Qualified` : 'Pipeline Ingestion Ready'}
+          </div>
         </div>
 
         <div className="p-5 rounded-2xl bg-[#090e18] border border-slate-800 space-y-1">
           <div className="text-slate-400 text-[10px] uppercase">Pending Human Approvals</div>
-          <div className="text-2xl font-black text-amber-400">2</div>
+          <div className="text-2xl font-black text-amber-400">
+            {liveMetrics ? liveMetrics.human_escalations_pending : '0'}
+          </div>
           <button 
             onClick={() => onNavigateApp('approvals')}
             className="text-[10px] text-amber-300 hover:underline flex items-center gap-1"
@@ -84,9 +113,9 @@ export function AppDashboard({ onNavigateApp, trialCreditsUsed = 32 }) {
         </div>
 
         <div className="p-5 rounded-2xl bg-[#090e18] border border-slate-800 space-y-1">
-          <div className="text-slate-400 text-[10px] uppercase">Average Model Latency</div>
-          <div className="text-2xl font-black text-cyan-400">28 ms</div>
-          <div className="text-[10px] text-slate-400">Gemini 1.5 Pro Flash RAG</div>
+          <div className="text-slate-400 text-[10px] uppercase">Inference Engine</div>
+          <div className="text-2xl font-black text-cyan-400">Live Grounded</div>
+          <div className="text-[10px] text-slate-400">Multi-Turn RAG & Tool Execution</div>
         </div>
       </div>
 

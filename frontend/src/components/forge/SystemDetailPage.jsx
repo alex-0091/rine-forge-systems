@@ -58,7 +58,7 @@ export function SystemDetailPage({ slug, onNavigate }) {
             <span>{system.rating} / 5.0 Rating</span>
           </div>
           <span className="text-xs font-mono text-slate-400">
-            • {system.executionsTotal.toLocaleString()} Production Executions
+            • {system.executionsTotal.toLocaleString()} Monthly Benchmark Capacity
           </span>
         </div>
 

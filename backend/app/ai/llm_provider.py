@@ -46,7 +46,7 @@ class MockLLMProvider(LLMProvider):
                     f"I noticed you have online inquiry channels, but after-hours visitors often have to wait for follow-up on routine service questions.\n\n"
                     f"We build conversational AI assistants that qualify inquiries 24/7 and route booked appointments directly into your schedule.\n\n"
                     f"I prepared a quick concept for {biz_name}—would you like me to send over a 2-minute preview?\n\n"
-                    f"Best,\nOwais\nOwais AI (owais-ai.com)"
+                    f"Best,\nAlex Rine\nRine Forge Systems (rineforge.ai)"
                 ),
                 "word_count": 82,
                 "primary_cta": "Would you like me to send over a 2-minute preview?",
@@ -96,7 +96,7 @@ class MockLLMProvider(LLMProvider):
                     "classification": "HIGH_VALUE_OPPORTUNITY",
                     "intent_score": 98,
                     "human_escalation_required": True,
-                    "escalation_reason": "High-budget / enterprise opportunity detected ($5k+). Immediate alert to Owais.",
+                    "escalation_reason": "High-budget / enterprise opportunity detected ($5k+). Immediate alert to operator.",
                     "extracted_sentiment": "Urgent / High Value",
                     "key_points_mentioned": ["High budget project mentioned"]
                 }
@@ -114,7 +114,7 @@ class MockLLMProvider(LLMProvider):
                     "classification": "PRICE_REQUEST",
                     "intent_score": 85,
                     "human_escalation_required": True,
-                    "escalation_reason": "Prospect requested pricing. Requires custom scope quote by Owais.",
+                    "escalation_reason": "Prospect requested pricing. Requires custom scope quote by operator.",
                     "extracted_sentiment": "Positive / Inquiring",
                     "key_points_mentioned": ["Requested cost / pricing breakdown"]
                 }
@@ -144,7 +144,7 @@ class MockLLMProvider(LLMProvider):
                     "Thanks for getting back to me! Glad you found the concept interesting.\n\n"
                     "Our AI assistant integrates directly with your website and booking calendar to answer patient/client questions and schedule inquiries automatically. Deployment typically takes 3-5 business days.\n\n"
                     "Would you have 10-15 minutes this Thursday or Friday for a quick walkthrough?\n\n"
-                    "Best,\nOwais\nOwais AI (owais-ai.com)"
+                    "Best,\nAlex Rine\nRine Forge Systems (rineforge.ai)"
                 ),
                 "rationale": "Direct, consultative response proposing a quick exploratory call.",
                 "contains_pricing": False

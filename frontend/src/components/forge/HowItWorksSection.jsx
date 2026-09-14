@@ -99,7 +99,7 @@ export const PROCESS_STAGES = [
     videoClip: {
       duration: '5.5s',
       aiTool: 'Luma Ray 2 & Pika 2.0',
-      action: 'Continuous telemetry observer optimizes prompt caching, maintaining sub-18ms latency and 99.98% resolution accuracy.',
+      action: 'Continuous telemetry observer optimizes prompt caching, maintaining grounded vector RAG and audited hallucination prevention.',
       prompt: 'Sapphire blue animated radar HUD tracking live business metrics climbing up smoothly, 100% uptime ring spinning, crisp digital rendering.'
     }
   }

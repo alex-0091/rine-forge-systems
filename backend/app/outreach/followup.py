@@ -11,15 +11,15 @@ logger = logging.getLogger(__name__)
 FOLLOW_UP_TEMPLATES = {
     2: {
         "subject_prefix": "re: ",
-        "body": "Hi {{first_name}},\n\nWanted to quickly follow up on my previous note. Did you have a chance to review the concept for {{business_name}}?\n\nHappy to share a quick 2-minute video walkthrough if you're open to exploring it.\n\nBest,\nOwais"
+        "body": "Hi {{first_name}},\n\nWanted to quickly follow up on my previous note. Did you have a chance to review the concept for {{business_name}}?\n\nHappy to share a quick 2-minute video walkthrough if you're open to exploring it.\n\nBest,\nAlex Rine\nRine Forge Systems"
     },
     3: {
         "subject_prefix": "quick thought for ",
-        "body": "Hi {{first_name}},\n\nFollowing up with a brief idea: for practices like {{business_name}}, capturing even 2-3 additional appointments a week from after-hours traffic typically covers the entire assistant setup.\n\nWould you be open to a 10-minute preview this week?\n\nBest,\nOwais"
+        "body": "Hi {{first_name}},\n\nFollowing up with a brief idea: for practices like {{business_name}}, capturing even 2-3 additional appointments a week from after-hours traffic typically covers the entire assistant setup.\n\nWould you be open to a 10-minute preview this week?\n\nBest,\nAlex Rine\nRine Forge Systems"
     },
     4: {
         "subject_prefix": "final note for ",
-        "body": "Hi {{first_name}},\n\nI realize you're likely busy managing {{business_name}}, so I won't follow up further. If 24/7 inquiry automation or custom digital systems ever become a priority down the road, feel free to reach out anytime at owais-ai.com.\n\nWishing you and {{business_name}} continued success.\n\nBest,\nOwais"
+        "body": "Hi {{first_name}},\n\nI realize you're likely busy managing {{business_name}}, so I won't follow up further. If 24/7 inquiry automation or custom digital systems ever become a priority down the road, feel free to reach out anytime at rineforge.ai.\n\nWishing you and {{business_name}} continued success.\n\nBest,\nAlex Rine\nRine Forge Systems"
     }
 }
 

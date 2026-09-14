@@ -82,23 +82,24 @@ async def get_dashboard_charts(session: AsyncSession = Depends(get_db)):
         "leads_by_country": by_country,
         "leads_by_industry": by_industry,
         "leads_by_tier": by_tier,
-        "best_performing_niches": [
-            {"niche": "Dental Clinics", "positive_rate": "18.5%", "avg_lead_score": 91},
-            {"niche": "Hotels & Resorts", "positive_rate": "22.0%", "avg_lead_score": 93},
-            {"niche": "Real Estate Agencies", "positive_rate": "14.2%", "avg_lead_score": 88},
-            {"niche": "Private Schools", "positive_rate": "15.0%", "avg_lead_score": 89}
+        "benchmark_target_niches": [
+            {"niche": "Dental & Healthcare", "target_response_rate": "15-20%", "avg_lead_score": 90},
+            {"niche": "Hotels & Hospitality", "target_response_rate": "18-22%", "avg_lead_score": 92},
+            {"niche": "Real Estate Brokerages", "target_response_rate": "12-16%", "avg_lead_score": 88},
+            {"niche": "Home Services & HVAC", "target_response_rate": "14-18%", "avg_lead_score": 89}
         ],
-        "best_performing_offers": [
-            {"offer": "AI Receptionist & 24/7 Booking", "reply_rate": "19.4%"},
-            {"offer": "Multilingual Hotel Concierge", "reply_rate": "23.1%"},
-            {"offer": "AI Buyer Qualification Assistant", "reply_rate": "14.8%"}
+        "benchmark_target_offers": [
+            {"offer": "AI Receptionist & 24/7 Booking", "model_profile": "Grounded Multi-Turn RAG"},
+            {"offer": "Inbound Lead Qualification", "model_profile": "Sub-60s ICP Scorer"},
+            {"offer": "Cross-Tool Webhook Automation", "model_profile": "Deterministic State Machine"}
         ]
     }
 
+@router.get("/operator-today")
 @router.get("/owais-today")
-async def get_owais_today_hub(session: AsyncSession = Depends(get_db)):
+async def get_operator_today_hub(session: AsyncSession = Depends(get_db)):
     """
-    Priority Action Hub: Surfaces actionable items requiring Owais's immediate review or action today.
+    Priority Action Hub: Surfaces actionable items requiring operator's immediate review or action today.
     """
     # 1. Unresolved Escalations / High Intent Replies
     alert_stmt = select(SystemAlert).where(SystemAlert.is_resolved == False).order_by(SystemAlert.created_at.desc()).limit(10)

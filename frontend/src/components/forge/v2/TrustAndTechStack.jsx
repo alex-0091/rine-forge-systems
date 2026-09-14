@@ -22,7 +22,7 @@ export function TrustAndTechStack({ onNavigate, onWatchDemo }) {
       title: '📈 Oracle AI Trading Intelligence',
       badge: 'PRODUCTION QUANT SYSTEM',
       desc: 'Real-time quantitative order-flow microstructure analysis, tick-level volatility filtering, and deterministic multi-timeframe regime detection.',
-      metric: 'Sub-4ms Tick Latency',
+      metric: 'Real-time WebSocket Feed',
       status: 'Live Production',
       sysId: 'oracle-ai'
     },
@@ -30,7 +30,7 @@ export function TrustAndTechStack({ onNavigate, onWatchDemo }) {
       title: '🚀 AI Cold Outreach & Prospecting System',
       badge: 'B2B REVENUE ENGINE',
       desc: 'Autonomous multi-channel prospect discovery, contextual personalized copy generation, and human-supervised dispatch for B2B pipeline growth.',
-      metric: '100% Verified Deliverability',
+      metric: 'Rate-Controlled Delivery',
       status: 'Live Production',
       sysId: 'outreach-ai'
     },
@@ -38,7 +38,7 @@ export function TrustAndTechStack({ onNavigate, onWatchDemo }) {
       title: '📞 AI Voice Telephony Concierge',
       badge: '24/7 PATIENT INTAKE',
       desc: 'Sub-2s inbound telephony answering, patient dental insurance verification, and calendar booking integrated with Dentrix and Twilio SIP trunks.',
-      metric: '< 18ms Audio Latency',
+      metric: 'Direct Telephony Triage',
       status: 'Live Production',
       sysId: 'receptionist-agent'
     },
@@ -46,7 +46,7 @@ export function TrustAndTechStack({ onNavigate, onWatchDemo }) {
       title: '📄 Optical OCR Document Parser',
       badge: 'AUTOMATED AP ACCOUNTING',
       desc: 'High-speed laser line-item extraction from PDF subcontractor invoices, validating mathematical sums and syncing clean ledgers to QuickBooks.',
-      metric: '$0 Data Entry Errors',
+      metric: 'Automated Line-Item Verification',
       status: 'Live Production',
       sysId: 'document-processor'
     }
@@ -181,10 +181,10 @@ export function TrustAndTechStack({ onNavigate, onWatchDemo }) {
           <div className="p-5 rounded-2xl bg-[#080d18] border border-slate-800 space-y-2">
             <div className="text-cyan-400 font-bold font-mono text-xs flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4" />
-              <span>99.8% FAIL-SAFE ACCURACY</span>
+              <span>DETERMINISTIC FALLBACK RULES</span>
             </div>
             <p className="text-xs text-slate-300 leading-relaxed font-sans">
-              If an inquiry falls outside strict policy bounds, it automatically transfers to your human staff instantly.
+              If an inquiry falls outside verified policy bounds, it automatically transfers to your human staff without hallucination.
             </p>
           </div>
 
