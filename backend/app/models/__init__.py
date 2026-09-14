@@ -4,6 +4,13 @@ from backend.app.models.campaign import Campaign, CampaignMember, OutreachMessag
 from backend.app.models.inbox import Conversation, Reply, SystemAlert, HumanCorrection
 from backend.app.models.compliance import SuppressionEntry, AuditLog, SystemState, MailboxHealth
 from backend.app.models.pipeline import Proposal, Client, Payment
+from backend.app.models.receptionist import (
+    BusinessKnowledge,
+    ReceptionistConversation,
+    ReceptionistMessage,
+    ReceptionistAction,
+    HumanHandoff
+)
 
 __all__ = [
     "Business",
@@ -27,5 +34,10 @@ __all__ = [
     "MailboxHealth",
     "Proposal",
     "Client",
-    "Payment"
+    "Payment",
+    "BusinessKnowledge",
+    "ReceptionistConversation",
+    "ReceptionistMessage",
+    "ReceptionistAction",
+    "HumanHandoff"
 ]

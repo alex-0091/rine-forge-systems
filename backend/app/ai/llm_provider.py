@@ -150,16 +150,141 @@ class MockLLMProvider(LLMProvider):
                 "contains_pricing": False
             }
             
+        elif "receptionist_intent_classification" in operation_name or "receptionist_intent" in prompt:
+            m = re.search(r'Customer Message:\s*"([^"]+)"', prompt)
+            p_lower = m.group(1).lower() if m else prompt.lower()
+
+            if "gibberish" in p_lower or "xyz123" in p_lower or "asdfghjkl" in p_lower or "unclear_message" in p_lower:
+                return {
+                    "intent": "UNKNOWN",
+                    "confidence": 0.45,
+                    "entities": {},
+                    "requires_human": True,
+                    "escalation_reason": "Low confidence / uninterpretable request.",
+                    "suggested_tool": "requestHumanHandoff"
+                }
+            elif any(w in p_lower for w in ["human", "speak to", "talk to", "real person", "representative", "manager", "operator"]):
+                return {
+                    "intent": "HUMAN_REQUEST",
+                    "confidence": 0.99,
+                    "entities": {},
+                    "requires_human": True,
+                    "escalation_reason": "Customer requested human assistance.",
+                    "suggested_tool": "requestHumanHandoff"
+                }
+            elif any(w in p_lower for w in ["cancel", "cancellation"]):
+                return {
+                    "intent": "CANCELLATION_REQUEST",
+                    "confidence": 0.95,
+                    "entities": {},
+                    "requires_human": False,
+                    "suggested_tool": "cancelAppointment"
+                }
+            elif any(w in p_lower for w in ["reschedule", "move appointment", "change appointment"]):
+                return {
+                    "intent": "RESCHEDULE_REQUEST",
+                    "confidence": 0.95,
+                    "entities": {},
+                    "requires_human": False,
+                    "suggested_tool": "rescheduleAppointment"
+                }
+            elif any(w in p_lower for w in ["hour", "open", "close", "operating"]):
+                return {
+                    "intent": "HOURS_QUESTION",
+                    "confidence": 0.95,
+                    "entities": {},
+                    "requires_human": False,
+                    "suggested_tool": "getBusinessHours"
+                }
+            elif any(w in p_lower for w in ["where", "address", "location", "directions"]):
+                return {
+                    "intent": "LOCATION_QUESTION",
+                    "confidence": 0.95,
+                    "entities": {},
+                    "requires_human": False,
+                    "suggested_tool": "getBusinessInformation"
+                }
+            elif any(w in p_lower for w in ["price", "cost", "how much", "rate", "fee"]):
+                return {
+                    "intent": "PRICING_QUESTION",
+                    "confidence": 0.92,
+                    "entities": {},
+                    "requires_human": False,
+                    "suggested_tool": "getServiceInformation"
+                }
+            elif any(w in p_lower for w in ["book", "appointment", "schedule", "opening", "slot", "visit"]):
+                return {
+                    "intent": "BOOKING_REQUEST",
+                    "confidence": 0.95,
+                    "entities": {},
+                    "requires_human": False,
+                    "suggested_tool": "checkAvailability"
+                }
+            elif "gibberish" in p_lower or "xyz123" in p_lower or "asdfghjkl" in p_lower or "unclear_message" in p_lower:
+                return {
+                    "intent": "UNKNOWN",
+                    "confidence": 0.45,
+                    "entities": {},
+                    "requires_human": True,
+                    "escalation_reason": "Low confidence / uninterpretable request.",
+                    "suggested_tool": "requestHumanHandoff"
+                }
+            else:
+                return {
+                    "intent": "GENERAL_QUESTION",
+                    "confidence": 0.88,
+                    "entities": {},
+                    "requires_human": False,
+                    "suggested_tool": "getBusinessInformation"
+                }
+
         elif "receptionist_demo" in prompt:
             return {
-                "response": "Hello and welcome! I am the 24/7 AI Receptionist demo built by Owais AI. I can answer common service questions, provide pricing guidance, or take your details to schedule a consultation with the team. How can I assist you today?"
+                "response": "Hello and welcome! I am the 24/7 AI Receptionist for Rine Forge Systems. I can answer common service questions, provide pricing guidance, or take your details to schedule a consultation with the team. How can I assist you today?"
             }
             
         return {"status": "ok", "message": "Mock analysis generated successfully."}
 
     async def generate_text(self, prompt: str, system_instruction: Optional[str] = None, model: Optional[str] = None, operation_name: str = "mock_text") -> str:
         cost_tracker.record_usage(operation_name, "mock", 100, 50)
-        return "Hello! I am Owais AI's interactive demonstration assistant. How can I help you today?"
+        
+        # Grounded Mock Receptionist Responses
+        if operation_name.startswith("receptionist_") or "receptionist" in (system_instruction or "").lower():
+            p_lower = prompt.lower()
+            s_lower = (system_instruction or "").lower()
+
+            if any(w in p_lower for w in ["human", "speak to someone", "real person", "operator", "manager"]):
+                return "Certainly. I'm connecting you with a member of our team right now so they can assist you personally."
+            
+            if any(w in p_lower for w in ["rocket", "mars", "flying car", "submarine", "crypto mining", "unknown_service", "diamond teeth"]):
+                return "I don't have that information in my verified records yet. I can connect you with a member of our team to assist you further."
+
+            if any(w in p_lower for w in ["hour", "open", "close", "time"]):
+                if "08:30-17:30" in s_lower or "8:30" in s_lower:
+                    return "We are open Monday through Friday from 8:30 AM to 5:30 PM. Let me know if you would like to book an appointment during these hours."
+                return "We are open during standard business hours Monday through Friday. How may I assist you today?"
+
+            if any(w in p_lower for w in ["address", "where are you", "location"]):
+                if "address" in s_lower:
+                    # Return address from context
+                    m = re.search(r'address\s*/\s*location:\s*([^\n]+)', system_instruction, re.IGNORECASE)
+                    addr = m.group(1).strip() if m else "our main office"
+                    return f"We are located at {addr}. Free parking is available for visitors."
+                return "Our main office is centrally located. Let me know if you would like directions or assistance."
+
+            if any(w in p_lower for w in ["price", "cost", "how much"]):
+                if "teeth whitening" in p_lower:
+                    return "Professional In-Office Teeth Whitening is $350 for a 60-minute session. Would you like to check availability?"
+                elif "cleaning" in p_lower:
+                    return "Comprehensive Dental Cleaning is $120. Would you like to schedule an appointment?"
+                return "I don't have that specific pricing information in my verified records yet. I can connect you with our team for a personalized quote."
+
+            if any(w in p_lower for w in ["book", "appointment", "schedule", "reserve", "tuesday", "tomorrow", "3pm"]):
+                return "I would be happy to help you schedule an appointment. We have openings available. Could you please share your full name and a phone number or email so we can finalize your reservation?"
+
+            return "Thank you for reaching out. I'm here to answer questions about our verified services, business hours, and schedule appointments. How can I help you today?"
+
+        return "Hello! I am the Rine Forge AI Receptionist assistant. How can I help you today?"
 
 class GeminiProvider(LLMProvider):
     """
