@@ -241,38 +241,39 @@ export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee,
                 </div>
 
                 {/* Action Triggers */}
-                {emp.id === 'receptionist' && onTalkToReceptionist ? (
-                  <div className="space-y-2">
-                    <ActionButton
-                      variant="primary"
-                      size="md"
-                      onClick={() => onTalkToReceptionist()}
-                      icon={MessageSquare}
-                      iconPosition="left"
-                      className="w-full text-xs font-mono bg-gradient-to-r from-teal-500 to-cyan-400 text-slate-950 font-black shadow-md shadow-teal-500/20"
-                    >
-                      TALK TO RECEPTIONIST
-                    </ActionButton>
-                    <button
-                      onClick={() => handleCardClick(emp)}
-                      className="w-full py-1 text-[11px] font-mono text-slate-400 hover:text-cyan-300 transition-colors flex items-center justify-center gap-1"
-                    >
-                      <span>Watch Simulation</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </button>
-                  </div>
-                ) : (
+                <div className="space-y-2">
                   <ActionButton
-                    variant="secondary"
+                    variant="primary"
                     size="md"
-                    onClick={() => handleCardClick(emp)}
-                    icon={ArrowRight}
-                    iconPosition="right"
-                    className="w-full text-xs font-mono"
+                    onClick={() => {
+                      if (onTalkToReceptionist) {
+                        onTalkToReceptionist(emp.id);
+                      } else {
+                        handleCardClick(emp);
+                      }
+                    }}
+                    icon={MessageSquare}
+                    iconPosition="left"
+                    className={`w-full text-xs font-mono font-black shadow-md ${
+                      emp.id === 'receptionist'
+                        ? 'bg-gradient-to-r from-teal-500 to-cyan-400 text-slate-950 shadow-teal-500/20'
+                        : emp.id === 'sales'
+                        ? 'bg-gradient-to-r from-violet-500 to-purple-400 text-white shadow-violet-500/20'
+                        : emp.id === 'support'
+                        ? 'bg-gradient-to-r from-emerald-500 to-teal-400 text-slate-950 shadow-emerald-500/20'
+                        : 'bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 shadow-amber-500/20'
+                    }`}
                   >
-                    WATCH DEMO
+                    TALK TO {emp.name}
                   </ActionButton>
-                )}
+                  <button
+                    onClick={() => handleCardClick(emp)}
+                    className="w-full py-1 text-[11px] font-mono text-slate-400 hover:text-cyan-300 transition-colors flex items-center justify-center gap-1"
+                  >
+                    <span>System Workflow</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
               </div>
             );
           })}

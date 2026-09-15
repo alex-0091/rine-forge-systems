@@ -315,11 +315,14 @@ class ReceptionistOrchestrator:
             f"Customer Intent: {classification.intent.value}\n"
             f"Tool Execution Info: {tool_result_message or 'No tool needed'}\n\n"
             f"Instructions:\n"
-            f"- Reply warmly, professionally, and concisely (under 3 sentences).\n"
-            f"- If tool executed successfully, communicate the findings or confirm the request accurately.\n"
-            f"- If an action requires human integration, communicate honestly: explain the request was recorded and staff will confirm.\n"
+            f"- Communicate like an elite, consultative healthcare director: warm, articulate, empathetic, and highly professional.\n"
+            f"- VALUE-FIRST: When stating treatment fees or services, briefly highlight key inclusions (e.g. ultrasonic cleaning, digital scans, LED laser activation) so the patient perceives high value.\n"
+            f"- CONSULTATIVE TRIAGE: Ask 1 helpful diagnostic question to clarify their clinical need (e.g. routine preventive care vs. toothache/sensitivity).\n"
+            f"- PROACTIVE SCHEDULING: Offer 2 concrete available appointment windows rather than vague open-ended questions.\n"
+            f"- If tool executed successfully, communicate the verified findings clearly.\n"
+            f"- If an action requires human integration, explain that the request has been secured and our team will confirm.\n"
             f"- NEVER fake calendar bookings or invent unverified information.\n"
-            f"- If information is missing from verified business facts, say you don't have that information in records and offer staff connection."
+            f"- If information is missing from verified business facts, say you don't have that in records and offer staff connection."
         )
 
         # For write actions or integration-required actions, use verified tool message directly

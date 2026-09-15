@@ -110,14 +110,16 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
   const [simpleAuditPreFill, setSimpleAuditPreFill] = useState({});
   const [isReceptionistChatOpen, setIsReceptionistChatOpen] = useState(false);
   const [receptionistInitialPrompt, setReceptionistInitialPrompt] = useState(null);
+  const [receptionistInitialWorker, setReceptionistInitialWorker] = useState('receptionist');
 
   const handleOpenSimpleAudit = (preFill = {}) => {
     setSimpleAuditPreFill(preFill);
     setIsSimpleAuditModalOpen(true);
   };
 
-  const handleOpenReceptionistChat = (prompt = null) => {
+  const handleOpenReceptionistChat = (prompt = null, workerId = 'receptionist') => {
     setReceptionistInitialPrompt(prompt);
+    setReceptionistInitialWorker(workerId);
     setIsReceptionistChatOpen(true);
   };
 
@@ -301,6 +303,13 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
             {/* 2. LIVE INTERACTIVE AI RECEPTIONIST DEMO (30-second hands-on experience) */}
             <LiveAiReceptionistDemoSection 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            />
+
+            {/* 2.5 MEET YOUR SPECIALIZED AI EMPLOYEES (ELENA, MARCUS, ARIA, KAEL) */}
+            <MeetAiEmployeesSection
+              onTalkToReceptionist={(workerId) => handleOpenReceptionistChat(null, workerId)}
+              onWatchEmployeeDemo={(emp) => setActiveWatchItHappenData(emp.demoData)}
+              onBuildAiEmployee={() => handleOpenSimpleAudit({ service: 'Custom AI Employee Platform' })}
             />
 
             {/* 3. THE TRANSFORMATION: BEFORE vs. AFTER */}
@@ -531,6 +540,7 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
           setReceptionistInitialPrompt(null);
         }}
         initialPrompt={receptionistInitialPrompt}
+        initialWorker={receptionistInitialWorker}
       />
 
     </div>

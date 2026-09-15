@@ -11,11 +11,10 @@ import { AiStatusBadge } from '../v4/AiStatusBadge';
 import { ForgeCharacterAvatar } from '../v4/ForgeCharacterAvatar';
 
 const QUICK_TEST_PROMPTS = [
-  'Do you have appointments available Friday?',
   'How much does laser teeth whitening cost?',
-  'What are your opening hours on Monday?',
-  'Can I book a dental cleaning?',
-  'Can I speak with a human receptionist?'
+  'I have severe tooth pain, can I come in today?',
+  'Do you have appointments available this Friday?',
+  'Do you accept Delta Dental insurance or CareCredit?'
 ];
 
 export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
@@ -25,7 +24,7 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
       id: 'welcome',
       role: 'assistant',
       sender_type: 'AI_RECEPTIONIST',
-      content: "Hi there! I'm Elena, the 24/7 AI Receptionist for Rine Dental & Facial Aesthetics in Austin, TX. I can answer questions about our services, pricing, operating hours, or find and book an open appointment for you. What can I help you with?",
+      content: "Hello! I am Elena, 24/7 Front Desk AI Receptionist for Rine Dental & Facial Aesthetics. I can provide treatment details, verify doctor availability, explain insurance, and lock in appointments. How may I assist you today?",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       intent: 'GREETING',
       latencyMs: 140
@@ -155,7 +154,7 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
         id: 'welcome',
         role: 'assistant',
         sender_type: 'AI_RECEPTIONIST',
-        content: "Hi there! I'm Elena, the 24/7 AI Receptionist for Rine Dental & Facial Aesthetics in Austin, TX. I can answer questions about our services, pricing, operating hours, or find and book an open appointment for you. What can I help you with?",
+        content: "Hello! I am Elena, 24/7 Front Desk AI Receptionist for Rine Dental & Facial Aesthetics. I can provide treatment details, verify doctor availability, explain insurance, and lock in appointments. How may I assist you today?",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         intent: 'GREETING',
         latencyMs: 120

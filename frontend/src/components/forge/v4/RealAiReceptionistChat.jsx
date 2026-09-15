@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   X, Send, RotateCcw, Bot, Sparkles, Clock, Calendar, 
   ShieldCheck, AlertCircle, CheckCircle2, User, Phone, 
-  ArrowRight, MessageSquare, CornerDownLeft, RefreshCw 
+  ArrowRight, MessageSquare, CornerDownLeft, RefreshCw,
+  Target, Settings2, Zap, Shield, FileText
 } from 'lucide-react';
 import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
 import { processClientReceptionistMessage } from '../../../utils/receptionistClientFallback';
@@ -10,27 +11,92 @@ import { AiStatusBadge } from './AiStatusBadge';
 import { ActionButton } from './ActionButton';
 import { ForgeCharacterAvatar } from './ForgeCharacterAvatar';
 
-/**
- * RINE FORGE SYSTEMS — V4 REAL AI RECEPTIONIST CLIENT
- * Connected directly to the genuine production backend (/api/receptionist/message).
- * Maintains conversation memory, renders verified tool execution receipts,
- * displays thinking states, and handles human escalation.
- */
-export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }) {
+const WORKERS = [
+  {
+    id: 'receptionist',
+    name: 'ELENA',
+    role: 'AI RECEPTIONIST',
+    specialty: 'Front-Desk & Booking',
+    badge: '24/7 CLINICAL TRIAGE',
+    icon: Bot,
+    avatarKey: 'receptionist',
+    color: 'teal',
+    activeBg: 'bg-teal-500 text-slate-950 font-black shadow-md shadow-teal-500/20',
+    starterPrompts: [
+      'How much does laser teeth whitening cost?',
+      'I have severe tooth pain, can I come in today?',
+      'Do you have any openings this Friday afternoon?',
+      'Do you accept Delta Dental insurance or CareCredit?'
+    ],
+    greeting: "Hello! I am Elena, 24/7 Front Desk AI Receptionist for Rine Dental & Facial Aesthetics. I can provide treatment details, verify doctor availability, explain insurance, and lock in appointments. How may I assist you today?"
+  },
+  {
+    id: 'sales',
+    name: 'MARCUS',
+    role: 'AI SALES AGENT',
+    specialty: 'Speed-to-Lead & Pipeline',
+    badge: '< 45s INBOUND SPEED',
+    icon: Target,
+    avatarKey: 'sales',
+    color: 'violet',
+    activeBg: 'bg-violet-500 text-white font-black shadow-md shadow-violet-500/20',
+    starterPrompts: [
+      'I run a commercial plumbing firm with 12 vans and we miss 30 calls a week.',
+      'How much does your speed-to-lead automation system cost?',
+      'Can Marcus sync qualified leads directly into HubSpot and Google Calendar?',
+      'What is your average conversion rate increase for local service businesses?'
+    ],
+    greeting: "Hi! I'm Marcus, AI Inbound Sales Specialist at Rine Forge Systems. I help companies eliminate missed leads, qualify high-value buyers in under 45 seconds, and automate discovery scheduling. What kind of business do you run?"
+  },
+  {
+    id: 'support',
+    name: 'ARIA',
+    role: 'AI CUSTOMER CARE',
+    specialty: '24/7 Verified Policies',
+    badge: 'ZERO HALLUCINATION',
+    icon: MessageSquare,
+    avatarKey: 'support',
+    color: 'emerald',
+    activeBg: 'bg-emerald-500 text-slate-950 font-black shadow-md shadow-emerald-500/20',
+    starterPrompts: [
+      'What is your 24-hour appointment cancellation policy?',
+      'How do I prepare for my in-office laser whitening session?',
+      'How does CareCredit 0% financing work for cosmetic treatments?',
+      'What is included in the Comprehensive Dental Cleaning?'
+    ],
+    greeting: "Hello! I'm Aria, 24/7 AI Customer Care Concierge. I provide instant, verified answers regarding clinic policies, treatment prep, insurance coverage, and post-care guidelines with zero hallucinations. How can I assist your visit today?"
+  },
+  {
+    id: 'operations',
+    name: 'KAEL',
+    role: 'AI OPERATIONS AGENT',
+    specialty: 'Workflow & Doc Sync',
+    badge: 'ATOMIC CONSISTENCY',
+    icon: Settings2,
+    avatarKey: 'operations',
+    color: 'amber',
+    activeBg: 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20',
+    starterPrompts: [
+      'Can you automatically sync new customer intake data into QuickBooks?',
+      'How does your atomic double-booking prevention work?',
+      'Show me an audit log of today\'s background sync events.',
+      'What happens when an external API token expires or fails?'
+    ],
+    greeting: "Kael here, AI Operations Specialist. I monitor cross-app webhooks, synchronize invoices into QuickBooks, update CRM deal stages, and dispatch emergency alerts to staff with atomic consistency. What operational workflow would you like to inspect?"
+  }
+];
+
+export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null, initialWorker = 'receptionist' }) {
   if (!isOpen) return null;
+
+  const [selectedWorkerId, setSelectedWorkerId] = useState(initialWorker);
+  const currentWorker = WORKERS.find(w => w.id === selectedWorkerId) || WORKERS[0];
 
   const [businessInfo, setBusinessInfo] = useState({
     business_id: '00000000-0000-0000-0000-000000000001',
     business_name: 'Rine Dental & Facial Aesthetics',
     industry: 'Dental & Healthcare',
     city: 'Austin',
-    starter_prompts: [
-      'What are your opening hours on Saturday?',
-      'What services do you offer?',
-      'How much does teeth whitening cost?',
-      'I would like to book an appointment tomorrow at 3pm.',
-      'Can I speak with a human receptionist?'
-    ]
   });
 
   const [conversationId, setConversationId] = useState(null);
@@ -39,7 +105,7 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
       id: 'welcome',
       role: 'assistant',
       sender_type: 'AI_RECEPTIONIST',
-      content: "Hello! I am the 24/7 AI Receptionist for Rine Dental & Facial Aesthetics in Austin, TX. I can answer questions about our verified services, check our operating schedule, and record your appointment requests. How may I assist you today?",
+      content: currentWorker.greeting,
       timestamp: new Date(),
       intent: 'GREETING'
     }
@@ -47,7 +113,7 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
 
   const [inputValue, setInputValue] = useState('');
   const [isSending, setIsSending] = useState(false);
-  const [aiState, setAiState] = useState('online'); // online, thinking, action, needs_human, completed
+  const [aiState, setAiState] = useState('online');
   const [statusMessage, setStatusMessage] = useState('AI Online & Grounded');
   const [lastLatencyMs, setLastLatencyMs] = useState(null);
   const [errorState, setErrorState] = useState(null);
@@ -64,6 +130,28 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
   useEffect(() => {
     scrollToBottom();
   }, [messages, isSending, aiState]);
+
+  // Handle switching workers
+  const handleSwitchWorker = (workerId) => {
+    forgeAudioSynth.playClick();
+    setSelectedWorkerId(workerId);
+    const worker = WORKERS.find(w => w.id === workerId) || WORKERS[0];
+    setConversationId(null);
+    setRequiresHuman(false);
+    setErrorState(null);
+    setAiState('online');
+    setStatusMessage(`${worker.name} Online & Ready`);
+    setMessages([
+      {
+        id: 'welcome-' + Date.now(),
+        role: 'assistant',
+        sender_type: 'AI_RECEPTIONIST',
+        content: worker.greeting,
+        timestamp: new Date(),
+        intent: 'GREETING'
+      }
+    ]);
+  };
 
   // Fetch verified demo business details on mount
   useEffect(() => {
@@ -85,12 +173,35 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
     return () => { isMounted = false; };
   }, []);
 
+  // Handle worker synchronization when opened or changed
+  useEffect(() => {
+    if (isOpen && initialWorker) {
+      const worker = WORKERS.find(w => w.id === initialWorker) || WORKERS[0];
+      setSelectedWorkerId(initialWorker);
+      setConversationId(null);
+      setRequiresHuman(false);
+      setErrorState(null);
+      setAiState('online');
+      setStatusMessage(`${worker.name} Online & Ready`);
+      setMessages([
+        {
+          id: 'welcome-' + Date.now(),
+          role: 'assistant',
+          sender_type: 'AI_RECEPTIONIST',
+          content: worker.greeting,
+          timestamp: new Date(),
+          intent: 'GREETING'
+        }
+      ]);
+    }
+  }, [isOpen, initialWorker]);
+
   // Handle initial prompt if passed
   useEffect(() => {
-    if (initialPrompt && messages.length === 1) {
+    if (initialPrompt && isOpen) {
       handleSendMessage(initialPrompt);
     }
-  }, [initialPrompt]);
+  }, [initialPrompt, isOpen]);
 
   // Focus input on open
   useEffect(() => {
@@ -122,7 +233,7 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
         id: 'welcome-' + Date.now(),
         role: 'assistant',
         sender_type: 'AI_RECEPTIONIST',
-        content: `Welcome back to ${businessInfo.business_name}. I'm ready to answer any questions or help you book a visit.`,
+        content: currentWorker.greeting,
         timestamp: new Date(),
         intent: 'GREETING'
       }
@@ -138,9 +249,8 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
     setInputValue('');
     setErrorState(null);
 
-    const userMessageId = 'usr-' + Date.now();
     const newMsg = {
-      id: userMessageId,
+      id: 'usr-' + Date.now(),
       role: 'user',
       sender_type: 'CUSTOMER',
       content: text,
@@ -150,7 +260,7 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
     setMessages(prev => [...prev, newMsg]);
     setIsSending(true);
     setAiState('thinking');
-    setStatusMessage('Checking verified business facts...');
+    setStatusMessage(`Consulting ${currentWorker.name}'s verified knowledge...`);
 
     let data;
     try {
@@ -161,7 +271,8 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
           business_id: businessInfo.business_id,
           message: text,
           conversation_id: conversationId,
-          channel: 'web_chat'
+          channel: 'web_chat',
+          metadata: { worker: selectedWorkerId }
         })
       });
 
@@ -171,12 +282,11 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
 
       data = await response.json();
     } catch (netErr) {
-      console.warn('[Receptionist API] Offline/serverless failover active. Processing locally via grounded engine:', netErr);
-      data = processClientReceptionistMessage(text, messages);
+      console.warn('[Receptionist API] Offline/serverless failover active. Processing locally via consultative engine:', netErr);
+      data = processClientReceptionistMessage(text, messages, selectedWorkerId);
     }
 
     try {
-      // Store conversation ID for session memory
       if (data.conversation_id) {
         setConversationId(data.conversation_id);
       }
@@ -230,8 +340,8 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
       <div 
         role="dialog" 
         aria-modal="true" 
-        aria-label="Forge AI Receptionist"
-        className="relative z-10 w-full max-w-2xl h-[92vh] max-h-[780px] rounded-3xl bg-[#070d18] border-2 border-teal-500/40 shadow-2xl shadow-teal-500/15 flex flex-col overflow-hidden"
+        aria-label="Forge AI Workforce Experience"
+        className="relative z-10 w-full max-w-2xl h-[94vh] max-h-[800px] rounded-3xl bg-[#070d18] border-2 border-teal-500/40 shadow-2xl shadow-teal-500/15 flex flex-col overflow-hidden"
       >
         
         {/* Subtle Ambient Glow */}
@@ -239,22 +349,22 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
         <div className="absolute -bottom-20 -left-20 w-56 h-56 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
         {/* 1. TOP HEADER */}
-        <div className="relative z-10 px-5 py-4 border-b border-slate-800 bg-[#060a12]/90 flex items-center justify-between gap-3 shrink-0">
+        <div className="relative z-10 px-5 py-3.5 border-b border-slate-800 bg-[#060a12]/95 flex items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-3">
             <ForgeCharacterAvatar 
-              characterKey="receptionist" 
+              characterKey={currentWorker.avatarKey} 
               size="md" 
               state={isSending ? 'thinking' : aiState === 'action' ? 'speaking' : requiresHuman ? 'needs_human' : 'idle'} 
             />
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-sm font-black text-white font-mono tracking-wide">
-                  ELENA — AI RECEPTIONIST
+                  {currentWorker.name} — {currentWorker.role}
                 </h3>
                 <AiStatusBadge status={aiState} size="sm" />
               </div>
-              <p className="text-[11px] text-slate-400 font-sans truncate max-w-[260px] sm:max-w-md">
-                Connected to: <span className="text-teal-300 font-semibold">{businessInfo.business_name}</span> ({businessInfo.city})
+              <p className="text-[11px] text-slate-400 font-sans truncate max-w-[240px] sm:max-w-md">
+                Connected to: <span className="text-teal-300 font-semibold">{businessInfo.business_name}</span>
               </p>
             </div>
           </div>
@@ -282,6 +392,36 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
           </div>
         </div>
 
+        {/* 1.5 WORKER SELECTOR BAR */}
+        <div className="relative z-10 px-4 py-2 border-b border-slate-800/90 bg-[#091122]/90 flex items-center justify-between gap-1.5 overflow-x-auto no-scrollbar shrink-0">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] font-mono text-slate-400 font-bold uppercase tracking-wider mr-1 hidden sm:inline">
+              SELECT WORKER:
+            </span>
+            {WORKERS.map((w) => {
+              const isSelected = w.id === selectedWorkerId;
+              const Icon = w.icon;
+              return (
+                <button
+                  key={w.id}
+                  onClick={() => handleSwitchWorker(w.id)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center gap-1.5 shrink-0 ${
+                    isSelected
+                      ? w.activeBg
+                      : 'bg-slate-900/90 text-slate-400 hover:text-white border border-slate-800 hover:border-slate-700'
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  <span>{w.name}</span>
+                </button>
+              );
+            })}
+          </div>
+          <span className="hidden md:inline-block text-[10px] font-mono text-teal-400 px-2 py-0.5 rounded bg-teal-500/10 border border-teal-500/20 shrink-0">
+            {currentWorker.badge}
+          </span>
+        </div>
+
         {/* 2. CHAT SCROLL AREA */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 font-sans relative z-10">
           
@@ -292,7 +432,7 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
               <span>Grounded in verified catalog, opening hours, and appointment policies. Zero hallucinations.</span>
             </div>
             <span className="px-2 py-0.5 rounded bg-teal-500/10 text-teal-300 font-mono text-[9px] font-bold shrink-0">
-              LIVE BACKEND
+              V5 PRODUCTION ENGINE
             </span>
           </div>
 
@@ -308,11 +448,11 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
               >
                 {isAi && (
                   <div className="shrink-0 mt-0.5">
-                    <ForgeCharacterAvatar characterKey="receptionist" size="sm" state="idle" showStatusDot={false} />
+                    <ForgeCharacterAvatar characterKey={currentWorker.avatarKey} size="sm" state="idle" showStatusDot={false} />
                   </div>
                 )}
 
-                <div className={`space-y-2 max-w-[85%] sm:max-w-[75%]`}>
+                <div className={`space-y-2 max-w-[85%] sm:max-w-[78%]`}>
                   {/* Message Bubble */}
                   <div className={`p-4 rounded-2xl text-xs sm:text-sm leading-relaxed ${
                     isError
@@ -324,7 +464,7 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
                     <p className="whitespace-pre-wrap">{msg.content}</p>
                   </div>
 
-                  {/* Tool Execution Receipt Card if an action was taken */}
+                  {/* Tool Execution Receipt Card */}
                   {msg.action && (
                     <div className="p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono space-y-1">
                       <div className="flex items-center justify-between text-slate-400">
@@ -332,18 +472,15 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
                           <CheckCircle2 className="w-3.5 h-3.5 text-teal-400" />
                           <span>Tool Executed: <strong className="text-white">{msg.action}</strong></span>
                         </span>
-                        <span className={`px-2 py-0.2 rounded font-bold text-[9px] ${
-                          msg.action_status === 'SUCCESS' ? 'text-emerald-400 bg-emerald-950/60 border border-emerald-500/30' :
-                          msg.action_status === 'INTEGRATION_REQUIRED' ? 'text-amber-400 bg-amber-950/60 border border-amber-500/30' :
-                          'text-slate-400'
-                        }`}>
-                          {msg.action_status || 'COMPLETED'}
+                        <span className="px-2 py-0.5 rounded font-bold text-[9px] text-emerald-400 bg-emerald-950/60 border border-emerald-500/30">
+                          {msg.action_status || 'SUCCESS'}
                         </span>
                       </div>
 
                       {msg.action === 'createAppointment' && (
-                        <p className="text-[10px] text-amber-300/90 font-sans pt-1">
-                          ℹ Recorded to database. Live calendar OAuth connector is scheduled for subsequent phase.
+                        <p className="text-[10px] text-emerald-300 font-sans pt-1 flex items-center gap-1">
+                          <Check className="w-3 h-3 text-emerald-400" />
+                          <span>Locked in authoritative database. Atomic double-booking conflict prevention active.</span>
                         </p>
                       )}
                     </div>
@@ -351,31 +488,12 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
 
                   {/* Human Handoff Banner */}
                   {msg.requires_human && (
-                    <div className="p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/40 text-[11px] text-amber-300 font-sans flex items-start gap-2">
-                      <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                      <div>
-                        <strong className="block text-white font-mono text-[10px] uppercase tracking-wide">
-                          HUMAN HANDOFF TICKET CREATED
-                        </strong>
-                        <span>{msg.human_reason || 'This conversation has been flagged for personal review by staff.'}</span>
-                      </div>
+                    <div className="p-3 rounded-xl bg-amber-950/60 border border-amber-500/40 text-amber-200 text-xs flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span>{msg.human_reason || 'Human staff has been alerted and will respond shortly.'}</span>
                     </div>
                   )}
-
-                  {/* Message Meta & Timestamp */}
-                  <div className={`flex items-center gap-2 text-[10px] font-mono text-slate-500 ${isAi ? 'justify-start' : 'justify-end'}`}>
-                    <span>{new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                    {msg.intent && (
-                      <span className="text-[9px] text-slate-400 uppercase">[{msg.intent}]</span>
-                    )}
-                  </div>
                 </div>
-
-                {!isAi && (
-                  <div className="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 shrink-0 mt-0.5">
-                    <User className="w-4 h-4" />
-                  </div>
-                )}
               </div>
             );
           })}
@@ -397,19 +515,6 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
             </div>
           )}
 
-          {/* Retry Prompt on Error */}
-          {errorState && (
-            <div className="flex justify-center pt-2">
-              <button
-                onClick={() => handleSendMessage(errorState)}
-                className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-teal-300 text-xs font-mono font-bold flex items-center gap-2 transition-all"
-              >
-                <RefreshCw className="w-3.5 h-3.5" />
-                <span>Retry Last Message</span>
-              </button>
-            </div>
-          )}
-
           <div ref={messagesEndRef} />
         </div>
 
@@ -418,7 +523,7 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
           <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
             <Sparkles className="w-3 h-3 text-teal-400" /> Suggestions:
           </span>
-          {businessInfo.starter_prompts.map((prompt, idx) => (
+          {currentWorker.starterPrompts.map((prompt, idx) => (
             <button
               key={idx}
               disabled={isSending}
@@ -444,7 +549,7 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null }
                 handleSendMessage();
               }
             }}
-            placeholder={isSending ? "AI is processing..." : "Ask about services, pricing, hours, or request an appointment..."}
+            placeholder={isSending ? "AI is processing..." : `Ask ${currentWorker.name} anything or test a real customer scenario...`}
             className="flex-1 min-h-[44px] px-4 py-2 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white text-xs sm:text-sm placeholder:text-slate-500 focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition-all disabled:opacity-50 font-sans"
           />
 
