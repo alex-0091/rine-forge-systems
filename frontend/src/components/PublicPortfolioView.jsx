@@ -39,8 +39,17 @@ import { SolutionDetailPage } from './forge/SolutionDetailPage';
 import { SystemDetailPage } from './forge/SystemDetailPage';
 import { PersonalizedIndustryView } from './forge/PersonalizedIndustryView';
 
-// FORGE V2 Visual Experience Components
+// FORGE V2 High-Converting Platform Components
 import { ForgeV2HeroScene } from './forge/v2/ForgeV2HeroScene';
+import { LiveAiReceptionistDemoSection } from './forge/v2/LiveAiReceptionistDemoSection';
+import { TransformationSection } from './forge/v2/TransformationSection';
+import { OmnichannelSection } from './forge/v2/OmnichannelSection';
+import { WatchItWorkSection } from './forge/v2/WatchItWorkSection';
+import { IndustrySolutionsSection } from './forge/v2/IndustrySolutionsSection';
+import { HowItWorksFlowSection } from './forge/v2/HowItWorksFlowSection';
+import { RoiRevenueCalculatorSection } from './forge/v2/RoiRevenueCalculatorSection';
+import { TrustAndProofSection } from './forge/v2/TrustAndProofSection';
+import { StrongCtaSection } from './forge/v2/StrongCtaSection';
 import { ForgeWorkforceMap } from './forge/v2/ForgeWorkforceMap';
 import { ChaosToOrderStory } from './forge/v2/ChaosToOrderStory';
 import { VisualIndustrySelector } from './forge/v2/VisualIndustrySelector';
@@ -282,84 +291,57 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
       <main>
         {currentView === 'home' && (
           <>
-            {/* 1. HERO: AI Employees for Small Businesses + Animated Scenario (PROBLEM → AI SOLUTION) */}
+            {/* 1. HERO: Above-the-fold value pitch (10-second comprehension) */}
             <ForgeV2HeroScene 
               onNavigate={(target) => target === 'audit' ? handleOpenSimpleAudit() : handleNavigate(target)} 
               onLaunchSystemDemo={handleLaunchSystemSandbox}
               onWatchTenSecDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
             />
 
-            {/* 2. V3 PHASE 1: 6-STAGE CINEMATIC VIDEO & VISUAL STORYTELLING LAYER (WATCH IT WORK) */}
-            <ForgeVideoExperienceLayer 
-              onNavigate={(target) => target === 'audit' ? handleOpenSimpleAudit() : handleNavigate(target)} 
-              onOpenLiveReceptionist={handleOpenReceptionistChat}
-            />
-
-            {/* 3. V3 PHASE 2: MEET YOUR NEW AI EMPLOYEES (INTERACTIVE DIGITAL WORKERS) */}
-            <MeetAiEmployeesSection 
-              onWatchEmployeeDemo={(demoData) => setActiveWatchItHappenData(demoData)} 
-              onBuildAiEmployee={() => handleOpenSimpleAudit({ whatToAutomate: 'Custom AI Employee for business operations' })}
-              onTalkToReceptionist={handleOpenReceptionistChat}
-            />
-
-            {/* 4. V3 PHASE 2: WHAT COULD YOUR BUSINESS AUTOMATE? (CHOOSE YOUR INDUSTRY) */}
-            <WhatCouldYourBusinessAutomate 
-              onWatchServiceDemo={(demoData) => setActiveWatchItHappenData(demoData)} 
-              onSeeWhatWeCouldAutomate={(indName) => handleOpenSimpleAudit({ businessType: indName, whatToAutomate: `Automating ${indName} customer communication and workflows` })}
-            />
-
-            {/* 5. V3 PHASE 4: REAL SYSTEMS. REAL AUTOMATION. (SEE REAL SYSTEMS) */}
-            <RealSystemsProofSection 
-              onViewSystem={(sysId) => {
-                if (sysId === 'oracle-ai') {
-                  const el = document.getElementById('tools-forge') || document.getElementById('automation-calculator');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                } else {
-                  handleLaunchSystemSandbox(sysId);
-                }
-              }}
+            {/* 2. LIVE INTERACTIVE AI RECEPTIONIST DEMO (30-second hands-on experience) */}
+            <LiveAiReceptionistDemoSection 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
 
-            {/* 6. V3 PHASE 4: THE AUTOMATION STACK ARCHITECTURE */}
-            <AutomationStackArchitecture />
-
-            {/* 7. V3 PHASE 4: FROM IDEA -> AI SYSTEM (UNDERSTAND PROCESS) */}
-            <ProcessTimelineSection />
-
-            {/* 8. V3 PHASE 4: WHY FORGE? (4 CONCISE VISUAL POINTS) */}
-            <WhyForgeSection_v2 
+            {/* 3. THE TRANSFORMATION: BEFORE vs. AFTER */}
+            <TransformationSection 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
 
-            {/* 9. V3 PHASE 3: HOW MUCH COULD YOU AUTOMATE? (FREE AI AUDIT) */}
-            <HowMuchCouldYouAutomate 
-              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)} 
+            {/* 4. THE SOLUTION: ONE AI EMPLOYEE, MULTIPLE CHANNELS */}
+            <OmnichannelSection 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
 
-            {/* 10. V3 PHASE 3 & 4: TRANSPARENT TECH STACK & MODERN INFRASTRUCTURE */}
-            <BuiltForRealBusinessWork />
-            <BuiltWithModernTechnology />
-
-            {/* 11. DEEP DIVE: INTERACTIVE AI SANDBOX & COMMAND CENTER */}
-            <InteractiveAiDemoWidget 
-              onNavigate={handleNavigate}
-              onSelectSystem={handleLaunchSystemSandbox}
+            {/* 5. WATCH IT WORK: 5-STAGE PRODUCT JOURNEY SIMULATION */}
+            <WatchItWorkSection 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
 
-            <ForgeCommandCenter 
-              onNavigate={handleNavigate}
-              onLaunchSandbox={handleLaunchSystemSandbox}
-              onWatchDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
+            {/* 6. SPECIFIC BUSINESS USE CASES (7 CLICKABLE INDUSTRIES) */}
+            <IndustrySolutionsSection 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
 
-            {/* 12. Security & Human Governance */}
-            <SecuritySection />
+            {/* 7. HOW IT WORKS (5 SIMPLE STEPS TO LAUNCH IN 7 DAYS) */}
+            <HowItWorksFlowSection 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            />
 
-            {/* 13. Frequently Asked Questions */}
+            {/* 8. ROI / REVENUE SECTION: WHAT DOES ONE MISSED LEAD COST YOU? */}
+            <RoiRevenueCalculatorSection 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            />
+
+            {/* 9. TRUST, REAL CASE STUDIES & PRODUCTION ARCHITECTURE */}
+            <TrustAndProofSection 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            />
+
+            {/* 10. FREQUENTLY ASKED QUESTIONS */}
             <FaqSection onNavigate={handleNavigate} />
 
-            {/* 14. Secondary Toolkit Sandbox Banner (Demoted from primary B2B flow) */}
+            {/* 11. SECONDARY DEVELOPER TOOLKIT SANDBOX BANNER */}
             <section id="tools-forge" className="py-12 border-t border-slate-900 bg-[#060a14]">
               <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-4">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-400 text-xs font-mono font-bold tracking-wider uppercase">
@@ -383,8 +365,10 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
               </div>
             </section>
 
-            {/* 15. High-Impact Agency Final CTA */}
-            <FinalCtaSection onNavigate={handleNavigate} />
+            {/* 12. HIGH-CONVERTING FINAL CTA */}
+            <StrongCtaSection 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            />
           </>
         )}
 

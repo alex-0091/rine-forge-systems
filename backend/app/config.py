@@ -68,4 +68,11 @@ class Settings(BaseSettings):
     PORTFOLIO_PLOT_TWIST_URL: str = "https://plot-twist.demo.local"
     PORTFOLIO_BRIGHT_STAR_URL: str = "https://bs-grammar-school.demo.local"
 
+    # Meta WhatsApp Cloud API
+    META_VERIFY_TOKEN: str = "rine_forge_whatsapp_verify_token_2026"
+    META_ACCESS_TOKEN: Optional[str] = None
+    META_PHONE_NUMBER_ID: Optional[str] = None
+    META_WABA_ID: Optional[str] = None
+    META_API_VERSION: str = "v21.0"
+
 settings = Settings()

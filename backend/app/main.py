@@ -16,6 +16,7 @@ from backend.app.api.compliance import router as compliance_router
 from backend.app.api.kill_switch import router as kill_switch_router
 from backend.app.api.public import router as public_router
 from backend.app.api.receptionist import router as receptionist_router
+from backend.app.channels.whatsapp.router import router as whatsapp_router
 
 # Configure logging
 logging.basicConfig(
@@ -61,6 +62,7 @@ app.include_router(compliance_router)
 app.include_router(kill_switch_router)
 app.include_router(public_router)
 app.include_router(receptionist_router)
+app.include_router(whatsapp_router)
 
 @app.get("/api/health")
 async def health_check():

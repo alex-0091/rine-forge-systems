@@ -130,40 +130,37 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
           
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 text-xs font-mono font-bold tracking-wider uppercase shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-teal-400" />
-            <span>RINE FORGE</span>
+            <span>YOUR BUSINESS. RUNNING 24/7.</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.06] font-sans">
-            AI EMPLOYEES FOR <br />
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.05] font-sans">
+            Turn Your Website & WhatsApp <br className="hidden sm:inline" />
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-300 via-cyan-300 to-indigo-400">
-              YOUR BUSINESS.
+              Into a 24/7 AI Employee.
             </span>
           </h1>
 
-          <p className="text-xl sm:text-2xl text-slate-100 font-bold max-w-2xl mx-auto leading-relaxed">
-            Your repetitive work. Automated by AI.
+          <p className="text-lg sm:text-2xl text-slate-100 font-bold max-w-3xl mx-auto leading-relaxed">
+            AI employees that answer questions, qualify leads, book appointments, and follow up with your customers automatically.
           </p>
 
           <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed font-sans">
-            We build digital workers that answer customers, qualify leads, schedule appointments, update your CRM, and handle repetitive tasks — <strong className="text-white">automatically, 24/7.</strong>
+            Never miss another customer after hours. When a patient or client reaches out on WhatsApp or your website, Elena answers in under 5 seconds, confirms open calendar slots, and syncs directly to your CRM.
           </p>
 
           {/* Primary High-Converting CTAs */}
           <div className="flex flex-col items-center justify-center gap-3 pt-3">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto font-mono text-xs">
-              {/* Primary CTA: Visually Dominant with Tactile Response */}
+              {/* Primary CTA: Directly experience the product */}
               <ActionButton
                 variant="primary"
                 size="lg"
                 onClick={() => {
-                  if (onNavigate) onNavigate('audit');
-                  else {
-                    const el = document.getElementById('automation-calculator');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }
+                  const el = document.getElementById('live-receptionist-demo') || document.getElementById('try-ai');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
               >
-                GET YOUR FREE AI AUDIT
+                TRY THE LIVE AI EMPLOYEE
               </ActionButton>
 
               {/* Secondary CTA */}
@@ -172,30 +169,38 @@ export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSec
                 size="lg"
                 showIcon={false}
                 onClick={() => {
-                  const el = document.getElementById('v3-video-experience') || document.getElementById('watch-demos');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  else if (onNavigate) onNavigate('watch-demos');
+                  if (onNavigate) onNavigate('audit');
+                  else {
+                    const el = document.getElementById('automation-calculator');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }
                 }}
               >
-                WATCH HOW IT WORKS
+                GET YOUR AI EMPLOYEE
               </ActionButton>
             </div>
 
-            {/* Small text underneath primary CTA */}
+            {/* Micro reassurance underneath CTA */}
             <p className="text-xs font-mono text-teal-300/90 font-medium">
-              We'll find repetitive tasks your business could automate.
+              Free 15-minute automation audit • No obligation • Live interactive demo below
             </p>
           </div>
 
           <div className="text-[11px] text-slate-400 flex flex-wrap items-center justify-center gap-4 pt-1 font-mono">
             <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Zero disruption to daily ops
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> &lt; 5s Instant Replies
             </span>
             <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Live in 48 hours
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> WhatsApp + Website
             </span>
             <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> No long-term lock-in
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Direct Calendar Booking
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Fraction of Hiring Cost
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Zero Hallucination Guarantee
             </span>
           </div>
 
