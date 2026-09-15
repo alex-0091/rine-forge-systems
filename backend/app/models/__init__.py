@@ -11,6 +11,7 @@ from backend.app.models.receptionist import (
     ReceptionistAction,
     HumanHandoff
 )
+from backend.app.models import v5 as v5_models
 
 __all__ = [
     "Business",
@@ -39,5 +40,6 @@ __all__ = [
     "ReceptionistConversation",
     "ReceptionistMessage",
     "ReceptionistAction",
-    "HumanHandoff"
+    "HumanHandoff",
+    "v5_models"
 ]

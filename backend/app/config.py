@@ -9,6 +9,8 @@ class Settings(BaseSettings):
     DEBUG: bool = True
     PORT: int = 8000
     HOST: str = "0.0.0.0"
+    SECRET_KEY: str = "rine_forge_jwt_secret_key_prod_2026_change_in_production"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 # 24 hours
 
     # Database - in Vercel Serverless / Lambda use /tmp/ directory
     DATABASE_URL: str = (

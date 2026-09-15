@@ -17,6 +17,8 @@ from backend.app.api.kill_switch import router as kill_switch_router
 from backend.app.api.public import router as public_router
 from backend.app.api.receptionist import router as receptionist_router
 from backend.app.channels.whatsapp.router import router as whatsapp_router
+from backend.app.api.v1 import api_v1_router
+from backend.app.database_seed import seed_v5_database
 
 # Configure logging
 logging.basicConfig(
@@ -31,6 +33,7 @@ async def lifespan(app: FastAPI):
     try:
         await init_db()
         logger.info(f"Database initialized. Operating Mode: DRY_RUN={settings.DRY_RUN}, LLM_PROVIDER={settings.LLM_PROVIDER}")
+        await seed_v5_database()
     except Exception as e:
         logger.warning(f"Database initialization warning in serverless: {e}")
     yield
@@ -63,6 +66,7 @@ app.include_router(kill_switch_router)
 app.include_router(public_router)
 app.include_router(receptionist_router)
 app.include_router(whatsapp_router)
+app.include_router(api_v1_router)
 
 @app.get("/api/health")
 async def health_check():
