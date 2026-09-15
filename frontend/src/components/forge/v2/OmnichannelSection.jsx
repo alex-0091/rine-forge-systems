@@ -26,8 +26,8 @@ const CHANNELS = [
     color: 'emerald',
     badge: 'Official Meta Cloud API',
     highlight: '98% Open Rate • Voice Notes Supported',
-    customerSnippet: '“Hi, do you have any emergency dental slots open tomorrow morning?”',
-    aiSnippet: '“Hello! Yes, Dr. Evans has Operatory 2 available at 9:30 AM or 11:00 AM. Which time works best for you?”',
+    customerSnippet: '“Hi, I cracked a crown and I am in severe pain. Can anyone see me tomorrow morning?”',
+    aiSnippet: '“I’m so sorry to hear you’re in pain! We treat acute discomfort as an urgent priority. Dr. Evans has an emergency triage slot open at 9:30 AM or 11:00 AM tomorrow—which one can you make so we can relieve your discomfort?”',
     features: [
       'Official Meta WhatsApp Cloud API verified integration',
       'Text messages & audio voice notes processed automatically',
@@ -42,8 +42,8 @@ const CHANNELS = [
     color: 'teal',
     badge: 'Sub-second Interactive Widget',
     highlight: 'Zero Lead Leakage from Web Traffic',
-    customerSnippet: '“How much does laser teeth whitening cost and how long does it take?”',
-    aiSnippet: '“Our in-office laser teeth whitening is $350. The session takes approximately 60 minutes and brightens teeth up to 8 shades.”',
+    customerSnippet: '“How much does laser teeth whitening cost and what does it include?”',
+    aiSnippet: '“Our in-office laser whitening is $350 and brightens smiles up to 8 shades in 60 minutes, including custom enamel barrier desensitization. Are you preparing for a special event? Dr. Evans has Thursday at 11:30 AM or Friday at 2:00 PM open!”',
     features: [
       'Lightweight, responsive widget loading in < 120ms',
       'Converts passive site visitors into booked calendar slots',
@@ -58,8 +58,8 @@ const CHANNELS = [
     color: 'purple',
     badge: 'Direct Message Automation',
     highlight: 'Instant Story & Post Lead Conversion',
-    customerSnippet: '“Loved your latest case result! How do I get started with cosmetic consultation?”',
-    aiSnippet: '“Thank you! Our initial consultation is 30 minutes. Would you prefer a virtual call or visiting our Austin clinic?”',
+    customerSnippet: '“Loved your latest smile transformation! How do I get started with cosmetic consultation?”',
+    aiSnippet: '“Thank you! Our Smile Design Consultation is $150 and includes complete 3D scans and a digital aesthetic preview. Would you prefer this Thursday at 2:30 PM or Friday at 10:00 AM?”',
     features: [
       'Responds to Instagram DMs and Story mentions instantly',
       'Pre-qualifies interest before routing to staff',
@@ -74,8 +74,8 @@ const CHANNELS = [
     color: 'cyan',
     badge: 'AI Telephony & Call Screening',
     highlight: 'Zero Busy Signals • 24/7 Voice Intake',
-    customerSnippet: '[Caller dials clinic number at 8:15 PM]',
-    aiSnippet: '“Thank you for calling Rine Dental. I can help you schedule an appointment or answer questions about our treatments.”',
+    customerSnippet: '[Caller dials clinic after hours at 8:15 PM with acute toothache]',
+    aiSnippet: '“Thank you for calling Rine Dental. I understand you have acute discomfort—I have reserved a priority morning triage slot at 9:30 AM with Dr. Evans. Can I text this confirmation to your mobile number right now?”',
     features: [
       'Answers calls when all front-desk lines are engaged',
       'Transcribes caller inquiries and updates calendar',

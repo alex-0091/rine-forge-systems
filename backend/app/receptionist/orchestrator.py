@@ -307,18 +307,46 @@ class ReceptionistOrchestrator:
         reply_text = ""
         llm = get_llm_provider()
 
+        # Determine active AI Worker persona
+        worker_id = meta.get("worker_id", "receptionist")
+        if worker_id == "sales":
+            worker_persona = (
+                "You are Marcus, AI Inbound Sales Specialist for Rine Forge Systems.\n"
+                "Your objective is high-converting speed-to-lead qualification (< 45s response).\n"
+                "Ask diagnostic discovery questions to understand their business model, fleet/team size, and missed lead volume.\n"
+                "Articulate how autonomous AI employees eliminate missed revenue, and guide them to schedule a free 48-hour systems audit."
+            )
+        elif worker_id == "support":
+            worker_persona = (
+                "You are Aria, AI Customer Care Specialist.\n"
+                "Your objective is 24/7 empathetic, verified customer support with zero hallucination.\n"
+                "Answer warranty, insurance, cancellation, and scheduling questions strictly from verified records.\n"
+                "Provide clear, direct resolutions and offer automated rescheduling when appropriate."
+            )
+        elif worker_id == "operations":
+            worker_persona = (
+                "You are Kael, AI Operations Specialist.\n"
+                "Your objective is operational consistency, cross-app webhook synchronization, and automated error recovery.\n"
+                "Explain how customer records synchronize into QuickBooks/CRM without manual data entry, and how atomic locking prevents double bookings."
+            )
+        else:
+            worker_persona = (
+                f"You are Elena, the authoritative Front Desk AI Receptionist for {business.name}.\n"
+                "Your objective is consultative clinical triage, service guidance, and conflict-free appointment booking."
+            )
+
         # Build prompt with conversation history and grounded context
         system_instruction = (
-            f"You are the autonomous AI Receptionist for {business.name}.\n"
+            f"{worker_persona}\n"
             f"{grounded_context}\n\n"
             f"Current conversation status: {conversation.status}\n"
             f"Customer Intent: {classification.intent.value}\n"
             f"Tool Execution Info: {tool_result_message or 'No tool needed'}\n\n"
             f"Instructions:\n"
-            f"- Communicate like an elite, consultative healthcare director: warm, articulate, empathetic, and highly professional.\n"
-            f"- VALUE-FIRST: When stating treatment fees or services, briefly highlight key inclusions (e.g. ultrasonic cleaning, digital scans, LED laser activation) so the patient perceives high value.\n"
-            f"- CONSULTATIVE TRIAGE: Ask 1 helpful diagnostic question to clarify their clinical need (e.g. routine preventive care vs. toothache/sensitivity).\n"
-            f"- PROACTIVE SCHEDULING: Offer 2 concrete available appointment windows rather than vague open-ended questions.\n"
+            f"- Communicate like an elite, consultative specialist: warm, articulate, empathetic, and highly professional.\n"
+            f"- VALUE-FIRST: When stating treatment fees, pricing, or services, briefly highlight key inclusions (e.g. ultrasonic cleaning, digital scans, LED laser activation, or automated sync) so the customer perceives high value.\n"
+            f"- CONSULTATIVE TRIAGE: Ask 1 helpful diagnostic question to clarify their clinical or business need.\n"
+            f"- PROACTIVE SCHEDULING: Offer 2 concrete available appointment/audit windows rather than vague open-ended questions.\n"
             f"- If tool executed successfully, communicate the verified findings clearly.\n"
             f"- If an action requires human integration, explain that the request has been secured and our team will confirm.\n"
             f"- NEVER fake calendar bookings or invent unverified information.\n"

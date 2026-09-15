@@ -10,21 +10,95 @@ import { ActionButton } from '../v4/ActionButton';
 import { AiStatusBadge } from '../v4/AiStatusBadge';
 import { ForgeCharacterAvatar } from '../v4/ForgeCharacterAvatar';
 
-const QUICK_TEST_PROMPTS = [
-  'How much does laser teeth whitening cost?',
-  'I have severe tooth pain, can I come in today?',
-  'Do you have appointments available this Friday?',
-  'Do you accept Delta Dental insurance or CareCredit?'
+const WORKERS = [
+  {
+    id: 'receptionist',
+    name: 'Elena',
+    role: 'AI RECEPTIONIST',
+    specialty: 'Clinical Triage & Appointments',
+    avatarKey: 'receptionist',
+    businessContext: 'Rine Dental & Facial Aesthetics • Austin, TX',
+    badge: '24/7 CLINICAL TRIAGE',
+    activeTabClass: 'bg-teal-500/20 text-teal-300 border-teal-400 shadow-teal-500/10',
+    avatarInitialBg: 'bg-teal-900/60 border-teal-500/40 text-teal-300',
+    initial: 'E',
+    starterPrompts: [
+      'How much does laser teeth whitening cost?',
+      'I have severe tooth pain, can I come in today?',
+      'Do you have appointments available this Friday?',
+      'Do you accept Delta Dental insurance or CareCredit?'
+    ],
+    greeting: "Hello! I am Elena, 24/7 Front Desk AI Receptionist for Rine Dental & Facial Aesthetics. I can provide treatment details, verify doctor availability, explain insurance, and lock in appointments. How may I assist you today?"
+  },
+  {
+    id: 'sales',
+    name: 'Marcus',
+    role: 'AI SALES AGENT',
+    specialty: 'Speed-to-Lead & Pipeline Qualification',
+    avatarKey: 'sales',
+    businessContext: 'Rine Forge Systems • B2B Inbound Speed',
+    badge: '< 45s INBOUND SPEED',
+    activeTabClass: 'bg-violet-500/20 text-violet-300 border-violet-400 shadow-violet-500/10',
+    avatarInitialBg: 'bg-violet-900/60 border-violet-500/40 text-violet-300',
+    initial: 'M',
+    starterPrompts: [
+      'I run a commercial plumbing firm with 12 vans and we miss 30 calls a week.',
+      'How much does your speed-to-lead automation system cost?',
+      'Can Marcus sync qualified leads directly into HubSpot and Google Calendar?',
+      'What is your average conversion rate increase for local service businesses?'
+    ],
+    greeting: "Hi! I'm Marcus, AI Inbound Sales Specialist at Rine Forge Systems. I help companies eliminate missed leads, qualify high-value buyers in under 45 seconds, and automate discovery scheduling. What kind of business do you run?"
+  },
+  {
+    id: 'support',
+    name: 'Aria',
+    role: 'AI CUSTOMER CARE',
+    specialty: '24/7 Verified Policies & Care',
+    avatarKey: 'support',
+    businessContext: '24/7 Grounded Support Core • Verified Knowledge',
+    badge: 'ZERO HALLUCINATION',
+    activeTabClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-400 shadow-emerald-500/10',
+    avatarInitialBg: 'bg-emerald-900/60 border-emerald-500/40 text-emerald-300',
+    initial: 'A',
+    starterPrompts: [
+      'What is your cancellation policy if an emergency comes up?',
+      'Do you accept out-of-network PPO insurance plans?',
+      'Is free parking and wheelchair access available at the clinic?',
+      'Can you reschedule my cleaning appointment from Wednesday to Friday?'
+    ],
+    greeting: "Hello, I'm Aria from Customer Care. I provide verified answers to service policies, insurance coverage, billing, and scheduling with zero hallucination. What question can I resolve for you?"
+  },
+  {
+    id: 'operations',
+    name: 'Kael',
+    role: 'AI OPERATIONS AGENT',
+    specialty: 'Workflow & Doc Sync',
+    avatarKey: 'operations',
+    businessContext: 'Atomic Database Sync & API Dispatch',
+    badge: 'ATOMIC CONSISTENCY',
+    activeTabClass: 'bg-amber-500/20 text-amber-300 border-amber-400 shadow-amber-500/10',
+    avatarInitialBg: 'bg-amber-900/60 border-amber-500/40 text-amber-300',
+    initial: 'K',
+    starterPrompts: [
+      'Can you automatically sync new customer intake data into QuickBooks?',
+      'How does your atomic double-booking prevention work?',
+      'Show me an audit log of today\'s background sync events.',
+      'What happens when an external API token expires or fails?'
+    ],
+    greeting: "Kael here, AI Operations Specialist. I monitor cross-app webhooks, synchronize invoices into QuickBooks, update CRM deal stages, and dispatch emergency alerts to staff with atomic consistency. What operational workflow would you like to inspect?"
+  }
 ];
 
 export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
+  const [selectedWorkerId, setSelectedWorkerId] = useState('receptionist');
+  const currentWorker = WORKERS.find(w => w.id === selectedWorkerId) || WORKERS[0];
   const [channelMode, setChannelMode] = useState('whatsapp'); // 'whatsapp' | 'web'
   const [messages, setMessages] = useState([
     {
       id: 'welcome',
       role: 'assistant',
       sender_type: 'AI_RECEPTIONIST',
-      content: "Hello! I am Elena, 24/7 Front Desk AI Receptionist for Rine Dental & Facial Aesthetics. I can provide treatment details, verify doctor availability, explain insurance, and lock in appointments. How may I assist you today?",
+      content: currentWorker.greeting,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       intent: 'GREETING',
       latencyMs: 140
@@ -35,7 +109,7 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
   const [telemetry, setTelemetry] = useState({
     intent: 'GREETING',
     confidence: 0.99,
-    action: 'None (Grounded Greeting)',
+    action: `${currentWorker.name} Online & Ready`,
     latencyMs: 140,
     status: 'ONLINE'
   });
@@ -49,6 +123,30 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
+
+  const handleSwitchWorker = (workerId) => {
+    forgeAudioSynth.playClick();
+    setSelectedWorkerId(workerId);
+    const worker = WORKERS.find(w => w.id === workerId) || WORKERS[0];
+    setMessages([
+      {
+        id: 'welcome_' + Date.now(),
+        role: 'assistant',
+        sender_type: 'AI_RECEPTIONIST',
+        content: worker.greeting,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        intent: 'GREETING',
+        latencyMs: 120
+      }
+    ]);
+    setTelemetry({
+      intent: 'GREETING',
+      confidence: 0.99,
+      action: `${worker.name} Online & Ready`,
+      latencyMs: 120,
+      status: 'ONLINE'
+    });
+  };
 
   const handleSendMessage = async (textToSend) => {
     const text = (textToSend || inputValue).trim();
@@ -82,7 +180,8 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
         body: JSON.stringify({
           business_id: '00000000-0000-0000-0000-000000000001',
           message: text,
-          channel: channelMode === 'whatsapp' ? 'whatsapp' : 'web_chat'
+          channel: channelMode === 'whatsapp' ? 'whatsapp' : 'web_chat',
+          metadata: { worker_id: selectedWorkerId }
         }),
         signal: controller.signal
       });
@@ -118,7 +217,7 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
       }
     } catch (err) {
       // Zero-failure client-side grounding fallback
-      const fallbackResult = processClientReceptionistMessage(text);
+      const fallbackResult = processClientReceptionistMessage(text, selectedWorkerId);
       const latency = Date.now() - startTime;
 
       setTelemetry({
@@ -154,7 +253,7 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
         id: 'welcome',
         role: 'assistant',
         sender_type: 'AI_RECEPTIONIST',
-        content: "Hello! I am Elena, 24/7 Front Desk AI Receptionist for Rine Dental & Facial Aesthetics. I can provide treatment details, verify doctor availability, explain insurance, and lock in appointments. How may I assist you today?",
+        content: currentWorker.greeting,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         intent: 'GREETING',
         latencyMs: 120
@@ -163,7 +262,7 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
     setTelemetry({
       intent: 'GREETING',
       confidence: 0.99,
-      action: 'None (Grounded Greeting)',
+      action: `${currentWorker.name} Online & Ready`,
       latencyMs: 120,
       status: 'ONLINE'
     });
@@ -184,12 +283,34 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
           </div>
 
           <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-            Talk to Your AI Receptionist.
+            Talk to Your AI Receptionist & Team.
           </h2>
 
           <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-            Don't take our word for it. Actually talk to Elena right now. Ask about Friday appointments, whitening pricing, or clinic hours. Experience the sub-second speed your customers will feel.
+            Select any AI employee below to test them live right now. Ask Elena about clinical appointments, ask Marcus about sales speed-to-lead, Aria about policies, or Kael about system integrations.
           </p>
+        </div>
+
+        {/* 4 Specialized AI Worker Selection Bar */}
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 max-w-4xl mx-auto">
+          {WORKERS.map((worker) => {
+            const isSelected = worker.id === selectedWorkerId;
+            return (
+              <button
+                key={worker.id}
+                onClick={() => handleSwitchWorker(worker.id)}
+                className={`flex items-center gap-2.5 px-4 sm:px-5 py-2.5 rounded-2xl text-xs font-mono font-bold transition-all border ${
+                  isSelected
+                    ? worker.activeTabClass
+                    : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:text-slate-200 hover:border-slate-700'
+                }`}
+              >
+                <span className={`w-2 h-2 rounded-full ${isSelected ? 'animate-pulse bg-emerald-400' : 'bg-slate-600'}`} />
+                <span className="font-sans font-bold text-white text-sm">{worker.name}</span>
+                <span className="text-[10px] uppercase tracking-wider text-slate-400 font-mono">({worker.role.replace('AI ', '')})</span>
+              </button>
+            );
+          })}
         </div>
 
         {/* The Live Interactive Console */}
@@ -202,18 +323,18 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
             <div className="p-4 sm:px-6 border-b border-slate-800 bg-[#0d1527] flex items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <ForgeCharacterAvatar characterId="elena" size="sm" />
+                  <ForgeCharacterAvatar characterKey={currentWorker.avatarKey} size="sm" />
                   <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#0d1527]" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-white font-sans">Elena</span>
+                    <span className="text-sm font-bold text-white font-sans">{currentWorker.name}</span>
                     <span className="text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30">
-                      AI RECEPTIONIST
+                      {currentWorker.role}
                     </span>
                   </div>
                   <div className="text-[11px] text-slate-400 font-mono">
-                    Rine Dental & Facial Aesthetics • Austin, TX
+                    {currentWorker.businessContext}
                   </div>
                 </div>
               </div>
@@ -275,8 +396,8 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
                     className={`flex items-end gap-2.5 ${isAI ? 'justify-start' : 'justify-end'}`}
                   >
                     {isAI && (
-                      <div className="w-7 h-7 rounded-full bg-teal-900/60 border border-teal-500/40 flex items-center justify-center text-teal-300 shrink-0 text-xs font-bold">
-                        E
+                      <div className={`w-7 h-7 rounded-full ${currentWorker.avatarInitialBg} flex items-center justify-center shrink-0 text-xs font-bold`}>
+                        {currentWorker.initial}
                       </div>
                     )}
                     <div className={`max-w-[85%] sm:max-w-[75%] rounded-2xl p-3.5 shadow-md ${
@@ -309,7 +430,7 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
                     <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-bounce" style={{ animationDelay: '0ms' }} />
                     <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-bounce" style={{ animationDelay: '150ms' }} />
                     <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-bounce" style={{ animationDelay: '300ms' }} />
-                    <span className="ml-2 text-[11px] text-teal-300/80">Checking clinic facts & availability...</span>
+                    <span className="ml-2 text-[11px] text-teal-300/80">Checking verified knowledge & availability...</span>
                   </div>
                 </div>
               )}
@@ -321,9 +442,9 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
             <div className="p-3 bg-[#0d1527] border-t border-slate-800/80 overflow-x-auto">
               <div className="flex items-center gap-2 min-w-max">
                 <span className="text-[10px] font-mono uppercase text-slate-400 font-bold mr-1">
-                  Try asking:
+                  Try asking {currentWorker.name}:
                 </span>
-                {QUICK_TEST_PROMPTS.map((prompt, idx) => (
+                {currentWorker.starterPrompts.map((prompt, idx) => (
                   <button
                     key={idx}
                     disabled={isTyping}
@@ -348,7 +469,7 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder={channelMode === 'whatsapp' ? "Type a WhatsApp message to Elena..." : "Ask a question or request a booking slot..."}
+                placeholder={channelMode === 'whatsapp' ? `Type a WhatsApp message to ${currentWorker.name}...` : `Ask ${currentWorker.name} a question or request availability...`}
                 disabled={isTyping}
                 className="flex-1 bg-slate-900/90 border border-slate-700/80 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-teal-500 font-sans"
               />
@@ -417,10 +538,10 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
             {/* Direct CTA Box */}
             <div className="p-6 rounded-3xl bg-gradient-to-b from-teal-950/40 via-slate-900/80 to-[#0c1322] border-2 border-teal-500/30 text-center space-y-4">
               <h4 className="text-base font-bold text-white">
-                Want this exact AI employee for your business?
+                Want {currentWorker.name} for your business?
               </h4>
               <p className="text-xs text-slate-300 leading-relaxed">
-                We train Elena on your service menu, pricing, and operating schedule. Live on your WhatsApp and website in under 7 days.
+                We train {currentWorker.name} on your exact business documents, pricing, and workflows. Live on your WhatsApp and website in under 7 days.
               </p>
               <ActionButton
                 variant="primary"
@@ -428,13 +549,13 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
                 onClick={() => {
                   if (onOpenAuditModal) {
                     onOpenAuditModal({
-                      businessType: 'Dental & Healthcare Clinic',
-                      whatToAutomate: '24/7 AI Receptionist for WhatsApp and Website'
+                      businessType: 'Custom Business Setup',
+                      whatToAutomate: `${currentWorker.name} (${currentWorker.role}) for WhatsApp and Website`
                     });
                   }
                 }}
               >
-                BUILD MY AI RECEPTIONIST
+                DEPLOY YOUR AI {currentWorker.name.toUpperCase()}
               </ActionButton>
             </div>
 

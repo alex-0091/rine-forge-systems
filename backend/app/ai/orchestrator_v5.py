@@ -87,21 +87,41 @@ class V5Orchestrator:
         # ----------------------------------------------------
         # 3. AI Employee Persona Retrieval
         # ----------------------------------------------------
+        target_worker = (metadata or {}).get("worker_id") or "receptionist"
+        target_name_map = {
+            "receptionist": "Elena",
+            "sales": "Marcus",
+            "support": "Aria",
+            "operations": "Kael"
+        }
+        requested_name = target_name_map.get(target_worker, "Elena")
+
         stmt = select(AIEmployee).where(
             AIEmployee.business_id == business_id,
-            AIEmployee.status == "ACTIVE"
+            AIEmployee.status == "ACTIVE",
+            AIEmployee.name == requested_name
         )
         res = await session.execute(stmt)
         employee = res.scalar_one_or_none()
+
+        if not employee:
+            # Fallback to any active employee
+            stmt_any = select(AIEmployee).where(
+                AIEmployee.business_id == business_id,
+                AIEmployee.status == "ACTIVE"
+            )
+            res_any = await session.execute(stmt_any)
+            employee = res_any.scalar_one_or_none()
+
         if not employee:
             # Create default employee if none exists
             employee = AIEmployee(
                 business_id=business_id,
-                name="Elena",
-                role="Front Desk AI Receptionist",
+                name=requested_name,
+                role="Front Desk AI Receptionist" if requested_name == "Elena" else f"AI {target_worker.capitalize()} Specialist",
                 model="gpt-4o-mini",
                 provider="openai",
-                system_instructions="You are Elena, front desk AI receptionist for Rine Dental & Facial Aesthetics. Be welcoming, efficient, accurate, and concise.",
+                system_instructions=f"You are {requested_name}, representing {business.name}. Be consultative, accurate, and high-converting.",
                 status="ACTIVE"
             )
             session.add(employee)
