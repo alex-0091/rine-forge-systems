@@ -262,28 +262,40 @@ class V5Message(Base, TimestampMixin):
     conversation: Mapped["V5Conversation"] = relationship("V5Conversation", back_populates="messages")
 
 # ============================================================
-# 12. LEAD (Lead Qualification & Scoring)
+# 12. LEAD (Lead Qualification, Scoring & Discovery Pipeline)
 # ============================================================
 class V5Lead(Base, TimestampMixin):
     """
-    Authoritative lead detected from customer intent with AI scoring.
+    Authoritative lead detected from customer intent with AI scoring and sourcing transparency.
     """
     __tablename__ = "v5_leads"
 
     business_id: Mapped[str] = mapped_column(String(36), ForeignKey("v5_businesses.id", ondelete="CASCADE"), index=True, nullable=False)
     customer_id: Mapped[str] = mapped_column(String(36), ForeignKey("v5_customers.id", ondelete="CASCADE"), index=True, nullable=False)
-    source: Mapped[str] = mapped_column(String(100), default="website_chat")
+    source: Mapped[str] = mapped_column(String(100), default="website_chat") # WEBSITE_FORMS, INBOUND_CHAT, CRM, EMAIL, REFERRALS, PUBLIC_BUSINESS_DATA, AUTHORIZED_LEAD_APIS, etc.
+    source_url: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+    why_it_matched: Mapped[Optional[str]] = mapped_column(Text, nullable=True) # Full AI transparency explaining matching signals
     status: Mapped[str] = mapped_column(String(50), default="NEW", index=True) # NEW, QUALIFIED, CONTACTED, BOOKED, LOST
+    pipeline_stage: Mapped[str] = mapped_column(String(50), default="DISCOVERED", index=True) # DISCOVERED, QUALIFIED, REVIEW, CONTACTED, RESPONDED, INTERESTED, APPOINTMENT, CONVERTED, DISQUALIFIED, NO_RESPONSE, OPTED_OUT
+    review_mode: Mapped[str] = mapped_column(String(20), default="REVIEW") # AUTO, REVIEW, MANUAL
     score: Mapped[int] = mapped_column(Integer, default=50) # 0–30 cold, 31–60 warm, 61–80 hot, 81–100 very hot
+    score_breakdown: Mapped[Dict[str, Any]] = mapped_column(JSON, default=dict) # { intent, relevance, recency, geographicFit, engagement, consentStatus, overallScore }
     urgency: Mapped[str] = mapped_column(String(50), default="MEDIUM", index=True) # LOW, MEDIUM, HIGH
-    intent: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    intent: Mapped[Optional[str]] = mapped_column(String(100), nullable=True) # SERVICE_SEARCH, APPOINTMENT_INTENT, RECOMMENDATION_REQUEST, etc.
+    consent_status: Mapped[str] = mapped_column(String(50), default="UNKNOWN") # CONSENTED, OPTED_IN, PUBLIC_COMMERCIAL, UNKNOWN
+    contactability: Mapped[str] = mapped_column(String(50), default="REVIEW_REQUIRED") # CONTACTABLE, REVIEW_REQUIRED, SUPPRESSED, UNREACHABLE
+    geo_data: Mapped[Dict[str, Any]] = mapped_column(JSON, default=dict) # { city, region, distance_miles, within_service_area }
     value: Mapped[float] = mapped_column(Float, default=0.0) # Estimated customer deal value
     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    next_action: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     assigned_to: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("v5_staff.id", ondelete="SET NULL"), nullable=True)
+    last_contacted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    converted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
     # Relationships
     business: Mapped["V5Business"] = relationship("V5Business", back_populates="leads")
     customer: Mapped["V5Customer"] = relationship("V5Customer", back_populates="leads")
+    outreach_messages: Mapped[List["V5OutreachMessage"]] = relationship("V5OutreachMessage", back_populates="lead", cascade="all, delete-orphan")
 
 # ============================================================
 # 13. APPOINTMENT (Authoritative Booking Engine)
@@ -443,6 +455,75 @@ class V5Usage(Base, TimestampMixin):
 
 
 # ============================================================
+# 21. GEO TARGETING CONFIG (Client Business Geo Parameters)
+# ============================================================
+class V5GeoTargetingConfig(Base, TimestampMixin):
+    """
+    Client-configured geographical targeting parameters for local business discovery.
+    """
+    __tablename__ = "v5_geo_targeting_configs"
+
+    business_id: Mapped[str] = mapped_column(String(36), ForeignKey("v5_businesses.id", ondelete="CASCADE"), unique=True, nullable=False, index=True)
+    service_area: Mapped[str] = mapped_column(String(255), default="Austin Metro Area")
+    cities: Mapped[List[str]] = mapped_column(JSON, default=list) # e.g. ["Austin", "Round Rock", "Cedar Park"]
+    neighborhoods: Mapped[List[str]] = mapped_column(JSON, default=list) # e.g. ["Downtown", "South Congress", "The Domain"]
+    radius_miles: Mapped[float] = mapped_column(Float, default=20.0)
+    services: Mapped[List[str]] = mapped_column(JSON, default=list) # Target services: ["cleaning", "whitening", "veneers"]
+    languages: Mapped[List[str]] = mapped_column(JSON, default=lambda: ["en"])
+    business_hours: Mapped[Dict[str, Any]] = mapped_column(JSON, default=dict)
+
+    # Relationships
+    business: Mapped["V5Business"] = relationship("V5Business")
+
+
+# ============================================================
+# 22. OUTREACH MESSAGE (Compliant Multi-Channel Communications)
+# ============================================================
+class V5OutreachMessage(Base, TimestampMixin):
+    """
+    Audited outbound outreach records across compliant channels.
+    """
+    __tablename__ = "v5_outreach_messages"
+
+    business_id: Mapped[str] = mapped_column(String(36), ForeignKey("v5_businesses.id", ondelete="CASCADE"), index=True, nullable=False)
+    lead_id: Mapped[str] = mapped_column(String(36), ForeignKey("v5_leads.id", ondelete="CASCADE"), index=True, nullable=False)
+    customer_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("v5_customers.id", ondelete="SET NULL"), nullable=True, index=True)
+    channel: Mapped[str] = mapped_column(String(50), nullable=False) # email, permitted_social, website_chat, whatsapp, sms
+    message: Mapped[str] = mapped_column(Text, nullable=False)
+    purpose: Mapped[str] = mapped_column(String(100), default="OPPORTUNITY_ENGAGEMENT")
+    consent_status: Mapped[str] = mapped_column(String(50), default="UNKNOWN")
+    source: Mapped[str] = mapped_column(String(100), default="LeadDiscoveryEngine")
+    status: Mapped[str] = mapped_column(String(50), default="DRAFT", index=True) # DRAFT, PENDING_REVIEW, APPROVED, SENT, DELIVERED, RESPONDED, BOUNCED, OPTED_OUT, BLOCKED
+    approved_by: Mapped[Optional[str]] = mapped_column(String(36), nullable=True) # User ID who approved in REVIEW mode
+    sent_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    delivered_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    responded_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    meta_json: Mapped[Dict[str, Any]] = mapped_column(JSON, default=dict)
+
+    # Relationships
+    business: Mapped["V5Business"] = relationship("V5Business")
+    lead: Mapped["V5Lead"] = relationship("V5Lead", back_populates="outreach_messages")
+
+
+# ============================================================
+# 23. SUPPRESSION ENTRY (Do-Not-Contact List)
+# ============================================================
+class V5SuppressionEntry(Base, TimestampMixin):
+    """
+    Multi-tenant suppression list ensuring no messages are sent to opted-out or blocked entities.
+    """
+    __tablename__ = "v5_suppression_entries"
+
+    business_id: Mapped[str] = mapped_column(String(36), ForeignKey("v5_businesses.id", ondelete="CASCADE"), index=True, nullable=False)
+    entry_type: Mapped[str] = mapped_column(String(50), nullable=False, index=True) # EMAIL, PHONE, SOCIAL_ID, DOMAIN
+    value: Mapped[str] = mapped_column(String(255), nullable=False, index=True) # Normalized value (lowercased)
+    reason: Mapped[str] = mapped_column(String(100), default="USER_OPTOUT") # USER_OPTOUT, PLATFORM_BLOCK, INTERNAL_BLACKLIST, HARD_BOUNCE
+
+    # Relationships
+    business: Mapped["V5Business"] = relationship("V5Business")
+
+
+# ============================================================
 # EXPORTED ALIASES (Backward-Compatibility for V5 Subsystems)
 # ============================================================
 User = V5User
@@ -465,3 +546,25 @@ Notification = V5Notification
 AIEvent = V5AIEvent
 AuditLog = V5AuditLog
 Usage = V5Usage
+GeoTargetingConfig = V5GeoTargetingConfig
+OutreachMessage = V5OutreachMessage
+SuppressionEntry = V5SuppressionEntry
+
+# Import & Re-export V5 Lead Engine Models (Modules 41-56)
+from backend.app.models.lead_engine import (
+    V5Prospect,
+    V5ProspectObservation,
+    V5ProspectOpportunity,
+    V5ProspectOutreach,
+    V5OutreachEvent,
+    V5LeadSearch,
+    V5LeadSearchResult,
+    Prospect,
+    ProspectObservation,
+    ProspectOpportunity,
+    ProspectOutreach,
+    OutreachEvent,
+    LeadSearch,
+    LeadSearchResult,
+)
+

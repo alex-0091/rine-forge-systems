@@ -19,6 +19,7 @@ from .integrations import router as integrations_router
 from .analytics import router as analytics_router
 from .admin import router as admin_router
 from .health import router as health_router
+from .lead_engine import router as lead_engine_router
 
 api_v1_router = APIRouter(prefix="/api/v1")
 
@@ -37,5 +38,7 @@ api_v1_router.include_router(integrations_router)
 api_v1_router.include_router(analytics_router)
 api_v1_router.include_router(admin_router)
 api_v1_router.include_router(health_router)
+api_v1_router.include_router(lead_engine_router)
 
 __all__ = ["api_v1_router"]
+

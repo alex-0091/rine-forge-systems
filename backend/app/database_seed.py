@@ -11,7 +11,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from backend.app.database import AsyncSessionLocal
 from backend.app.models.v5 import (
     User, Business, BusinessUser, AIEmployee, Service, Staff,
-    KnowledgeDocument, KnowledgeChunk, Automation, Customer, Lead
+    KnowledgeDocument, KnowledgeChunk, Automation, Customer, Lead,
+    V5Prospect, V5ProspectObservation, V5ProspectOpportunity,
+    V5ProspectOutreach, V5OutreachEvent, V5LeadSearch, V5LeadSearchResult
 )
 from backend.app.auth.security import hash_password
 from backend.app.ai.provider_abstraction import ai_provider
@@ -19,11 +21,12 @@ from backend.app.ai.provider_abstraction import ai_provider
 logger = logging.getLogger("rine_forge_systems.seed")
 
 DEMO_BUSINESS_ID = "00000000-0000-0000-0000-000000000001"
+INTERNAL_SALES_ID = "00000000-0000-0000-0000-000000000002"
 
 async def seed_v5_database():
     """
     Idempotent database seeder for V5.
-    Creates demo clinic tenant if not present.
+    Creates demo clinic tenant and internal sales tenant if not present.
     """
     logger.info("Checking V5 database seeding status...")
     async with AsyncSessionLocal() as session:
@@ -32,11 +35,9 @@ async def seed_v5_database():
             res = await session.execute(stmt)
             existing_biz = res.scalar_one_or_none()
 
-            if existing_biz:
-                logger.info("Demo tenant Rine Dental & Facial Aesthetics already exists.")
-                return
+            if not existing_biz:
+                logger.info("Seeding V5 Demo Tenant: Rine Dental & Facial Aesthetics...")
 
-            logger.info("Seeding V5 Demo Tenant: Rine Dental & Facial Aesthetics...")
 
             # 1. Admin / Owner User
             pw_hash = hash_password("Forge2026!Admin")
@@ -276,11 +277,307 @@ async def seed_v5_database():
                 urgency="HIGH",
                 notes="Inquired about teeth whitening for upcoming wedding."
             )
-            session.add(demo_lead)
-
             await session.commit()
             logger.info("✅ V5 Demo Tenant seeded successfully with services, staff, RAG chunks, and Elena AI Receptionist!")
+
+            # --------------------------------------------------------
+            # 10. Rine Forge Internal Sales Engine Tenant (Meta-Dogfooding)
+            # --------------------------------------------------------
+            stmt_sales = select(Business).where(Business.id == INTERNAL_SALES_ID)
+            res_sales = await session.execute(stmt_sales)
+            existing_sales = res_sales.scalar_one_or_none()
+
+            if not existing_sales:
+                logger.info("Seeding V5 Internal Sales Tenant: Rine Forge Systems...")
+                
+                # Check if founder user exists
+                stmt_u = select(User).where(User.email == "founder@rineforge.com")
+                res_u = await session.execute(stmt_u)
+                founder_user = res_u.scalar_one_or_none()
+                if not founder_user:
+                    founder_user = User(
+                        email="founder@rineforge.com",
+                        name="Rine Forge Founder",
+                        password_hash=hash_password("Forge2026!Sales"),
+                        role="SUPER_ADMIN",
+                        status="ACTIVE"
+                    )
+                    session.add(founder_user)
+                    await session.flush()
+
+                sales_biz = Business(
+                    id=INTERNAL_SALES_ID,
+                    owner_id=founder_user.id,
+                    name="Rine Forge Systems (Sales Engine)",
+                    industry="AI & Software Automation",
+                    description="Autonomous Lead Discovery, website inspection, and high-conversion client acquisition engine for Rine Forge Systems.",
+                    phone="+1 (512) 555-0100",
+                    email="sales@rineforge.com",
+                    address="100 Congress Ave, Suite 2000, Austin, TX 78701",
+                    timezone="America/Chicago",
+                    status="ACTIVE",
+                    settings_json={
+                        "default_review_mode": "REVIEW",
+                        "target_metro": "Austin, TX",
+                        "target_industry": "Dental"
+                    }
+                )
+                session.add(sales_biz)
+                await session.flush()
+
+                session.add(BusinessUser(
+                    business_id=sales_biz.id,
+                    user_id=founder_user.id,
+                    role="OWNER"
+                ))
+
+                # Lead Search Audit Record
+                search_run = V5LeadSearch(
+                    business_id=sales_biz.id,
+                    query="Dental in Austin, TX",
+                    industry="Dental",
+                    location="Austin, TX",
+                    services=["Cleaning", "Whitening", "Cosmetic Dentistry", "Invisalign"],
+                    results_count=3,
+                    status="COMPLETED"
+                )
+                session.add(search_run)
+                await session.flush()
+
+                # Prospect 1: Austin Premier Dental Care (REVIEW mode, pending draft)
+                p1 = V5Prospect(
+                    business_id=sales_biz.id,
+                    prospect_type="B2B_BUSINESS",
+                    company_name="Austin Premier Dental Care",
+                    website="https://austinpremierdental.com",
+                    industry="Dental",
+                    location="Austin, TX",
+                    city="Austin",
+                    state="TX",
+                    country="USA",
+                    email="contact@austinpremierdental.com",
+                    phone="+1 (512) 555-0199",
+                    source="PUBLIC_BUSINESS_DATA",
+                    source_url="https://austinpremierdental.com",
+                    score=88,
+                    score_breakdown={"intent": 90, "relevance": 95, "recency": 85, "geo_fit": 100, "engagement": 80, "consent": 100},
+                    outreach_status="PENDING_REVIEW",
+                    contact_status="UNCONTACTED",
+                    consent_status="PUBLIC_COMMERCIAL",
+                    pipeline_stage="REVIEW",
+                    review_mode="REVIEW",
+                    next_action="AWAITING_HUMAN_APPROVAL",
+                    meta_json={"sources": ["PUBLIC_BUSINESS_DATA"], "why_it_matched": "Dental practice in Austin with high patient inquiry traffic and 24-48h form delay"}
+                )
+                session.add(p1)
+                await session.flush()
+
+                session.add(V5LeadSearchResult(search_id=search_run.id, prospect_id=p1.id))
+
+                session.add_all([
+                    V5ProspectObservation(
+                        prospect_id=p1.id,
+                        observation="Contact form explicitly states: 'Please allow 24-48 hours for inquiry response.'",
+                        source="https://austinpremierdental.com/contact",
+                        confidence=0.96,
+                        category="SPEED_TO_LEAD"
+                    ),
+                    V5ProspectObservation(
+                        prospect_id=p1.id,
+                        observation="No automated calendar booking widget (Calendly, Acuity, NexHealth) detected on website.",
+                        source="https://austinpremierdental.com",
+                        confidence=0.92,
+                        category="BOOKING_FLOW"
+                    )
+                ])
+
+                session.add_all([
+                    V5ProspectOpportunity(
+                        prospect_id=p1.id,
+                        type="SPEED_TO_LEAD",
+                        reason="Contact channels promise delayed turnaround ('24-48 hours'). High-intent patients consult competitors who respond within minutes.",
+                        evidence="Contact form states: 'Please allow 24-48 hours for inquiry response.'",
+                        confidence=0.95
+                    ),
+                    V5ProspectOpportunity(
+                        prospect_id=p1.id,
+                        type="AI_RECEPTIONIST",
+                        reason="Website has no conversational assistant to qualify patients, answer common pricing/insurance questions, or resolve inquiries in real-time.",
+                        evidence="No live chat widget, interactive assistant, or 24/7 inquiry agent found on landing page.",
+                        confidence=0.92
+                    )
+                ])
+
+                p1_outreach = V5ProspectOutreach(
+                    business_id=sales_biz.id,
+                    prospect_id=p1.id,
+                    channel="EMAIL",
+                    subject="Quick note regarding Austin Premier Dental Care's website booking",
+                    message=(
+                        "Hi team at Austin Premier Dental Care,\n\n"
+                        "I was reviewing your website and noticed your contact form mentions a 24-48 hour response time. "
+                        "For patients looking for same-day appointments or cleanings, that delay often means they call the next clinic on Google.\n\n"
+                        "Rine Forge deploys an AI receptionist (Elena) that engages website and WhatsApp visitors in under 30 seconds, "
+                        "answers specific service questions, and schedules directly into your calendar.\n\n"
+                        "Would you be open to a 2-minute preview showing how Elena handles after-hours patient inquiries for Austin Premier Dental Care?\n\n"
+                        "Best regards,\nElena at Rine Forge Systems\n\n---\nReply STOP to opt out."
+                    ),
+                    reason="Initial evidence-grounded outreach draft",
+                    status="PENDING_REVIEW",
+                    step_number=0,
+                    meta_json={"body_html": "<p>Hi team at Austin Premier Dental Care...</p>"}
+                )
+                session.add(p1_outreach)
+                await session.flush()
+
+                session.add(V5OutreachEvent(
+                    outreach_id=p1_outreach.id,
+                    event_type="DRAFTED",
+                    payload={"step": 0, "status": "PENDING_REVIEW"}
+                ))
+
+                # Prospect 2: South Congress Cosmetic Dentistry (REVIEW mode)
+                p2 = V5Prospect(
+                    business_id=sales_biz.id,
+                    prospect_type="B2B_BUSINESS",
+                    company_name="South Congress Cosmetic Dentistry",
+                    website="https://socodental.com",
+                    industry="Dental",
+                    location="Austin, TX",
+                    city="Austin",
+                    state="TX",
+                    country="USA",
+                    email="info@socodental.com",
+                    phone="+1 (512) 555-0248",
+                    source="PUBLIC_BUSINESS_DATA",
+                    source_url="https://socodental.com",
+                    score=82,
+                    score_breakdown={"intent": 85, "relevance": 90, "recency": 80, "geo_fit": 100, "engagement": 75, "consent": 100},
+                    outreach_status="PENDING_REVIEW",
+                    contact_status="UNCONTACTED",
+                    consent_status="PUBLIC_COMMERCIAL",
+                    pipeline_stage="REVIEW",
+                    review_mode="REVIEW",
+                    next_action="AWAITING_HUMAN_APPROVAL",
+                    meta_json={"sources": ["PUBLIC_BUSINESS_DATA"], "why_it_matched": "Cosmetic dentist in central Austin with no instant WhatsApp communication"}
+                )
+                session.add(p2)
+                await session.flush()
+
+                session.add(V5LeadSearchResult(search_id=search_run.id, prospect_id=p2.id))
+
+                session.add(V5ProspectObservation(
+                    prospect_id=p2.id,
+                    observation="No WhatsApp contact button or wa.me link found on website",
+                    source="https://socodental.com",
+                    confidence=0.90,
+                    category="WHATSAPP"
+                ))
+
+                session.add(V5ProspectOpportunity(
+                    prospect_id=p2.id,
+                    type="WHATSAPP_EMPLOYEE",
+                    reason="Modern dental patients prefer WhatsApp over phone calls. An AI receptionist on WhatsApp provides zero-friction booking.",
+                    evidence="No WhatsApp link detected on homepage or contact page.",
+                    confidence=0.88
+                ))
+
+                p2_outreach = V5ProspectOutreach(
+                    business_id=sales_biz.id,
+                    prospect_id=p2.id,
+                    channel="EMAIL",
+                    subject="Quick note regarding South Congress Cosmetic Dentistry",
+                    message=(
+                        "Hi team at South Congress Cosmetic Dentistry,\n\n"
+                        "I took a look at your website and noticed you don't currently offer WhatsApp booking for mobile visitors...\n\n"
+                        "Best regards,\nElena at Rine Forge Systems\n\n---\nReply STOP to opt out."
+                    ),
+                    reason="Initial evidence-grounded outreach draft",
+                    status="PENDING_REVIEW",
+                    step_number=0,
+                    meta_json={"body_html": "<p>Hi team at South Congress Cosmetic Dentistry...</p>"}
+                )
+                session.add(p2_outreach)
+                await session.flush()
+
+                session.add(V5OutreachEvent(
+                    outreach_id=p2_outreach.id,
+                    event_type="DRAFTED",
+                    payload={"step": 0, "status": "PENDING_REVIEW"}
+                ))
+
+                # Prospect 3: Hill Country Family Dental (Already CONTACTED)
+                p3 = V5Prospect(
+                    business_id=sales_biz.id,
+                    prospect_type="B2B_BUSINESS",
+                    company_name="Hill Country Family Dental",
+                    website="https://hillcountrydental.com",
+                    industry="Dental",
+                    location="Austin, TX",
+                    city="Austin",
+                    state="TX",
+                    country="USA",
+                    email="reception@hillcountrydental.com",
+                    phone="+1 (512) 555-0371",
+                    source="PUBLIC_BUSINESS_DATA",
+                    source_url="https://hillcountrydental.com",
+                    score=76,
+                    score_breakdown={"intent": 80, "relevance": 85, "recency": 75, "geo_fit": 100, "engagement": 65, "consent": 100},
+                    outreach_status="SENT",
+                    contact_status="IN_PROGRESS",
+                    consent_status="PUBLIC_COMMERCIAL",
+                    pipeline_stage="CONTACTED",
+                    review_mode="REVIEW",
+                    next_action="AWAITING_REPLY_OR_STEP_1",
+                    meta_json={"sources": ["PUBLIC_BUSINESS_DATA"], "why_it_matched": "Family dental clinic with zero weekend coverage"}
+                )
+                session.add(p3)
+                await session.flush()
+
+                session.add(V5LeadSearchResult(search_id=search_run.id, prospect_id=p3.id))
+
+                session.add(V5ProspectObservation(
+                    prospect_id=p3.id,
+                    observation="Office schedule shows closed Saturdays and Sundays; inquiries outside 9am-5pm go to voicemail.",
+                    source="https://hillcountrydental.com/hours",
+                    confidence=0.94,
+                    category="AFTER_HOURS_COVERAGE"
+                ))
+
+                session.add(V5ProspectOpportunity(
+                    prospect_id=p3.id,
+                    type="AFTER_HOURS_COVERAGE",
+                    reason="Inquiries after 5 PM and on weekends are lost to voicemail, risking drop-off until Monday morning.",
+                    evidence="Published office schedule: Mon-Fri only.",
+                    confidence=0.89
+                ))
+
+                sent_time = datetime.now(timezone.utc)
+                p3.last_contacted = sent_time
+                p3_outreach = V5ProspectOutreach(
+                    business_id=sales_biz.id,
+                    prospect_id=p3.id,
+                    channel="EMAIL",
+                    subject="After-hours patient coverage for Hill Country Family Dental",
+                    message="Hi team,\n\nFollowing up on after-hours coverage...\n\nReply STOP to opt out.",
+                    status="SENT",
+                    step_number=0,
+                    sent_at=sent_time,
+                    external_message_id="<mock-hillcountry-001@rineforge.com>"
+                )
+                session.add(p3_outreach)
+                await session.flush()
+
+                session.add(V5OutreachEvent(
+                    outreach_id=p3_outreach.id,
+                    event_type="SENT",
+                    payload={"provider": "EmailOutreachProvider", "message_id": "<mock-hillcountry-001@rineforge.com>"}
+                ))
+
+                await session.commit()
+                logger.info("✅ V5 Internal Sales Tenant (Rine Forge) seeded with 3 Austin dental prospects, observations, and outreach drafts!")
 
         except Exception as e:
             await session.rollback()
             logger.error(f"Error during V5 database seeding: {e}", exc_info=True)
+
