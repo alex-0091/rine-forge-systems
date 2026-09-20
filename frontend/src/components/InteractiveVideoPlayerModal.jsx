@@ -149,13 +149,13 @@ export function InteractiveVideoPlayerModal({
               <div className="space-y-2 animate-fadeIn">
                 <div className="flex items-center justify-between text-xs font-mono text-cyan-400">
                   <span>[00:0{t.toFixed(1)}s] GEMINI CROSS-VERIFICATION</span>
-                  <span className="text-emerald-400 font-bold font-mono">CREDIBILITY: 98%</span>
+                  <span className="text-emerald-400 font-bold font-mono">STATUS: VERIFIED</span>
                 </div>
                 <div className="p-2.5 bg-dark-950 rounded-xl border border-slate-800 text-xs space-y-1 text-slate-200">
                   <div className="flex items-center gap-1.5 text-teal-400 font-bold">
                     <CheckCircle2 className="w-3.5 h-3.5" /> Direct Telemetry Verified
                   </div>
-                  <p className="text-[11px] text-slate-400">Propellant transfer mass efficiency verified at 99.4% in low-Earth orbit.</p>
+                  <p className="text-[11px] text-slate-400">Propellant transfer mass efficiency verified in low-Earth orbit telemetry.</p>
                 </div>
               </div>
             ) : (

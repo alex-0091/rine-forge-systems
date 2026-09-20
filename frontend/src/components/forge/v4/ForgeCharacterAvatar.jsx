@@ -46,7 +46,7 @@ export const FORGE_CHARACTERS = {
     badgeClass: 'bg-sky-500/20 text-sky-300 border-sky-500/30',
     ringColor: 'ring-sky-500/40',
     icon: ShieldCheck,
-    bio: 'Answers customer questions strictly using approved company docs with zero hallucination.',
+    bio: 'Answers customer questions strictly using approved company docs with strict context grounding.',
     initials: 'AR'
   },
   operations: {

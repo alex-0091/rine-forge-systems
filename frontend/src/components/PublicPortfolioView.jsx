@@ -33,11 +33,11 @@ import { FaqSection } from './forge/FaqSection';
 import { AboutSection } from './forge/AboutSection';
 import { FinalCtaSection } from './forge/FinalCtaSection';
 import { ForgeFooter } from './forge/ForgeFooter';
-import { AuditPage } from './forge/AuditPage';
-import { IndustryDetailPage } from './forge/IndustryDetailPage';
-import { SolutionDetailPage } from './forge/SolutionDetailPage';
-import { SystemDetailPage } from './forge/SystemDetailPage';
-import { PersonalizedIndustryView } from './forge/PersonalizedIndustryView';
+const AuditPage = React.lazy(() => import('./forge/AuditPage').then(m => ({ default: m.AuditPage })));
+const IndustryDetailPage = React.lazy(() => import('./forge/IndustryDetailPage').then(m => ({ default: m.IndustryDetailPage })));
+const SolutionDetailPage = React.lazy(() => import('./forge/SolutionDetailPage').then(m => ({ default: m.SolutionDetailPage })));
+const SystemDetailPage = React.lazy(() => import('./forge/SystemDetailPage').then(m => ({ default: m.SystemDetailPage })));
+const PersonalizedIndustryView = React.lazy(() => import('./forge/PersonalizedIndustryView').then(m => ({ default: m.PersonalizedIndustryView })));
 
 // FORGE V2 High-Converting Platform Components
 import { ForgeV2HeroScene } from './forge/v2/ForgeV2HeroScene';
@@ -71,6 +71,8 @@ import { AutomationStackArchitecture } from './forge/v2/AutomationStackArchitect
 import { WhyForgeSection_v2 } from './forge/v2/WhyForgeSection_v2';
 import { ProcessTimelineSection } from './forge/v2/ProcessTimelineSection';
 import { BuiltWithModernTechnology } from './forge/v2/BuiltWithModernTechnology';
+import { AiEmployeeBuilderMini } from './forge/v2/AiEmployeeBuilderMini';
+import { VoiceLiveInterface } from './voice/VoiceLiveInterface';
 
 // Interactive Human Interface & 10s Demo Modals
 import { ForgeHumanControl } from './forge/ForgeHumanControl';
@@ -96,6 +98,7 @@ import { PaymentPortalModal } from './PaymentPortalModal';
 import { AIToolsForgeView } from './AIToolsForgeView';
 import { ForgeAiLab } from './forge/ForgeAiLab';
 import { ForgeExperienceView } from './forge/ForgeExperienceView';
+import { WorkbenchView } from './workbench/WorkbenchView';
 
 export function PublicPortfolioView({ onOpenOperatorConsole }) {
   const [currentView, setCurrentView] = useState('home');
@@ -111,6 +114,7 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
   const [isReceptionistChatOpen, setIsReceptionistChatOpen] = useState(false);
   const [receptionistInitialPrompt, setReceptionistInitialPrompt] = useState(null);
   const [receptionistInitialWorker, setReceptionistInitialWorker] = useState('receptionist');
+  const [isAppLaunchingModalOpen, setIsAppLaunchingModalOpen] = useState(false);
 
   const handleOpenSimpleAudit = (preFill = {}) => {
     setSimpleAuditPreFill(preFill);
@@ -133,6 +137,8 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
       if (path.startsWith('/app')) {
         const sub = path.replace('/app', '').replace('/', '') || 'dashboard';
         setCurrentView(`app-${sub}`);
+      } else if (path.includes('/workbench') || search.includes('workbench=true')) {
+        setCurrentView('workbench');
       } else if (path.includes('/lab')) {
         setCurrentView('lab');
       } else if (path.includes('/tools') || path.includes('/toolkit')) {
@@ -162,6 +168,9 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
           const el = document.getElementById(hash);
           if (el) el.scrollIntoView({ behavior: 'smooth' });
         }, 150);
+      } else {
+        // Enforce opening at the start (top) of the page on initial load
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       }
     }
   }, []);
@@ -182,15 +191,15 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
       return;
     }
 
-    if (target === 'operator-console' && onOpenOperatorConsole) {
-      onOpenOperatorConsole();
+    if (target === 'app-dashboard' || target === 'operator-console' || target === 'launch-app') {
+      setIsAppLaunchingModalOpen(true);
       return;
     }
 
     if (target.startsWith('app-')) {
-      setCurrentView(target);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (target === 'lab' || target === 'tools' || target === 'toolkit' || target === 'experience' || target === 'audit' || target === 'home' || target.startsWith('system-') || target.startsWith('for-') || target.startsWith('industry-') || target.startsWith('solution-')) {
+      setIsAppLaunchingModalOpen(true);
+      return;
+    } else if (target === 'workbench' || target === 'lab' || target === 'tools' || target === 'toolkit' || target === 'experience' || target === 'audit' || target === 'home' || target.startsWith('system-') || target.startsWith('for-') || target.startsWith('industry-') || target.startsWith('solution-')) {
       setCurrentView(target === 'toolkit' ? 'tools' : target);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
@@ -209,19 +218,39 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
   };
 
   const handleLaunchSystemSandbox = (sysId) => {
+    // Receptionist: open live chat directly
     if (sysId === 'receptionist-agent' || sysId === 'ai-receptionist' || sysId === 'receptionist') {
       handleOpenReceptionistChat();
       return;
     }
-    if (currentView !== 'home') {
-      setCurrentView('home');
-      setTimeout(() => {
-        const el = document.getElementById('try-ai');
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
+    // Audit: navigate to audit page
+    if (sysId === 'audit') {
+      handleNavigate('audit');
+      return;
+    }
+    // All other systems: open the TenSecondDemoModal (animated 5.5s clip)
+    setActiveTenSecDemoSysId(sysId);
+  };
+
+  // Called by TenSecondDemoModal "TEST IN LIVE SANDBOX" — performs actual live action
+  const handleTryLiveFromDemo = (sysId) => {
+    setActiveTenSecDemoSysId(null);
+    if (sysId === 'receptionist-agent' || sysId === 'ai-receptionist' || sysId === 'receptionist') {
+      handleOpenReceptionistChat();
+    } else if (sysId === 'audit') {
+      handleNavigate('audit');
     } else {
-      const el = document.getElementById('try-ai');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      // For lead-agent, document-processor, email-agent, support-agent, appointment-agent
+      // Open the audit/contact modal pre-filled with what system the user wants to demo
+      const sysLabels = {
+        'lead-agent': 'Speed-to-Lead Qualifier & CRM Sync',
+        'document-processor': 'Document & OCR Automation Engine',
+        'email-agent': 'Autonomous Email Triage & Reply Agent',
+        'support-agent': 'Support & Knowledge RAG Agent',
+        'appointment-agent': 'AI Appointment Booking System',
+        'app-builder': 'Custom Multi-Agent System Builder',
+      };
+      handleOpenSimpleAudit({ whatToAutomate: sysLabels[sysId] || sysId });
     }
   };
 
@@ -284,7 +313,7 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
 
   // EXPERIENCE A: MARKETING & DISCOVERY PLATFORM
   return (
-    <div className="min-h-screen bg-[#060a12] text-slate-100 font-sans selection:bg-teal-500 selection:text-dark-950">
+    <div className="min-h-screen bg-canvas-light text-ink-primary font-sans selection:bg-accent-blue selection:text-white">
       
       {/* Top Universal Navbar */}
       <ForgeNavbar onNavigate={handleNavigate} currentView={currentView} />
@@ -299,6 +328,33 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
               onLaunchSystemDemo={handleLaunchSystemSandbox}
               onWatchTenSecDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
             />
+
+            {/* 1.5 INTERACTIVE AI EMPLOYEE BLUEPRINT BUILDER */}
+            <section id="ai-builder-mini" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#090d16] border-y border-white/[0.08]">
+              <div className="max-w-5xl mx-auto">
+                <AiEmployeeBuilderMini 
+                  onConnectToGenerator={() => handleOpenSimpleAudit({ service: 'AI Employee Configuration' })} 
+                />
+              </div>
+            </section>
+
+            {/* 1.8 REAL LIVE VOICE ENGINE INTERACTION */}
+            <section id="voice-live-demo" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#080b11] border-b border-white/[0.08]">
+              <div className="max-w-5xl mx-auto space-y-8">
+                <div className="text-center space-y-3 max-w-2xl mx-auto">
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/25 text-indigo-300 text-xs font-mono font-bold tracking-wider uppercase">
+                    <PhoneCall className="w-3.5 h-3.5 text-indigo-400" /> Real Voice Engine Live
+                  </div>
+                  <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+                    Experience Real-Time Voice Intelligence
+                  </h2>
+                  <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+                    Provider-independent neural voice architecture. Connect directly from your browser microphone, inquire about clinic hours, lock appointments, and observe verified tool execution.
+                  </p>
+                </div>
+                <VoiceLiveInterface />
+              </div>
+            </section>
 
             {/* 2. LIVE INTERACTIVE AI RECEPTIONIST DEMO (30-second hands-on experience) */}
             <LiveAiReceptionistDemoSection 
@@ -345,6 +401,15 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
             {/* 9. TRUST, REAL CASE STUDIES & PRODUCTION ARCHITECTURE */}
             <TrustAndProofSection 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            />
+
+            {/* 9.5 TRANSPARENT PRICING & 50% MILESTONE SETTLEMENT */}
+            <PricingSection 
+              onNavigate={handleNavigate}
+              onOpenPaymentModal={(pkgId) => {
+                setSelectedPackageForModal(pkgId);
+                setIsPaymentModalOpen(true);
+              }}
             />
 
             {/* 10. FREQUENTLY ASKED QUESTIONS */}
@@ -403,6 +468,11 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
           </div>
         )}
 
+        {/* AI Business Workbench Subpage (/workbench) */}
+        {currentView === 'workbench' && (
+          <WorkbenchView />
+        )}
+
         {/* The AI Lab Subpage (/lab) */}
         {currentView === 'lab' && (
           <ForgeAiLab onNavigate={handleNavigate} />
@@ -413,43 +483,41 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
           <ForgeExperienceView onNavigate={handleNavigate} />
         )}
 
-        {/* Free AI Automation Audit Portal (/audit) */}
-        {currentView === 'audit' && (
-          <AuditPage onNavigate={handleNavigate} />
-        )}
+        {/* Lazy-loaded subpages: audit, system-*, for-*, industry-*, solution-* */}
+        <React.Suspense fallback={<div className="min-h-screen flex items-center justify-center text-teal-400 font-mono text-sm animate-pulse">Loading...</div>}>
+          {currentView === 'audit' && (
+            <AuditPage onNavigate={handleNavigate} />
+          )}
 
-        {/* Dedicated System Product Pages (/systems/:slug) */}
-        {currentView.startsWith('system-') && (
-          <SystemDetailPage
-            slug={currentView.replace('system-', '')}
-            onNavigate={handleNavigate}
-          />
-        )}
+          {currentView.startsWith('system-') && (
+            <SystemDetailPage
+              slug={currentView.replace('system-', '')}
+              onNavigate={handleNavigate}
+            />
+          )}
 
-        {/* Tailored Industry Pages (/for/:slug) */}
-        {currentView.startsWith('for-') && (
-          <PersonalizedIndustryView
-            industrySlug={currentView.replace('for-', '')}
-            onNavigate={handleNavigate}
-          />
-        )}
+          {currentView.startsWith('for-') && (
+            <PersonalizedIndustryView
+              industrySlug={currentView.replace('for-', '')}
+              onNavigate={handleNavigate}
+            />
+          )}
 
-        {/* Dynamic Industry Subpages (/industries/:slug) */}
-        {currentView.startsWith('industry-') && (
-          <IndustryDetailPage 
-            slug={currentView.replace('industry-', '')} 
-            onNavigate={handleNavigate}
-            onOpenWorkflowModal={(agent) => setSelectedAgentForModal(agent)}
-          />
-        )}
+          {currentView.startsWith('industry-') && (
+            <IndustryDetailPage 
+              slug={currentView.replace('industry-', '')} 
+              onNavigate={handleNavigate}
+              onOpenWorkflowModal={(agent) => setSelectedAgentForModal(agent)}
+            />
+          )}
 
-        {/* Dynamic Solution Subpages (/solutions/:slug) */}
-        {currentView.startsWith('solution-') && (
-          <SolutionDetailPage 
-            slug={currentView.replace('solution-', '')} 
-            onNavigate={handleNavigate}
-          />
-        )}
+          {currentView.startsWith('solution-') && (
+            <SolutionDetailPage 
+              slug={currentView.replace('solution-', '')} 
+              onNavigate={handleNavigate}
+            />
+          )}
+        </React.Suspense>
       </main>
 
       {/* Global Footer */}
@@ -475,10 +543,7 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
         <TenSecondDemoModal
           systemId={activeTenSecDemoSysId}
           onClose={() => setActiveTenSecDemoSysId(null)}
-          onTryLive={(sysId) => {
-            setActiveTenSecDemoSysId(null);
-            handleLaunchSystemSandbox(sysId);
-          }}
+          onTryLive={handleTryLiveFromDemo}
         />
       )}
 
@@ -542,6 +607,63 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
         initialPrompt={receptionistInitialPrompt}
         initialWorker={receptionistInitialWorker}
       />
+
+      {/* Operator Console V5 Update Launching Soon Modal */}
+      {isAppLaunchingModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl">
+          <div className="bg-[#0c101a] border border-white/[0.12] rounded-3xl max-w-lg w-full p-6 sm:p-8 text-center space-y-5 shadow-[0_25px_60px_rgba(0,0,0,0.7)] relative animate-in fade-in zoom-in-95 duration-200">
+            <button
+              onClick={() => setIsAppLaunchingModalOpen(false)}
+              className="absolute top-4 right-4 p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-400 hover:text-white border border-white/[0.08]"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="w-14 h-14 rounded-2xl bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mx-auto shadow-[0_0_20px_rgba(99,102,241,0.3)]">
+              <Sparkles className="w-7 h-7" />
+            </div>
+
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/25 text-indigo-300 text-xs font-mono font-bold uppercase">
+                <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+                V5 Core Update
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+                Operator Console Launching Soon
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-md mx-auto">
+                The internal Rine Forge Operator Console is currently receiving multi-tenant scaling updates. Dedicated access is reserved for verified client deployments.
+              </p>
+            </div>
+
+            <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl text-xs text-slate-300 space-y-1.5 text-left font-mono">
+              <div className="text-emerald-400 font-bold flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4" /> Live Client Production Active
+              </div>
+              <div className="text-[11px] text-slate-400">All 4 autonomous agents (Elena, Marcus, Aria, Kael) are actively serving clients. Deploy your system below to get instant private staging.</div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <button
+                onClick={() => {
+                  setIsAppLaunchingModalOpen(false);
+                  setSelectedPackageForModal('speed-to-lead');
+                  setIsPaymentModalOpen(true);
+                }}
+                className="flex-1 py-3 px-4 bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all"
+              >
+                Deploy System ($99 Deposit) →
+              </button>
+              <button
+                onClick={() => setIsAppLaunchingModalOpen(false)}
+                className="py-3 px-5 bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 border border-white/[0.08] rounded-xl text-xs font-semibold"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

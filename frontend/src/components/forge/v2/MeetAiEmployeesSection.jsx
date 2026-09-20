@@ -78,7 +78,7 @@ export function MeetAiEmployeesSection({ onWatchEmployeeDemo, onBuildAiEmployee,
             <span className="text-violet-400">&rarr;</span>
             <div className="px-2.5 py-1 rounded-lg bg-violet-500/20 border border-violet-400/40 text-violet-300 font-bold animate-pulse flex items-center gap-1">
               <Zap className="w-3 h-3 text-violet-400" />
-              <span>SCORE 98%</span>
+              <span>SCORE 85/100</span>
             </div>
             <span className="text-violet-400">&rarr;</span>
             <span className="px-2 py-1 rounded bg-emerald-950 border border-emerald-500/40 text-emerald-400 font-bold">CRM ✓</span>

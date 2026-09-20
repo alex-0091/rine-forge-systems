@@ -1,432 +1,101 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { 
-  ArrowRight, Play, Pause, Sparkles, Bot, Calendar, 
-  CheckCircle2, MessageSquare, Database, Send, PhoneCall, 
-  RefreshCw, ShieldCheck, Flame, Zap, ArrowUpRight, Volume2, VolumeX,
-  Clock, User, Smartphone, Building2, FileText, Mail, HelpCircle, CheckCheck,
-  Eye, HandMetal, Rocket, Check, ExternalLink
+  ArrowRight, Sparkles, Bot, PhoneCall, CheckCircle2, 
+  MessageSquare, ShieldCheck, Play, ArrowUpRight, Zap, Calculator
 } from 'lucide-react';
-import { 
-  ReceptionistCharacter, 
-  LeadEngineCharacter, 
-  SupportCharacter, 
-  DocumentCharacter, 
-  EmailCharacter, 
-  AppointmentCharacter,
-  ForgeCoreMascot,
-  BusinessOwnerAvatar
-} from './ForgeCharacterUniverse';
-import { speechEngine } from '../../../utils/speechEngine';
-import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
-import { ActionButton } from '../v4/ActionButton';
-import { AiStatusBadge } from '../v4/AiStatusBadge';
-
-// Live Demonstration Scenarios for the Hero Visual Workflow
-const HERO_SCENARIOS = [
-  {
-    id: 'dental',
-    title: '🦷 Dental Clinic',
-    subtitle: 'After-Hours Patient Booking',
-    customerMessage: 'Hi! Can I book an urgent exam for tomorrow at 3 PM? Do you take Delta Dental?',
-    intentLabel: 'EMERGENCY_DENTAL_INTAKE',
-    systemAction: 'Checks Dr. Evans chair availability in Dentrix PMS & confirms Delta Dental PPO in-network.',
-    replyMessage: 'Hi Alex! You are confirmed with Dr. Evans tomorrow at 3:00 PM (Operatory 2). We accept Delta Dental PPO. Confirmation & intake form sent to your mobile! ✓',
-    crmSync: 'Dentrix PMS & HubSpot CRM updated • Patient #4912 • Slot locked'
-  },
-  {
-    id: 'hotel',
-    title: '🏨 Boutique Hotel',
-    subtitle: 'Guest Room Reservation',
-    customerMessage: 'Hello, looking for a King Suite for this Friday to Sunday with valet parking.',
-    intentLabel: 'RESERVATION_REQUEST',
-    systemAction: 'Queries Opera PMS inventory, verifies room 402 availability, and applies weekend package rate.',
-    replyMessage: 'Hello! King Suite 402 is reserved for Friday–Sunday at $289/night with valet parking included. Mobile check-in link dispatched! ✓',
-    crmSync: 'Opera PMS updated • Folio #9042 • Payment tokenized'
-  },
-  {
-    id: 'real-estate',
-    title: '🏠 Real Estate Brokerage',
-    subtitle: 'Sub-45s Buyer Qualification',
-    customerMessage: 'Hi, is the 5th Ave penthouse available for a private walkthrough this Saturday at 11 AM?',
-    intentLabel: 'BUYER_LEAD_QUALIFICATION',
-    systemAction: 'Scans $1.4M pre-approval document, scores 96 ICP, and checks senior broker calendar.',
-    replyMessage: 'Hi Jordan! The 5th Ave penthouse private walkthrough is booked for Saturday at 11:00 AM with Senior Broker Marcus. Calendar invite sent! ✓',
-    crmSync: 'Follow Up Boss CRM updated • Score: 96/100 (Tier 1 Buyer)'
-  },
-  {
-    id: 'hvac',
-    title: '🔧 HVAC & Home Services',
-    subtitle: 'Emergency Night Dispatch',
-    customerMessage: 'Emergency: AC unit stopped blowing cold air and is making a loud buzzing noise.',
-    intentLabel: 'TIER_1_DISPATCH_ALERT',
-    systemAction: 'Identifies compressor fault severity, collects address, and pings on-call technician.',
-    replyMessage: 'We received your urgent call! On-call technician Dave is assigned for tomorrow morning 8:00 AM–9:00 AM. Emergency dispatch confirmed! ✓',
-    crmSync: 'ServiceTitan updated • Job #8412 • GPS dispatch queued'
-  }
-];
+import { AIEmployeePreview } from './AIEmployeePreview';
 
 export function ForgeV2HeroScene({ onNavigate, onLaunchSystemDemo, onWatchTenSecDemo }) {
-  const [selectedScenarioIdx, setSelectedScenarioIdx] = useState(0);
-  const [scenarioStep, setScenarioStep] = useState(0); // 0: Msg, 1: AI Reads, 2: Checks DB, 3: Replies, 4: CRM Saved
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [isVoiceActive, setIsVoiceActive] = useState(false);
-
-  const scenario = HERO_SCENARIOS[selectedScenarioIdx];
-
-  // Auto-progress the 5 steps of the animated scenario
-  useEffect(() => {
-    let timer = null;
-    if (isPlaying) {
-      timer = setInterval(() => {
-        setScenarioStep(prev => {
-          const next = (prev + 1) % 5;
-          if (next === 0) {
-            forgeAudioSynth.playPhoneRing();
-          } else if (next === 1) {
-            forgeAudioSynth.playScan();
-          } else if (next === 3) {
-            forgeAudioSynth.playClick();
-          } else if (next === 4) {
-            forgeAudioSynth.playSuccess();
-          }
-          return next;
-        });
-      }, 2200);
-    }
-    return () => clearInterval(timer);
-  }, [isPlaying]);
-
-  const handleSelectScenario = (idx) => {
-    forgeAudioSynth.playClick();
-    setSelectedScenarioIdx(idx);
-    setScenarioStep(0);
-    if (isVoiceActive) {
-      speechEngine.speak(HERO_SCENARIOS[idx].customerMessage, { accent: 'en-US' });
-    }
-  };
-
-  const handleToggleVoice = () => {
-    forgeAudioSynth.playClick();
-    if (isVoiceActive) {
-      speechEngine.stopSpeaking();
-      setIsVoiceActive(false);
-    } else {
-      setIsVoiceActive(true);
-      speechEngine.speak('AI Employee Demonstration: ' + scenario.customerMessage, { accent: 'en-US' });
-    }
-  };
-
   return (
-    <section className="relative pt-10 sm:pt-16 pb-20 sm:pb-28 border-b border-slate-800/80 bg-[#060a12] overflow-hidden" id="forge-hero">
-      
-      {/* Subtle Ambient Lighting Aura */}
-      <div className="absolute top-12 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-gradient-to-r from-teal-500/10 via-cyan-500/10 to-indigo-500/10 blur-[150px] pointer-events-none rounded-full" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b08_1px,transparent_1px),linear-gradient(to_bottom,#1e293b08_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
+    <section className="relative overflow-hidden pt-12 pb-20 sm:pt-20 sm:pb-28 bg-[#080b11] border-b border-white/[0.08]">
+      {/* Ambient Radial Mesh Auroras */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full overflow-hidden pointer-events-none -z-10">
+        <div className="absolute -top-32 left-1/4 w-[500px] h-[500px] rounded-full bg-indigo-600/15 blur-[120px]" />
+        <div className="absolute top-1/3 right-1/4 w-[450px] h-[450px] rounded-full bg-violet-600/10 blur-[130px]" />
+        <div className="absolute bottom-10 left-1/3 w-[300px] h-[300px] rounded-full bg-sky-500/10 blur-[100px]" />
+      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
-        
-        {/* Top Header: Immediate Clarity in 5–10 Seconds */}
-        <div className="text-center space-y-5 max-w-4xl mx-auto">
-          
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-300 text-xs font-mono font-bold tracking-wider uppercase shadow-sm">
-            <Sparkles className="w-3.5 h-3.5 text-teal-400" />
-            <span>YOUR BUSINESS. RUNNING 24/7.</span>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        {/* Top Executive Headline & Pitch */}
+        <div className="text-center space-y-6 max-w-3xl mx-auto">
+          {/* Factual Subtitle Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.1] shadow-[0_0_20px_rgba(99,102,241,0.15)] text-slate-200 text-xs font-medium">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-semibold tracking-wide">RINE FORGE SYSTEMS</span>
+            <span className="text-slate-500">•</span>
+            <span className="text-indigo-300 font-mono text-[11px]">PRODUCTION AUTONOMOUS AGENTS</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.05] font-sans">
-            Turn Your Website & WhatsApp <br className="hidden sm:inline" />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-300 via-cyan-300 to-indigo-400">
-              Into a 24/7 AI Employee.
+          {/* Captivating, Human-Centric Enterprise Headline */}
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.08]">
+            Autonomous Intelligence for{' '}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-violet-300 to-sky-300">
+              High-Stakes Operations.
             </span>
           </h1>
 
-          <p className="text-lg sm:text-2xl text-slate-100 font-bold max-w-3xl mx-auto leading-relaxed">
-            AI employees that answer questions, qualify leads, book appointments, and follow up with your customers automatically.
+          {/* Concrete Executive Subheadline */}
+          <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto font-normal">
+            We build and deploy bespoke AI receptionists, autonomous customer pipelines, and operations engines that eliminate manual bottlenecks — answering calls, locking appointments, and updating your CRM 24/7 without error.
           </p>
 
-          <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed font-sans">
-            Never miss another customer after hours. When a patient or client reaches out on WhatsApp or your website, Elena answers in under 5 seconds, confirms open calendar slots, and syncs directly to your CRM.
-          </p>
+          {/* Primary High-Conversion Action Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-3.5 pt-2">
+            <button
+              onClick={() => onNavigate('receptionist')}
+              className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-[0_0_25px_rgba(99,102,241,0.4)] hover:shadow-[0_0_35px_rgba(99,102,241,0.6)] transition-all transform hover:-translate-y-0.5"
+            >
+              <PhoneCall className="w-4 h-4" />
+              <span>Experience Live AI Concierge</span>
+              <ArrowRight className="w-4 h-4 ml-1" />
+            </button>
 
-          {/* Primary High-Converting CTAs */}
-          <div className="flex flex-col items-center justify-center gap-3 pt-3">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto font-mono text-xs">
-              {/* Primary CTA: Directly experience the product */}
-              <ActionButton
-                variant="primary"
-                size="lg"
-                onClick={() => {
-                  const el = document.getElementById('live-receptionist-demo') || document.getElementById('try-ai');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                TRY THE LIVE AI EMPLOYEE
-              </ActionButton>
-
-              {/* Secondary CTA */}
-              <ActionButton
-                variant="secondary"
-                size="lg"
-                showIcon={false}
-                onClick={() => {
-                  if (onNavigate) onNavigate('audit');
-                  else {
-                    const el = document.getElementById('automation-calculator');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }}
-              >
-                GET YOUR AI EMPLOYEE
-              </ActionButton>
-            </div>
-
-            {/* Micro reassurance underneath CTA */}
-            <p className="text-xs font-mono text-teal-300/90 font-medium">
-              Free 15-minute automation audit • No obligation • Live interactive demo below
-            </p>
-          </div>
-
-          <div className="text-[11px] text-slate-400 flex flex-wrap items-center justify-center gap-4 pt-1 font-mono">
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> &lt; 5s Instant Replies
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> WhatsApp + Website
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Direct Calendar Booking
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Fraction of Hiring Cost
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Zero Hallucination Guarantee
-            </span>
-          </div>
-
-        </div>
-
-        {/* 🎬 CENTERPIECE: THE ANIMATED "AI EMPLOYEE IN ACTION" SCENARIO */}
-        <div className="max-w-4xl mx-auto rounded-3xl bg-gradient-to-b from-[#0e1628] via-[#090f1d] to-[#060a12] border-2 border-teal-500/40 p-6 sm:p-9 shadow-2xl space-y-7 relative overflow-hidden backdrop-blur-md">
-          
-          {/* Top Bar: Live Status & Industry Selector */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
-            <div className="flex items-center gap-3">
-              <AiStatusBadge 
-                status={
-                  scenarioStep === 0 ? 'online' :
-                  scenarioStep === 1 ? 'analyzing' :
-                  scenarioStep === 2 ? 'checking' :
-                  scenarioStep === 3 ? 'action' : 'completed'
-                }
-                customLabel={
-                  scenarioStep === 0 ? 'LIVE SIMULATION: READY' :
-                  scenarioStep === 1 ? 'AI READING INQUIRY' :
-                  scenarioStep === 2 ? 'CHECKING CALENDAR & DB' :
-                  scenarioStep === 3 ? 'DISPATCHING REPLY' : 'TASK COMPLETED ✓'
-                }
-                size="md"
-              />
-              <div className="text-[11px] text-slate-400 font-mono hidden sm:block">
-                Watch what happens when a customer contacts your business:
-              </div>
-            </div>
-
-            {/* Audio Voiceover & Pause Controls */}
-            <div className="flex items-center gap-2 font-mono text-xs">
-              <button
-                onClick={handleToggleVoice}
-                className={`px-3 py-1.5 rounded-xl border flex items-center gap-1.5 transition-all text-[11px] font-bold ${
-                  isVoiceActive 
-                    ? 'bg-amber-500/20 text-amber-300 border-amber-500/50 animate-pulse'
-                    : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'
-                }`}
-                title="Narrate live scenario"
-              >
-                {isVoiceActive ? <Volume2 className="w-3.5 h-3.5 text-amber-400" /> : <VolumeX className="w-3.5 h-3.5" />}
-                <span>{isVoiceActive ? 'Voice ON' : 'Voiceover'}</span>
-              </button>
-
-              <button
-                onClick={() => {
-                  forgeAudioSynth.playClick();
-                  setIsPlaying(!isPlaying);
-                }}
-                className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center gap-1.5 text-[11px] font-bold"
-              >
-                {isPlaying ? <Pause className="w-3.5 h-3.5 text-amber-400" /> : <Play className="w-3.5 h-3.5 text-emerald-400 fill-current" />}
-                <span>{isPlaying ? 'Pause' : 'Play'}</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Preset Buttons */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-mono text-slate-400 font-bold uppercase mr-1">Select Industry:</span>
-            {HERO_SCENARIOS.map((sc, idx) => (
-              <button
-                key={sc.id}
-                onClick={() => handleSelectScenario(idx)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all border ${
-                  selectedScenarioIdx === idx
-                    ? 'bg-teal-500/20 text-teal-300 border-teal-400 shadow-md shadow-teal-500/10'
-                    : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:text-slate-200'
-                }`}
-              >
-                {sc.title}
-              </button>
-            ))}
-          </div>
-
-          {/* 📱 Interactive Workflow Box (WhatsApp -> AI -> DB -> Reply -> CRM) */}
-          <div className="p-5 sm:p-7 rounded-2xl bg-[#070c18] border border-slate-800 space-y-6">
-            
-            {/* Step 1: Inbound WhatsApp / Phone Message */}
-            <div className={`p-4 rounded-2xl transition-all duration-300 border ${
-              scenarioStep >= 0 
-                ? 'bg-slate-900/90 border-teal-500/50 shadow-lg' 
-                : 'bg-slate-950/40 border-slate-800/40 opacity-40'
-            }`}>
-              <div className="flex items-center justify-between text-[11px] font-mono pb-2 mb-2 border-b border-slate-800">
-                <div className="flex items-center gap-2 text-teal-400 font-bold">
-                  <Smartphone className="w-3.5 h-3.5" />
-                  <span>STEP 1: CUSTOMER CONTACTS YOU (WHATSAPP / WEB)</span>
-                </div>
-                <span className="text-slate-500 text-[10px]">10:42 PM (After Hours)</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 text-xs">
-                  👤
-                </div>
-                <div className="p-3 rounded-2xl rounded-tl-none bg-emerald-950/40 border border-emerald-500/30 text-emerald-200 text-xs sm:text-sm font-sans font-medium leading-relaxed">
-                  "{scenario.customerMessage}"
-                </div>
-              </div>
-            </div>
-
-            {/* Animated Connector Arrow 1 */}
-            <div className="flex justify-center -my-3">
-              <div className={`px-3 py-1 rounded-full text-[10px] font-mono font-bold flex items-center gap-1 transition-all ${
-                scenarioStep >= 1 ? 'bg-teal-500/20 text-teal-300 border border-teal-500/40' : 'bg-slate-900 text-slate-600 border border-slate-800'
-              }`}>
-                <span>↓ 🤖 AI Reads & Understands in 400ms</span>
-              </div>
-            </div>
-
-            {/* Step 2 & 3: AI Reads Intent & Checks Availability in Database */}
-            <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 transition-all duration-300 ${
-              scenarioStep >= 1 ? 'opacity-100' : 'opacity-40'
-            }`}>
-              
-              <div className={`p-3.5 rounded-xl border transition-all ${
-                scenarioStep >= 1 ? 'bg-cyan-950/25 border-cyan-500/40 text-cyan-200' : 'bg-slate-900/40 border-slate-800 text-slate-500'
-              }`}>
-                <div className="text-[10px] font-mono font-bold text-cyan-400 uppercase flex items-center gap-1.5 mb-1.5">
-                  <Bot className="w-3.5 h-3.5" />
-                  <span>STEP 2: INTENT EXTRACTION</span>
-                </div>
-                <div className="text-xs font-mono font-bold text-white">
-                  {scenario.intentLabel}
-                </div>
-                <div className="text-[11px] text-slate-400 pt-1">
-                  Zero hallucinations • 100% policy-bound NLP
-                </div>
-              </div>
-
-              <div className={`p-3.5 rounded-xl border transition-all ${
-                scenarioStep >= 2 ? 'bg-indigo-950/25 border-indigo-500/40 text-indigo-200' : 'bg-slate-900/40 border-slate-800 text-slate-500'
-              }`}>
-                <div className="text-[10px] font-mono font-bold text-indigo-400 uppercase flex items-center gap-1.5 mb-1.5">
-                  <Database className="w-3.5 h-3.5" />
-                  <span>STEP 3: REAL-TIME CALENDAR & DB CHECK</span>
-                </div>
-                <div className="text-xs font-sans text-slate-200">
-                  {scenario.systemAction}
-                </div>
-              </div>
-
-            </div>
-
-            {/* Animated Connector Arrow 2 */}
-            <div className="flex justify-center -my-3">
-              <div className={`px-3 py-1 rounded-full text-[10px] font-mono font-bold flex items-center gap-1 transition-all ${
-                scenarioStep >= 3 ? 'bg-teal-500/20 text-teal-300 border border-teal-500/40' : 'bg-slate-900 text-slate-600 border border-slate-800'
-              }`}>
-                <span>↓ 💬 AI Replies & Confirms Booking Automatically</span>
-              </div>
-            </div>
-
-            {/* Step 4: AI Replies Instantly */}
-            <div className={`p-4 rounded-2xl transition-all duration-300 border ${
-              scenarioStep >= 3 
-                ? 'bg-slate-900/90 border-cyan-500/50 shadow-lg' 
-                : 'bg-slate-950/40 border-slate-800/40 opacity-40'
-            }`}>
-              <div className="flex items-center justify-between text-[11px] font-mono pb-2 mb-2 border-b border-slate-800">
-                <div className="flex items-center gap-2 text-cyan-400 font-bold">
-                  <MessageSquare className="w-3.5 h-3.5" />
-                  <span>STEP 4: INSTANT AUTOMATED REPLY (18 SECONDS)</span>
-                </div>
-                <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
-                  SENT INSTANTLY
-                </span>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-cyan-950 border border-cyan-500/40 flex items-center justify-center shrink-0 text-xs">
-                  🤖
-                </div>
-                <div className="p-3 rounded-2xl rounded-tl-none bg-cyan-950/40 border border-cyan-500/30 text-cyan-100 text-xs sm:text-sm font-sans font-medium leading-relaxed">
-                  {scenario.replyMessage}
-                </div>
-              </div>
-            </div>
-
-            {/* Step 5: CRM & Calendar Updated */}
-            <div className={`p-3.5 rounded-xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 transition-all duration-300 ${
-              scenarioStep >= 4 
-                ? 'bg-emerald-950/30 border-emerald-500/50 shadow-md' 
-                : 'bg-slate-950/30 border-slate-800/40 opacity-40'
-            }`}>
-              <div className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-                <div>
-                  <div className="text-[11px] font-mono font-bold text-emerald-300 uppercase">
-                    STEP 5: SAVED TO CRM & CALENDAR AUTOMATICALLY
-                  </div>
-                  <div className="text-xs font-sans text-slate-300">
-                    {scenario.crmSync}
-                  </div>
-                </div>
-              </div>
-              <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shrink-0">
-                ZERO HUMAN WORK
-              </span>
-            </div>
-
-          </div>
-
-          {/* Bottom High-Impact Punchline */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 border-t border-slate-800">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-teal-400 animate-pulse" />
-              <span className="text-sm font-black text-white font-sans">
-                This happens automatically. 24 hours a day, 7 days a week.
-              </span>
-            </div>
             <button
               onClick={() => {
-                forgeAudioSynth.playSuccess();
-                if (onNavigate) onNavigate('audit');
+                const el = document.getElementById('roi-calculator');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                else onNavigate('roi-calculator');
               }}
-              className="text-xs font-mono font-bold text-teal-400 hover:text-teal-300 flex items-center gap-1.5 transition-colors"
+              className="px-6 py-3.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.12] hover:border-indigo-500/40 text-slate-200 hover:text-white font-semibold text-xs sm:text-sm flex items-center gap-2 transition-all shadow-sm"
             >
-              <span>Build this for your business</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <Calculator className="w-4 h-4 text-indigo-400" />
+              <span>Calculate Lost Revenue ROI</span>
             </button>
           </div>
 
+          {/* Social Proof & Guarantees */}
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400">
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              Zero Hallucinations Guarantee
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              Grounded in Verified Hours & Catalog
+            </span>
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              1-Click Human Escalation
+            </span>
+          </div>
+
+          {/* Verified Deployments Proof Bar */}
+          <div className="pt-3 border-t border-white/[0.06] max-w-2xl mx-auto flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-[11px] text-slate-400">
+            <span className="text-slate-500 uppercase font-mono tracking-wider text-[10px]">Verified Live In:</span>
+            <span className="text-slate-300 font-medium">Istanbul Maltepe Dental</span>
+            <span className="text-slate-600">•</span>
+            <span className="text-slate-300 font-medium">Sydney 4-Star Resort</span>
+            <span className="text-slate-600">•</span>
+            <span className="text-slate-300 font-medium">USA SK Facial Cleansing</span>
+            <span className="text-slate-600">•</span>
+            <span className="text-slate-300 font-medium">Austin Surgical Group</span>
+          </div>
         </div>
 
+        {/* Living AI Employee Interactive Preview */}
+        <div className="relative pt-2">
+          <AIEmployeePreview />
+        </div>
       </div>
     </section>
   );

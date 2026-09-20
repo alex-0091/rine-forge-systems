@@ -38,7 +38,7 @@ export function WorkflowPipelineVisual({
       icon: Bot,
       color: 'cyan',
       glow: 'shadow-cyan-500/20',
-      status: 'Classified 99%'
+      status: 'Classified (High Intent)'
     },
     {
       id: 2,

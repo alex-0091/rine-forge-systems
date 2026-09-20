@@ -72,6 +72,7 @@ class V5Business(Base, TimestampMixin):
     leads: Mapped[List["V5Lead"]] = relationship("V5Lead", back_populates="business", cascade="all, delete-orphan")
     integrations: Mapped[List["V5Integration"]] = relationship("V5Integration", back_populates="business", cascade="all, delete-orphan")
     automations: Mapped[List["V5Automation"]] = relationship("V5Automation", back_populates="business", cascade="all, delete-orphan")
+    workspaces: Mapped[List["V5Workspace"]] = relationship("V5Workspace", back_populates="business", cascade="all, delete-orphan")
 
 # ============================================================
 # 3. BUSINESS USER (Tenant-User Link & RBAC)
@@ -90,6 +91,25 @@ class V5BusinessUser(Base, TimestampMixin):
     # Relationships
     business: Mapped["V5Business"] = relationship("V5Business", back_populates="users")
     user: Mapped["V5User"] = relationship("V5User", back_populates="business_memberships")
+
+# ============================================================
+# 3b. WORKSPACE (Tenant Sub-Boundary)
+# ============================================================
+class V5Workspace(Base, TimestampMixin):
+    """
+    Workspace partitioning within an Organization/Business.
+    Allows multi-workspace environments within the same tenant.
+    """
+    __tablename__ = "v5_workspaces"
+
+    business_id: Mapped[str] = mapped_column(String(36), ForeignKey("v5_businesses.id", ondelete="CASCADE"), index=True, nullable=False)
+    name: Mapped[str] = mapped_column(String(255), default="Default Workspace", nullable=False)
+    slug: Mapped[str] = mapped_column(String(100), default="default", index=True)
+    status: Mapped[str] = mapped_column(String(50), default="ACTIVE")
+    settings_json: Mapped[Dict[str, Any]] = mapped_column(JSON, default=dict)
+
+    # Relationships
+    business: Mapped["V5Business"] = relationship("V5Business", back_populates="workspaces")
 
 # ============================================================
 # 4. AI EMPLOYEE
@@ -524,11 +544,84 @@ class V5SuppressionEntry(Base, TimestampMixin):
 
 
 # ============================================================
+# 24. AUTOMATION RUN (Execution History & Telemetry)
+# ============================================================
+class V5AutomationRun(Base, TimestampMixin):
+    """
+    Execution trace for triggered automation workflows.
+    """
+    __tablename__ = "v5_automation_runs"
+
+    automation_id: Mapped[str] = mapped_column(String(36), ForeignKey("v5_automations.id", ondelete="CASCADE"), index=True, nullable=False)
+    business_id: Mapped[str] = mapped_column(String(36), ForeignKey("v5_businesses.id", ondelete="CASCADE"), index=True, nullable=False)
+    trigger_event: Mapped[str] = mapped_column(String(100), nullable=False)
+    status: Mapped[str] = mapped_column(String(50), default="RUNNING", index=True) # RUNNING, SUCCESS, FAILED, RETRYING
+    execution_time_ms: Mapped[float] = mapped_column(Float, default=0.0)
+    error_message: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    step_results: Mapped[List[Dict[str, Any]]] = mapped_column(JSON, default=list)
+
+    # Relationships
+    automation: Mapped["V5Automation"] = relationship("V5Automation")
+    business: Mapped["V5Business"] = relationship("V5Business")
+
+
+# ============================================================
+# 25. WEBHOOK EVENT (Inbound & Outbound Idempotent Delivery)
+# ============================================================
+class V5WebhookEvent(Base, TimestampMixin):
+    """
+    Tracks incoming and outgoing webhooks with cryptographic validation and idempotency.
+    """
+    __tablename__ = "v5_webhook_events"
+
+    business_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("v5_businesses.id", ondelete="CASCADE"), index=True, nullable=True)
+    source: Mapped[str] = mapped_column(String(50), index=True, nullable=False) # whatsapp, stripe, calcom, custom
+    event_type: Mapped[str] = mapped_column(String(100), index=True, nullable=False)
+    idempotency_key: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
+    signature: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    payload: Mapped[Dict[str, Any]] = mapped_column(JSON, default=dict)
+    status: Mapped[str] = mapped_column(String(50), default="PENDING", index=True) # PENDING, PROCESSED, FAILED, RETRYING
+    retry_count: Mapped[int] = mapped_column(Integer, default=0)
+    error_message: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Relationships
+    business: Mapped[Optional["V5Business"]] = relationship("V5Business")
+
+
+# ============================================================
+# 26. HUMAN HANDOFF (Escalation & Operator Queue)
+# ============================================================
+class V5HumanHandoff(Base, TimestampMixin):
+    """
+    Tracks live customer escalation tickets requiring human operator intervention.
+    """
+    __tablename__ = "v5_human_handoffs"
+
+    business_id: Mapped[str] = mapped_column(String(36), ForeignKey("v5_businesses.id", ondelete="CASCADE"), index=True, nullable=False)
+    conversation_id: Mapped[str] = mapped_column(String(36), ForeignKey("v5_conversations.id", ondelete="CASCADE"), index=True, nullable=False)
+    customer_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("v5_customers.id", ondelete="SET NULL"), index=True, nullable=True)
+    reason: Mapped[str] = mapped_column(String(100), default="CUSTOMER_REQUEST") # CUSTOMER_REQUEST, LOW_CONFIDENCE, NEGATIVE_SENTIMENT, ESCALATION
+    priority: Mapped[str] = mapped_column(String(20), default="MEDIUM", index=True) # LOW, MEDIUM, HIGH, URGENT
+    status: Mapped[str] = mapped_column(String(50), default="PENDING", index=True) # PENDING, ASSIGNED, RESOLVED, DISMISSED
+    assigned_user_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("v5_users.id", ondelete="SET NULL"), nullable=True, index=True)
+    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    resolved_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    # Relationships
+    business: Mapped["V5Business"] = relationship("V5Business")
+    conversation: Mapped["V5Conversation"] = relationship("V5Conversation")
+    assigned_user: Mapped[Optional["V5User"]] = relationship("V5User")
+
+
+# ============================================================
 # EXPORTED ALIASES (Backward-Compatibility for V5 Subsystems)
 # ============================================================
 User = V5User
 Business = V5Business
 BusinessUser = V5BusinessUser
+Workspace = V5Workspace
+Organization = V5Business
+Membership = V5BusinessUser
 AIEmployee = V5AIEmployee
 Service = V5Service
 Staff = V5Staff
@@ -541,6 +634,9 @@ Lead = V5Lead
 Appointment = V5Appointment
 Integration = V5Integration
 Automation = V5Automation
+AutomationRun = V5AutomationRun
+WebhookEvent = V5WebhookEvent
+HumanHandoff = V5HumanHandoff
 Task = V5Task
 Notification = V5Notification
 AIEvent = V5AIEvent
@@ -566,5 +662,29 @@ from backend.app.models.lead_engine import (
     OutreachEvent,
     LeadSearch,
     LeadSearchResult,
+    V5IdealCustomerProfile,
+    V5OutreachApproval,
+    IdealCustomerProfile,
+    OutreachApproval,
+    ICP,
+    V5SalesTask,
+    SalesTask,
+    V5SocialSignal,
+    V5SocialLead,
+    V5GeneratedAgentSuite,
+    SocialSignal,
+    SocialLead,
+    GeneratedAgentSuite,
+    V5VoiceSession,
+    VoiceSession,
+    V5Project,
+    V5WorkbenchTask,
+    V5WorkbenchArtifact,
+    Project,
+    WorkbenchTask,
+    WorkbenchArtifact,
+    V5RegisteredModel,
+    RegisteredModel,
 )
+
 

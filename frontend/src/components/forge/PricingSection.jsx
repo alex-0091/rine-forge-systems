@@ -1,121 +1,118 @@
 import React from 'react';
-import { ArrowRight, CheckCircle2, ShieldCheck, Sparkles, Layers, Cpu } from 'lucide-react';
+import { ArrowRight, CheckCircle2, ShieldCheck, Sparkles, Layers, Cpu, Zap, Lock } from 'lucide-react';
+import { PRICING_PACKAGES } from '../PaymentPortalModal';
 
-export function PricingSection({ onNavigate }) {
-  const tiers = [
-    {
-      name: 'PILOT WORKFLOW',
-      badge: 'PROVE VALUE FIRST',
-      tagline: 'Ideal for isolating and automating one high-friction, high-value process.',
-      features: [
-        'Single end-to-end workflow automation',
-        'Direct connection to 1–2 existing software tools (CRM, Email)',
-        'Zero-hallucination policy guardrails & human approval gate',
-        '7–14 day deployment timeline',
-        '14-day post-launch optimization & warranty'
-      ],
-      scope: 'Single Agent / Process'
-    },
-    {
-      name: 'CONNECTED SYSTEM',
-      badge: 'POPULAR ENGAGEMENT',
-      tagline: 'For connecting multiple departments and eliminating cross-tool manual data entry.',
-      features: [
-        '2–4 multi-step connected AI agents',
-        'Bi-directional sync across CRM, ERP, messaging, and database',
-        'Custom webhooks, data normalization, and PDF OCR parsing',
-        'Role-based human-in-the-loop approval routing (Slack/Email)',
-        '30-day monitoring, performance SLA, and prompt refinement'
-      ],
-      scope: 'Multi-Workflow Architecture'
-    },
-    {
-      name: 'CUSTOM INFRASTRUCTURE',
-      badge: 'ENTERPRISE',
-      tagline: 'For complex, proprietary operations requiring specialized multi-agent architectures.',
-      features: [
-        'Fully bespoke agent network and decision-support engines',
-        'High-frequency timeseries, custom microservices, or private RAG vaults',
-        'Dedicated edge deployment with auto-failovers',
-        'Comprehensive security review, role-based access, and immutable logging',
-        'Ongoing quarterly optimization & technical partnership'
-      ],
-      scope: 'Bespoke Enterprise Systems'
-    }
-  ];
-
+export function PricingSection({ onNavigate, onOpenPaymentModal }) {
   return (
-    <section id="pricing" className="py-16 sm:py-24 border-b border-slate-800/80 bg-[#080c14] relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+    <section id="pricing" className="py-16 sm:py-24 border-b border-white/[0.08] bg-[#080b11] relative">
+      {/* Ambient background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-indigo-600/10 blur-[130px] pointer-events-none rounded-full" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
         
         {/* Section Header */}
         <div className="text-center space-y-3 max-w-3xl mx-auto">
-          <div className="text-xs font-mono font-bold text-teal-400 tracking-widest uppercase">
-            COMMERCIAL TRANSPARENCY
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/25 text-indigo-300 text-xs font-mono font-bold tracking-wider uppercase">
+            <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+            <span>TRANSPARENT STARTER PRICING</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-            WHAT DOES AI AUTOMATION COST?
+          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+            Production AI Infrastructure. Scoped for Maximum ROI.
           </h2>
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-            Every business starts from a different workflow. Projects are scoped around the complexity, integrations, and level of automation required — with fixed milestones and zero unexpected charges.
+            Choose your deployment tier with guaranteed fixed milestones. Lock in staging with a 50% milestone deposit — remaining balance is only settled once your system is live and verified.
           </p>
         </div>
 
-        {/* 3 Tiers Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {tiers.map((tier, idx) => (
+        {/* 4 Tiers Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {PRICING_PACKAGES.map((tier) => (
             <div
-              key={idx}
-              className={`bg-dark-900 border rounded-3xl p-6 sm:p-8 space-y-6 transition-all flex flex-col justify-between shadow-xl ${
-                idx === 1 ? 'border-teal-500/50 shadow-teal-500/10' : 'border-slate-800'
+              key={tier.id}
+              className={`bg-[#0d121f]/80 backdrop-blur-xl border rounded-3xl p-6 space-y-6 transition-all flex flex-col justify-between shadow-[0_16px_40px_rgba(0,0,0,0.4)] ${
+                tier.popular 
+                  ? 'border-indigo-500/80 shadow-[0_0_30px_rgba(99,102,241,0.2)] ring-1 ring-indigo-500/40' 
+                  : 'border-white/[0.08] hover:border-white/[0.16]'
               }`}
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-mono font-black text-white tracking-wider">
+                  <span className="text-xs font-bold text-white tracking-wider">
                     {tier.name}
                   </span>
-                  <span className="text-[9px] font-mono px-2 py-0.5 bg-dark-950 text-teal-400 border border-slate-800 rounded font-bold">
-                    {tier.badge}
-                  </span>
+                  {tier.popular && (
+                    <span className="text-[9px] font-mono px-2 py-0.5 bg-amber-500/15 text-amber-300 border border-amber-500/30 rounded-md font-bold">
+                      TOP VALUE
+                    </span>
+                  )}
+                </div>
+
+                {/* Price Display */}
+                <div className="space-y-1">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-black text-white font-mono">${tier.discountPrice}</span>
+                    <span className="text-xs text-slate-500 line-through font-mono">${tier.regularPrice}</span>
+                    <span className="text-[10px] text-slate-400 font-mono">one-time</span>
+                  </div>
+                  <div className="inline-block text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 px-2 py-0.5 rounded-md font-semibold">
+                    50% Milestone Deposit: ${tier.depositRequired}
+                  </div>
                 </div>
 
                 <p className="text-xs text-slate-300 leading-relaxed">
                   {tier.tagline}
                 </p>
 
-                <div className="p-3 bg-dark-950 rounded-xl border border-slate-850 text-[11px] font-mono text-slate-400">
-                  <span>Scope: <strong className="text-teal-400">{tier.scope}</strong></span>
-                </div>
-
                 {/* Features list */}
-                <div className="space-y-2.5 pt-2">
-                  <div className="text-[10px] font-mono text-slate-400 uppercase font-bold tracking-wider">What’s Included:</div>
+                <div className="space-y-2.5 pt-2 border-t border-white/[0.06]">
+                  <div className="text-[10px] font-mono text-slate-400 uppercase font-bold tracking-wider">Included Capabilities:</div>
                   <ul className="space-y-2 text-xs text-slate-300">
                     {tier.features.map((feat, fIdx) => (
                       <li key={fIdx} className="flex items-start gap-2">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-teal-400 shrink-0 mt-0.5" />
-                        <span>{feat}</span>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-indigo-400 shrink-0 mt-0.5" />
+                        <span className="leading-snug">{feat}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80">
+              <div className="pt-4 border-t border-white/[0.06] space-y-2">
                 <button
-                  onClick={() => onNavigate('audit')}
-                  className={`w-full py-3 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 ${
-                    idx === 1 
-                      ? 'bg-teal-500 hover:bg-teal-400 text-dark-950 shadow-md shadow-teal-500/20' 
-                      : 'bg-dark-950 hover:bg-dark-850 text-slate-200 border border-slate-700'
+                  onClick={() => {
+                    if (onOpenPaymentModal) {
+                      onOpenPaymentModal(tier.id);
+                    } else if (onNavigate) {
+                      onNavigate('payment');
+                    }
+                  }}
+                  className={`w-full py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                    tier.popular 
+                      ? 'bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white shadow-[0_0_20px_rgba(99,102,241,0.4)]' 
+                      : 'bg-white/[0.05] hover:bg-white/[0.1] text-white border border-white/[0.1]'
                   }`}
                 >
-                  <span>DISCUSS YOUR WORKFLOW →</span>
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Lock Staging (${tier.depositRequired}) →</span>
                 </button>
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Commercial Escrow Guarantee */}
+        <div className="max-w-3xl mx-auto p-4 rounded-2xl bg-white/[0.02] border border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+          <div className="flex items-center gap-2 text-slate-300">
+            <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
+            <span><strong>Accepted Settlement Rails:</strong> Ziraat Bank Euro IBAN, Dollar IBAN, and USDT BNB Smart Chain (BEP20).</span>
+          </div>
+          <button
+            onClick={() => onNavigate && onNavigate('payment')}
+            className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 flex items-center gap-1 shrink-0"
+          >
+            <span>Open Settlement Terminal</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </div>
 
       </div>

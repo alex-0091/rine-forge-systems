@@ -25,7 +25,7 @@ const CHANNELS = [
     icon: Smartphone,
     color: 'emerald',
     badge: 'Official Meta Cloud API',
-    highlight: '98% Open Rate • Voice Notes Supported',
+    highlight: 'High-Engagement Delivery • Voice Notes Supported',
     customerSnippet: '“Hi, I cracked a crown and I am in severe pain. Can anyone see me tomorrow morning?”',
     aiSnippet: '“I’m so sorry to hear you’re in pain! We treat acute discomfort as an urgent priority. Dr. Evans has an emergency triage slot open at 9:30 AM or 11:00 AM tomorrow—which one can you make so we can relieve your discomfort?”',
     features: [
@@ -75,7 +75,7 @@ const CHANNELS = [
     badge: 'AI Telephony & Call Screening',
     highlight: 'Zero Busy Signals • 24/7 Voice Intake',
     customerSnippet: '[Caller dials clinic after hours at 8:15 PM with acute toothache]',
-    aiSnippet: '“Thank you for calling Rine Dental. I understand you have acute discomfort—I have reserved a priority morning triage slot at 9:30 AM with Dr. Evans. Can I text this confirmation to your mobile number right now?”',
+    aiSnippet: '“Thank you for calling Istanbul Maltepe Dental Clinic. I understand you have acute discomfort—I have reserved a priority morning triage slot at 9:30 AM with Dr. Evans. Can I text this confirmation to your mobile number right now?”',
     features: [
       'Answers calls when all front-desk lines are engaged',
       'Transcribes caller inquiries and updates calendar',

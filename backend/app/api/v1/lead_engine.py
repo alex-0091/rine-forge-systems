@@ -756,3 +756,458 @@ async def get_roi_analytics(
         session=session, business_id=tenant.id, timeframe_days=timeframe_days
     )
     return metrics["conversions"]
+
+
+# ============================================================
+# PHASE AN: ICP (IDEAL CUSTOMER PROFILE) ENDPOINTS
+# ============================================================
+class CreateICPRequest(BaseModel):
+    name: str
+    industry: str
+    company_size: str = "5-50"
+    country: str = "USA"
+    city_region: str = "Austin, TX"
+    services: Optional[List[str]] = None
+    technologies: Optional[List[str]] = None
+    revenue_range: Optional[str] = None
+    target_roles: Optional[List[str]] = None
+    keywords: Optional[List[str]] = None
+    business_characteristics: Optional[List[str]] = None
+    exclusions: Optional[List[str]] = None
+
+class UpdateICPRequest(BaseModel):
+    name: Optional[str] = None
+    industry: Optional[str] = None
+    company_size: Optional[str] = None
+    country: Optional[str] = None
+    city_region: Optional[str] = None
+    services: Optional[List[str]] = None
+    technologies: Optional[List[str]] = None
+    revenue_range: Optional[str] = None
+    target_roles: Optional[List[str]] = None
+    keywords: Optional[List[str]] = None
+    business_characteristics: Optional[List[str]] = None
+    exclusions: Optional[List[str]] = None
+    is_active: Optional[bool] = None
+
+@router.post("/icp", status_code=status.HTTP_201_CREATED)
+async def create_icp_endpoint(
+    payload: CreateICPRequest,
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Creates a new Ideal Customer Profile specification."""
+    from backend.app.discovery.icp_service import icp_service
+    icp = await icp_service.create_icp(
+        session=session,
+        business_id=tenant.id,
+        **payload.model_dump()
+    )
+    return {"status": "success", "icp": icp}
+
+@router.get("/icp")
+async def list_icps_endpoint(
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Lists all ICPs belonging to the authenticated tenant."""
+    from backend.app.discovery.icp_service import icp_service
+    icps = await icp_service.list_icps(session, tenant.id)
+    return {"status": "success", "count": len(icps), "icps": icps}
+
+@router.get("/icp/{icp_id}")
+async def get_icp_endpoint(
+    icp_id: str,
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Fetches an ICP specification within tenant scope."""
+    from backend.app.discovery.icp_service import icp_service
+    icp = await icp_service.get_icp(session, tenant.id, icp_id)
+    return {"status": "success", "icp": icp}
+
+@router.patch("/icp/{icp_id}")
+async def update_icp_endpoint(
+    icp_id: str,
+    payload: UpdateICPRequest,
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Updates an ICP specification."""
+    from backend.app.discovery.icp_service import icp_service
+    icp = await icp_service.update_icp(
+        session=session,
+        business_id=tenant.id,
+        icp_id=icp_id,
+        updates={k: v for k, v in payload.model_dump().items() if v is not None}
+    )
+    return {"status": "success", "icp": icp}
+
+@router.delete("/icp/{icp_id}")
+async def delete_icp_endpoint(
+    icp_id: str,
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Deletes an ICP specification."""
+    from backend.app.discovery.icp_service import icp_service
+    await icp_service.delete_icp(session, tenant.id, icp_id)
+    return {"status": "success", "deleted_id": icp_id}
+
+@router.post("/icp/{icp_id}/run")
+async def run_icp_discovery_endpoint(
+    icp_id: str,
+    max_results: int = Query(10, ge=1, le=50),
+    auto_draft_outreach: bool = Query(True),
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Executes a discovery run using the ICP as the target specification."""
+    from backend.app.discovery.icp_service import icp_service
+    results = await icp_service.run_discovery_from_icp(
+        session=session,
+        business_id=tenant.id,
+        icp_id=icp_id,
+        max_results=max_results,
+        auto_draft_outreach=auto_draft_outreach
+    )
+    return results
+
+
+# ============================================================
+# PHASE AN: MULTI-CHANNEL PITCH GENERATION
+# ============================================================
+class GeneratePitchRequest(BaseModel):
+    channel: str = "EMAIL" # EMAIL, WHATSAPP, SMS
+    service_name: Optional[str] = "Elena AI Receptionist"
+
+@router.post("/prospects/{prospect_id}/pitch")
+async def generate_pitch_endpoint(
+    prospect_id: str,
+    payload: GeneratePitchRequest,
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Generates a personalized, channel-adapted, evidence-grounded pitch draft."""
+    from backend.app.outreach.pitch_generator import pitch_generator
+
+    stmt = select(V5Prospect).where(
+        V5Prospect.id == prospect_id,
+        V5Prospect.business_id == tenant.id
+    ).options(
+        selectinload(V5Prospect.observations),
+        selectinload(V5Prospect.opportunities)
+    )
+    res = await session.execute(stmt)
+    prospect = res.scalar_one_or_none()
+    if not prospect:
+        raise HTTPException(status_code=404, detail=f"Prospect #{prospect_id} not found")
+
+    prospect_dict = {
+        "company_name": prospect.company_name,
+        "contact_name": prospect.contact_name,
+        "industry": prospect.industry,
+        "observations": prospect.observations,
+        "opportunities": prospect.opportunities
+    }
+
+    draft = pitch_generator.generate_pitch(
+        prospect_data=prospect_dict,
+        channel=payload.channel,
+        service_name=payload.service_name or "Elena AI Receptionist"
+    )
+    return {"status": "success", "prospect_id": prospect_id, "draft": draft}
+
+
+# ============================================================
+# PHASE AN: 11-STEP OUTREACH COMPLIANCE PREFLIGHT CHECK
+# ============================================================
+@router.get("/outreach/{outreach_id}/preflight")
+async def check_outreach_preflight(
+    outreach_id: str,
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Executes the authoritative 11-step compliance pre-flight check on an outreach item."""
+    from backend.app.compliance.outreach_compliance import outreach_compliance_layer
+
+    stmt = select(V5ProspectOutreach).where(
+        V5ProspectOutreach.id == outreach_id,
+        V5ProspectOutreach.business_id == tenant.id
+    ).options(selectinload(V5ProspectOutreach.prospect))
+    res = await session.execute(stmt)
+    outreach = res.scalar_one_or_none()
+    if not outreach:
+        raise HTTPException(status_code=404, detail=f"Outreach record #{outreach_id} not found")
+
+    result = await outreach_compliance_layer.evaluate_preflight(
+        session=session,
+        business_id=tenant.id,
+        prospect=outreach.prospect,
+        outreach=outreach,
+        channel=outreach.channel
+    )
+    return {"status": "success", "compliance": result.to_dict()}
+
+
+# ============================================================
+# PHASE AN: SAFE CSV IMPORT PREVIEW & COMMIT
+# ============================================================
+class ImportPreviewRequest(BaseModel):
+    csv_content: str
+
+class ImportCommitRequest(BaseModel):
+    valid_rows: List[Dict[str, Any]]
+    source_label: Optional[str] = "CUSTOMER_CSV_IMPORT"
+
+@router.post("/prospects/import-preview")
+async def preview_csv_endpoint(payload: ImportPreviewRequest):
+    """Validates CSV content and returns structured preview with error breakdown."""
+    from backend.app.discovery.csv_import_export import csv_service
+    return csv_service.preview_csv_import(payload.csv_content)
+
+@router.post("/prospects/import-commit")
+async def commit_csv_endpoint(
+    payload: ImportCommitRequest,
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Commits validated CSV rows to the tenant's CRM."""
+    from backend.app.discovery.csv_import_export import csv_service
+    return await csv_service.commit_csv_import(
+        session=session,
+        business_id=tenant.id,
+        valid_rows=payload.valid_rows,
+        source_label=payload.source_label or "CUSTOMER_CSV_IMPORT"
+    )
+
+
+# ============================================================
+# PHASE AN: TENANT-SCOPED CSV EXPORT
+# ============================================================
+@router.get("/prospects/export")
+async def export_prospects_csv_endpoint(
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Exports authenticated tenant's prospects as CSV. Enforces cross-tenant isolation."""
+    from fastapi.responses import Response
+    from backend.app.discovery.csv_import_export import csv_service
+
+    csv_data = await csv_service.export_prospects_csv(session, tenant.id)
+    filename = f"prospects_export_{tenant.name.replace(' ', '_').lower()}.csv"
+
+    return Response(
+        content=csv_data,
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename={filename}"}
+    )
+
+
+# ============================================================
+# PHASE AN: INTERNAL AI SALES ASSISTANT
+# ============================================================
+class AssistantQueryRequest(BaseModel):
+    query: str
+
+@router.post("/assistant")
+async def query_sales_assistant_endpoint(
+    payload: AssistantQueryRequest,
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Answers sales queries grounded strictly in live tenant CRM data."""
+    from backend.app.sales.assistant import sales_assistant
+    result = await sales_assistant.answer_sales_query(
+        session=session,
+        business_id=tenant.id,
+        query=payload.query
+    )
+    return {"status": "success", **result}
+
+
+# ============================================================
+# PHASE AN: CAMPAIGNS SAFETY & LIFECYCLE
+# ============================================================
+class CreateCampaignRequest(BaseModel):
+    name: str
+    target_industry: str
+    target_country: str = "USA"
+    primary_offer: str = "Elena AI Receptionist"
+    daily_send_limit: int = 25
+    hourly_send_limit: int = 5
+    follow_up_cadence_days: Optional[List[int]] = None
+    is_dry_run: bool = True
+
+@router.post("/campaigns", status_code=status.HTTP_201_CREATED)
+async def create_campaign_endpoint(
+    payload: CreateCampaignRequest,
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Creates a new compliant outbound campaign."""
+    from backend.app.campaigns.engine_v5 import campaign_engine_v5
+    camp = await campaign_engine_v5.create_campaign(
+        session=session,
+        **payload.model_dump()
+    )
+    return {"status": "success", "campaign": camp}
+
+@router.get("/campaigns")
+async def list_campaigns_endpoint(
+    status: Optional[str] = Query(None),
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Lists campaigns with optional status filtering."""
+    from backend.app.campaigns.engine_v5 import campaign_engine_v5
+    campaigns = await campaign_engine_v5.list_campaigns(session, status_filter=status)
+    return {"status": "success", "count": len(campaigns), "campaigns": campaigns}
+
+@router.post("/campaigns/{campaign_id}/pause")
+async def pause_campaign_endpoint(
+    campaign_id: str,
+    reason: str = Query("Manual operator pause"),
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Pauses a campaign and logs reason."""
+    from backend.app.campaigns.engine_v5 import campaign_engine_v5
+    camp = await campaign_engine_v5.pause_campaign(session, campaign_id, reason=reason)
+    return {"status": "success", "campaign_id": camp.id, "status_now": camp.status}
+
+@router.post("/campaigns/{campaign_id}/resume")
+async def resume_campaign_endpoint(
+    campaign_id: str,
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Resumes a paused campaign."""
+    from backend.app.campaigns.engine_v5 import campaign_engine_v5
+    camp = await campaign_engine_v5.resume_campaign(session, campaign_id)
+    return {"status": "success", "campaign_id": camp.id, "status_now": camp.status}
+
+
+# ============================================================
+# PHASE AN: SALES TASKS (Human-in-the-Loop CRM Actions)
+# ============================================================
+class CreateSalesTaskRequest(BaseModel):
+    title: str
+    description: Optional[str] = None
+    prospect_id: Optional[str] = None
+    task_type: str = "FOLLOW_UP"
+    priority: str = "MEDIUM"
+    assigned_to: Optional[str] = None
+    due_at: Optional[datetime] = None
+
+class UpdateSalesTaskRequest(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    status: Optional[str] = None
+    priority: Optional[str] = None
+    assigned_to: Optional[str] = None
+    completed: Optional[bool] = None
+
+@router.get("/tasks")
+async def list_sales_tasks_endpoint(
+    status: Optional[str] = Query(None),
+    prospect_id: Optional[str] = Query(None),
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Lists sales tasks for the tenant."""
+    from backend.app.models.lead_engine import V5SalesTask
+    stmt = select(V5SalesTask).where(V5SalesTask.business_id == tenant.id)
+    if status:
+        stmt = stmt.where(V5SalesTask.status == status.upper())
+    if prospect_id:
+        stmt = stmt.where(V5SalesTask.prospect_id == prospect_id)
+    stmt = stmt.order_by(V5SalesTask.created_at.desc())
+    res = await session.execute(stmt)
+    tasks = res.scalars().all()
+    return {"status": "success", "count": len(tasks), "tasks": tasks}
+
+@router.post("/tasks", status_code=status.HTTP_201_CREATED)
+async def create_sales_task_endpoint(
+    payload: CreateSalesTaskRequest,
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Creates a new sales task for human operator or automated workflow."""
+    from backend.app.models.lead_engine import V5SalesTask
+    task = V5SalesTask(
+        business_id=tenant.id,
+        prospect_id=payload.prospect_id,
+        title=payload.title.strip(),
+        description=payload.description,
+        task_type=payload.task_type.upper(),
+        priority=payload.priority.upper(),
+        assigned_to=payload.assigned_to,
+        due_at=payload.due_at,
+        status="PENDING"
+    )
+    session.add(task)
+    await session.commit()
+    await session.refresh(task)
+    return {"status": "success", "task": task}
+
+@router.patch("/tasks/{task_id}")
+async def update_sales_task_endpoint(
+    task_id: str,
+    payload: UpdateSalesTaskRequest,
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Updates status or assignment of a sales task."""
+    from backend.app.models.lead_engine import V5SalesTask
+    stmt = select(V5SalesTask).where(
+        V5SalesTask.id == task_id,
+        V5SalesTask.business_id == tenant.id
+    )
+    res = await session.execute(stmt)
+    task = res.scalar_one_or_none()
+    if not task:
+        raise HTTPException(status_code=404, detail=f"Sales task #{task_id} not found")
+
+    if payload.title is not None:
+        task.title = payload.title.strip()
+    if payload.description is not None:
+        task.description = payload.description
+    if payload.status is not None:
+        task.status = payload.status.upper()
+    if payload.priority is not None:
+        task.priority = payload.priority.upper()
+    if payload.assigned_to is not None:
+        task.assigned_to = payload.assigned_to
+    if payload.completed is True:
+        task.status = "COMPLETED"
+        task.completed_at = datetime.now(timezone.utc)
+    elif payload.completed is False:
+        task.status = "PENDING"
+        task.completed_at = None
+
+    await session.commit()
+    await session.refresh(task)
+    return {"status": "success", "task": task}
+
+@router.delete("/tasks/{task_id}")
+async def delete_sales_task_endpoint(
+    task_id: str,
+    session: AsyncSession = Depends(get_db),
+    tenant: Business = Depends(resolve_tenant)
+):
+    """Deletes a sales task."""
+    from backend.app.models.lead_engine import V5SalesTask
+    stmt = select(V5SalesTask).where(
+        V5SalesTask.id == task_id,
+        V5SalesTask.business_id == tenant.id
+    )
+    res = await session.execute(stmt)
+    task = res.scalar_one_or_none()
+    if not task:
+        raise HTTPException(status_code=404, detail=f"Sales task #{task_id} not found")
+
+    await session.delete(task)
+    await session.commit()
+    return {"status": "success", "message": f"Sales task #{task_id} deleted"}
+

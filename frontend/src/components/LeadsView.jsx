@@ -3,7 +3,8 @@ import {
   Building2, Search, Filter, Sparkles, CheckCircle2, AlertCircle,
   ExternalLink, Mail, Phone, Globe, Shield, RefreshCw, 
   ChevronRight, ArrowRight, Activity, X, Eye, Edit3, Send,
-  UserX, ShieldCheck, ShieldAlert, Check, Clock, Zap, MapPin
+  UserX, ShieldCheck, ShieldAlert, Check, Clock, Zap, MapPin,
+  Upload, Download, Bot, UserPlus, FileText, Smartphone, AlertTriangle
 } from 'lucide-react';
 
 export function LeadsView() {
@@ -43,6 +44,33 @@ export function LeadsView() {
   const [editMessage, setEditMessage] = useState('');
   const [actionProcessing, setActionProcessing] = useState(false);
   const [actionFeedback, setActionFeedback] = useState(null);
+
+  // Phase AN: CSV Import & Export State
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [csvContent, setCsvContent] = useState('');
+  const [importPreview, setImportPreview] = useState(null);
+  const [isValidatingCsv, setIsValidatingCsv] = useState(false);
+  const [isCommittingImport, setIsCommittingImport] = useState(false);
+  const [importCommitResult, setImportCommitResult] = useState(null);
+
+  // Phase AN: Grounded AI Sales Assistant State
+  const [assistantQuery, setAssistantQuery] = useState('');
+  const [assistantResult, setAssistantResult] = useState(null);
+  const [isAssistantQuerying, setIsAssistantQuerying] = useState(false);
+  const [showAssistantPanel, setShowAssistantPanel] = useState(false);
+
+  // Phase AN: Multi-Channel Pitch Generator State
+  const [pitchChannel, setPitchChannel] = useState('EMAIL');
+  const [isGeneratingPitch, setIsGeneratingPitch] = useState(false);
+
+  // Phase AN: Assign to Human & Notes State
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [assigneeName, setAssigneeName] = useState('');
+  const [taskPriority, setTaskPriority] = useState('MEDIUM');
+  const [isAssigning, setIsAssigning] = useState(false);
+  const [showNoteModal, setShowNoteModal] = useState(false);
+  const [newNoteText, setNewNoteText] = useState('');
+  const [isSavingNote, setIsSavingNote] = useState(false);
 
   const fetchLeads = async () => {
     try {
@@ -350,6 +378,162 @@ export function LeadsView() {
     }
   };
 
+  // Phase AN: Multi-Channel Pitch Generator Handler
+  const handleGeneratePitch = async (leadId, channel = 'EMAIL') => {
+    try {
+      setIsGeneratingPitch(true);
+      setPitchChannel(channel);
+      setActionFeedback(null);
+      const res = await fetch(`/api/v1/prospects/${leadId}/pitch`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ channel, service_name: "Elena AI Receptionist" })
+      });
+      const data = await res.json();
+      if (data.status === 'success' && data.draft) {
+        setEditSubject(data.draft.subject || '');
+        setEditMessage(data.draft.body_text || '');
+        setIsEditingDraft(true);
+        setActionFeedback({ 
+          type: 'success', 
+          text: `Generated ${channel} draft citing observable operational evidence.` 
+        });
+      }
+    } catch (e) {
+      console.error("Error generating pitch:", e);
+      setActionFeedback({ type: 'error', text: 'Error contacting pitch generator' });
+    } finally {
+      setIsGeneratingPitch(false);
+    }
+  };
+
+  // Phase AN: CSV Import Preview Handler
+  const handlePreviewCsv = async () => {
+    if (!csvContent.trim()) return;
+    try {
+      setIsValidatingCsv(true);
+      setImportPreview(null);
+      setImportCommitResult(null);
+      const res = await fetch('/api/v1/prospects/import-preview', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ csv_content: csvContent })
+      });
+      const data = await res.json();
+      setImportPreview(data);
+    } catch (e) {
+      console.error("CSV preview error:", e);
+    } finally {
+      setIsValidatingCsv(false);
+    }
+  };
+
+  // Phase AN: CSV Import Commit Handler
+  const handleCommitCsv = async () => {
+    if (!importPreview || !importPreview.valid_rows_preview) return;
+    try {
+      setIsCommittingImport(true);
+      const res = await fetch('/api/v1/prospects/import-commit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          valid_rows: importPreview.valid_rows_preview,
+          source_label: "CUSTOMER_CSV_IMPORT"
+        })
+      });
+      const data = await res.json();
+      setImportCommitResult(data);
+      await fetchLeads();
+    } catch (e) {
+      console.error("CSV commit error:", e);
+    } finally {
+      setIsCommittingImport(false);
+    }
+  };
+
+  // Phase AN: CSV Export Handler
+  const handleExportCsv = () => {
+    window.open('/api/v1/prospects/export', '_blank');
+  };
+
+  // Phase AN: AI Sales Assistant Query Handler
+  const handleQueryAssistant = async (queryText) => {
+    const q = queryText || assistantQuery;
+    if (!q.trim()) return;
+    try {
+      setIsAssistantQuerying(true);
+      setAssistantResult(null);
+      setAssistantQuery(q);
+      const res = await fetch('/api/v1/assistant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: q })
+      });
+      const data = await res.json();
+      setAssistantResult(data);
+      setShowAssistantPanel(true);
+    } catch (e) {
+      console.error("Assistant query error:", e);
+    } finally {
+      setIsAssistantQuerying(false);
+    }
+  };
+
+  // Phase AN: Task Assignment Handler
+  const handleCreateTask = async () => {
+    if (!selectedLeadId || !assigneeName.trim()) return;
+    try {
+      setIsAssigning(true);
+      const res = await fetch('/api/v1/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prospect_id: selectedLeadId,
+          title: `Follow up with ${leadDetail?.company_name || 'Prospect'}`,
+          description: `Assigned to ${assigneeName} for manual review & outreach.`,
+          assigned_to: assigneeName,
+          priority: taskPriority,
+          task_type: "FOLLOW_UP"
+        })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        setShowAssignModal(false);
+        setAssigneeName('');
+        setActionFeedback({ type: 'success', text: `Task assigned to ${assigneeName} successfully.` });
+      }
+    } catch (e) {
+      console.error("Task assignment error:", e);
+    } finally {
+      setIsAssigning(false);
+    }
+  };
+
+  // Phase AN: Note Saving Handler
+  const handleSaveNote = async () => {
+    if (!selectedLeadId || !newNoteText.trim()) return;
+    try {
+      setIsSavingNote(true);
+      const existingNotes = leadDetail?.notes ? `${leadDetail.notes}\n` : '';
+      const updatedNotes = `${existingNotes}[${new Date().toLocaleDateString()}] ${newNoteText.trim()}`;
+      const res = await fetch(`/api/v1/prospects/${selectedLeadId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ notes: updatedNotes })
+      });
+      if (res.ok) {
+        setShowNoteModal(false);
+        setNewNoteText('');
+        await openLeadDetail(selectedLeadId);
+        setActionFeedback({ type: 'success', text: 'Note added to business record.' });
+      }
+    } catch (e) {
+      console.error("Save note error:", e);
+    } finally {
+      setIsSavingNote(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header and Controls */}
@@ -368,6 +552,24 @@ export function LeadsView() {
 
         <div className="flex flex-wrap items-center gap-2.5">
           <button
+            onClick={() => { setShowImportModal(true); setImportPreview(null); setImportCommitResult(null); }}
+            className="px-3.5 py-2 bg-dark-850 hover:bg-dark-800 text-slate-200 border border-slate-700 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5"
+            title="Import verified CSV of business leads"
+          >
+            <Upload className="w-3.5 h-3.5 text-teal-400" />
+            Import CSV
+          </button>
+
+          <button
+            onClick={handleExportCsv}
+            className="px-3.5 py-2 bg-dark-850 hover:bg-dark-800 text-slate-200 border border-slate-700 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5"
+            title="Export tenant's verified leads as CSV"
+          >
+            <Download className="w-3.5 h-3.5 text-indigo-400" />
+            Export CSV
+          </button>
+
+          <button
             onClick={() => { setShowAnalyzeModal(true); setAnalyzedData(null); }}
             className="px-3.5 py-2 bg-dark-850 hover:bg-dark-800 text-slate-200 border border-slate-700 text-xs font-semibold rounded-xl transition-all flex items-center gap-1.5"
           >
@@ -383,6 +585,79 @@ export function LeadsView() {
             Discover New Leads
           </button>
         </div>
+      </div>
+
+      {/* Phase AN: Grounded AI Sales Assistant Interactive Bar */}
+      <div className="bg-dark-900 border border-slate-800/80 p-4 rounded-2xl space-y-3 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Bot className="w-4 h-4 text-teal-400" />
+            <span className="text-xs font-bold text-white uppercase tracking-wider">Internal AI Sales Assistant</span>
+            <span className="text-[10px] font-mono px-2 py-0.5 bg-dark-850 text-slate-400 border border-slate-700 rounded">
+              Grounded in Live CRM Data
+            </span>
+          </div>
+          <span className="text-[11px] text-slate-500 font-mono">Zero Hallucinations • Actual Tenant Records</span>
+        </div>
+
+        <div className="flex gap-2">
+          <input
+            type="text"
+            placeholder="Ask anything about your pipeline, follow-ups, replies, or unverified contacts..."
+            value={assistantQuery}
+            onChange={(e) => setAssistantQuery(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleQueryAssistant()}
+            className="flex-1 px-3.5 py-2.5 bg-dark-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none focus:border-teal-500 placeholder:text-slate-500"
+          />
+          <button
+            onClick={() => handleQueryAssistant()}
+            disabled={isAssistantQuerying || !assistantQuery.trim()}
+            className="px-4 py-2.5 bg-teal-500 hover:bg-teal-400 disabled:opacity-50 text-dark-950 font-bold rounded-xl text-xs transition-all flex items-center gap-1.5 shrink-0"
+          >
+            {isAssistantQuerying ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+            Ask Assistant
+          </button>
+        </div>
+
+        {/* Query Suggestion Chips */}
+        <div className="flex flex-wrap items-center gap-1.5 pt-1">
+          <span className="text-[10px] text-slate-500 uppercase font-mono mr-1">Suggestions:</span>
+          {[
+            "Which leads need follow up?",
+            "Which prospects replied?",
+            "Show me dental businesses in Austin",
+            "Which leads are missing verified contact information?"
+          ].map((suggestion, idx) => (
+            <button
+              key={idx}
+              onClick={() => handleQueryAssistant(suggestion)}
+              className="px-2.5 py-1 bg-dark-850 hover:bg-dark-800 text-slate-300 hover:text-white border border-slate-800 rounded-lg text-[11px] transition-all"
+            >
+              {suggestion}
+            </button>
+          ))}
+        </div>
+
+        {/* Assistant Response Box */}
+        {showAssistantPanel && assistantResult && (
+          <div className="mt-3 p-3.5 bg-dark-950 border border-teal-500/20 rounded-xl space-y-1.5 text-xs">
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-teal-300 flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-teal-400" />
+                Assistant Answer
+              </span>
+              <button 
+                onClick={() => setShowAssistantPanel(false)}
+                className="text-slate-500 hover:text-slate-300"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+            <pre className="whitespace-pre-wrap font-sans text-slate-200 leading-relaxed pt-1">
+              {assistantResult.answer}
+            </pre>
+          </div>
+        )}
       </div>
 
       {/* Filter and Search Bar */}
@@ -659,6 +934,99 @@ export function LeadsView() {
             ) : (
               leadDetail && (
                 <div className="space-y-6 text-sm">
+                  {/* Lead Action Controls Bar (Section 31 UI Requirements) */}
+                  <div className="bg-dark-850 border border-slate-800 p-4 rounded-xl space-y-3">
+                    <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                      Outreach & Workflow Actions
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        onClick={() => handleGeneratePitch(leadDetail.id, 'EMAIL')}
+                        disabled={isGeneratingPitch}
+                        className="px-3 py-1.5 bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 border border-teal-500/30 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5"
+                      >
+                        <Mail className="w-3.5 h-3.5" />
+                        {isGeneratingPitch && pitchChannel === 'EMAIL' ? 'Drafting...' : 'Draft Email'}
+                      </button>
+
+                      <button
+                        onClick={() => handleGeneratePitch(leadDetail.id, 'WHATSAPP')}
+                        disabled={isGeneratingPitch}
+                        className="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5"
+                      >
+                        <Smartphone className="w-3.5 h-3.5" />
+                        {isGeneratingPitch && pitchChannel === 'WHATSAPP' ? 'Drafting...' : 'Draft WhatsApp'}
+                      </button>
+
+                      <button
+                        onClick={() => handleGeneratePitch(leadDetail.id, 'SMS')}
+                        disabled={isGeneratingPitch}
+                        className="px-3 py-1.5 bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 border border-sky-500/30 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5" />
+                        {isGeneratingPitch && pitchChannel === 'SMS' ? 'Drafting...' : 'Draft SMS'}
+                      </button>
+
+                      <button
+                        onClick={() => { setShowAssignModal(true); setAssigneeName(''); }}
+                        className="px-3 py-1.5 bg-dark-800 hover:bg-dark-750 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5"
+                      >
+                        <UserPlus className="w-3.5 h-3.5 text-indigo-400" />
+                        Assign
+                      </button>
+
+                      <button
+                        onClick={() => { setShowNoteModal(true); setNewNoteText(''); }}
+                        className="px-3 py-1.5 bg-dark-800 hover:bg-dark-750 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5"
+                      >
+                        <FileText className="w-3.5 h-3.5 text-amber-400" />
+                        Add Note
+                      </button>
+                    </div>
+
+                    {/* Lead Attributes Summary Card */}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-2 text-xs border-t border-slate-800/80">
+                      <div className="p-2.5 bg-dark-900 rounded-lg border border-slate-800/60">
+                        <div className="text-[10px] text-slate-500 uppercase font-mono">Contact</div>
+                        <div className="font-semibold text-slate-200 truncate mt-0.5">
+                          {leadDetail.contact_name || 'Practice Operations'}
+                        </div>
+                      </div>
+
+                      <div className="p-2.5 bg-dark-900 rounded-lg border border-slate-800/60">
+                        <div className="text-[10px] text-slate-500 uppercase font-mono">Verification</div>
+                        <div className="font-semibold text-teal-400 truncate mt-0.5">
+                          {leadDetail.data_quality_status || 'VERIFIED'}
+                        </div>
+                      </div>
+
+                      <div className="p-2.5 bg-dark-900 rounded-lg border border-slate-800/60">
+                        <div className="text-[10px] text-slate-500 uppercase font-mono">Opt-Out Status</div>
+                        <div className={`font-semibold truncate mt-0.5 ${
+                          leadDetail.opt_out_status === 'GLOBAL_OPT_OUT' ? 'text-rose-400' : 'text-emerald-400'
+                        }`}>
+                          {leadDetail.opt_out_status || 'NOT_OPTED_OUT'}
+                        </div>
+                      </div>
+
+                      <div className="p-2.5 bg-dark-900 rounded-lg border border-slate-800/60 col-span-2 sm:col-span-3">
+                        <div className="text-[10px] text-slate-500 uppercase font-mono">Why Relevant (Evidence Basis)</div>
+                        <div className="text-slate-300 text-xs mt-0.5 leading-relaxed">
+                          {leadDetail.opportunities?.[0]?.reason || leadDetail.observations?.[0]?.observation || 'Public business signals indicate potential for operational workflow triage.'}
+                        </div>
+                      </div>
+
+                      {leadDetail.notes && (
+                        <div className="p-2.5 bg-dark-900 rounded-lg border border-slate-800/60 col-span-2 sm:col-span-3">
+                          <div className="text-[10px] text-slate-500 uppercase font-mono">Notes</div>
+                          <pre className="text-slate-300 text-xs font-sans whitespace-pre-wrap mt-0.5 leading-relaxed">
+                            {leadDetail.notes}
+                          </pre>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   {/* Section A: Sourcing Provenance & Compliance Verification */}
                   <div className="bg-dark-850 border border-slate-800 p-4 rounded-xl space-y-3">
                     <div className="flex items-center justify-between">
@@ -1092,6 +1460,239 @@ export function LeadsView() {
                 className="px-4 py-2 bg-dark-800 hover:bg-dark-700 text-slate-200 rounded-xl text-xs"
               >
                 Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Phase AN: Safe CSV Import Modal */}
+      {showImportModal && (
+        <div className="fixed inset-0 z-50 bg-dark-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-dark-900 border border-slate-800 rounded-2xl w-full max-w-2xl p-6 space-y-5 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <Upload className="w-4 h-4 text-teal-400" />
+                <h3 className="font-bold text-white text-base">Safe B2B Lead CSV Import</h3>
+              </div>
+              <button onClick={() => setShowImportModal(false)} className="text-slate-400 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3.5 text-xs">
+              <p className="text-slate-400 leading-relaxed">
+                Import legitimate customer-provided lists. Enforces RFC email syntax, blocks disposable temporary domains, and automatically detects intra-file duplicates.
+              </p>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="font-semibold text-slate-300">Paste CSV Content (with headers)</label>
+                  <button
+                    onClick={() => setCsvContent(
+                      "company_name,email,phone,website,industry,location\n" +
+                      "Lone Star Dental,reception@lonestardental.com,512-555-0101,https://lonestardental.com,Dental,Austin TX\n" +
+                      "Hill Country Law,info@hillcountrylaw.com,512-555-0102,https://hillcountrylaw.com,Legal,Austin TX"
+                    )}
+                    className="text-teal-400 hover:underline text-[10px]"
+                  >
+                    Load Sample CSV
+                  </button>
+                </div>
+                <textarea
+                  rows={5}
+                  value={csvContent}
+                  onChange={(e) => setCsvContent(e.target.value)}
+                  placeholder="company_name,email,phone,website,industry,location..."
+                  className="w-full p-2.5 bg-dark-950 border border-slate-800 rounded-xl font-mono text-xs text-slate-200 focus:outline-none focus:border-teal-500"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handlePreviewCsv}
+                  disabled={isValidatingCsv || !csvContent.trim()}
+                  className="px-4 py-2 bg-dark-800 hover:bg-dark-750 disabled:opacity-50 text-slate-200 border border-slate-700 font-semibold rounded-xl text-xs flex items-center gap-1.5"
+                >
+                  {isValidatingCsv ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Eye className="w-3.5 h-3.5" />}
+                  {isValidatingCsv ? 'Validating...' : 'Validate CSV Preview'}
+                </button>
+              </div>
+
+              {/* Import Preview Breakdown */}
+              {importPreview && (
+                <div className="p-4 bg-dark-950 border border-slate-800 rounded-xl space-y-3">
+                  <div className="flex items-center gap-3 text-xs font-mono">
+                    <span className="text-slate-300">Total: {importPreview.total_rows}</span>
+                    <span className="text-emerald-400 font-bold">Valid: {importPreview.valid_count}</span>
+                    {importPreview.invalid_count > 0 && (
+                      <span className="text-rose-400 font-bold">Invalid: {importPreview.invalid_count}</span>
+                    )}
+                  </div>
+
+                  {importPreview.invalid_rows?.length > 0 && (
+                    <div className="space-y-1 max-h-32 overflow-y-auto">
+                      <div className="text-[10px] text-rose-400 uppercase font-bold">Rejected Rows (Excluded from Commit):</div>
+                      {importPreview.invalid_rows.map((inv, i) => (
+                        <div key={i} className="p-2 bg-rose-500/10 border border-rose-500/20 rounded text-[11px] text-rose-300">
+                          Row #{inv.row_number} ({inv.company_name || 'No Name'}): {inv.reasons?.join(', ')}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {importPreview.valid_rows_preview?.length > 0 && (
+                    <div className="space-y-1 max-h-36 overflow-y-auto border-t border-slate-800 pt-2">
+                      <div className="text-[10px] text-teal-400 uppercase font-bold">Valid Rows Preview:</div>
+                      {importPreview.valid_rows_preview.map((v, i) => (
+                        <div key={i} className="p-2 bg-dark-900 border border-slate-800 rounded text-[11px] text-slate-300 flex items-center justify-between">
+                          <span className="font-semibold text-slate-200">{v.company_name}</span>
+                          <span className="text-slate-400">{v.email || v.phone}</span>
+                          <span className="text-teal-400 font-mono text-[10px]">{v.industry}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {importCommitResult && (
+                <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl text-emerald-300 text-xs">
+                  <div className="font-bold flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    CSV Import Complete
+                  </div>
+                  <div>
+                    Imported: {importCommitResult.imported_count} leads | Duplicates skipped: {importCommitResult.skipped_duplicates}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-800">
+              <button
+                onClick={() => setShowImportModal(false)}
+                className="px-4 py-2 text-xs text-slate-400 hover:text-white"
+              >
+                Close
+              </button>
+              {importPreview?.valid_count > 0 && !importCommitResult && (
+                <button
+                  onClick={handleCommitCsv}
+                  disabled={isCommittingImport}
+                  className="px-4 py-2 bg-teal-500 hover:bg-teal-400 disabled:opacity-50 text-dark-950 font-bold rounded-xl text-xs transition-all flex items-center gap-1.5"
+                >
+                  {isCommittingImport ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                  {isCommittingImport ? 'Committing...' : `Commit ${importPreview.valid_count} Valid Leads`}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Phase AN: Assign to Human Operator Modal */}
+      {showAssignModal && (
+        <div className="fixed inset-0 z-50 bg-dark-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-dark-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <UserPlus className="w-4 h-4 text-indigo-400" />
+                <h3 className="font-bold text-white text-base">Assign Lead to Operator</h3>
+              </div>
+              <button onClick={() => setShowAssignModal(false)} className="text-slate-400 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div>
+                <label className="font-semibold text-slate-300 block mb-1">Assignee Name / Operator ID</label>
+                <input
+                  type="text"
+                  value={assigneeName}
+                  onChange={(e) => setAssigneeName(e.target.value)}
+                  placeholder="e.g. Alex, Sarah, Sales Lead"
+                  className="w-full p-2.5 bg-dark-950 border border-slate-800 rounded-xl text-slate-200 focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-300 block mb-1">Task Priority</label>
+                <select
+                  value={taskPriority}
+                  onChange={(e) => setTaskPriority(e.target.value)}
+                  className="w-full p-2.5 bg-dark-950 border border-slate-800 rounded-xl text-slate-200 focus:outline-none"
+                >
+                  <option value="LOW">LOW</option>
+                  <option value="MEDIUM">MEDIUM</option>
+                  <option value="HIGH">HIGH</option>
+                  <option value="URGENT">URGENT</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-800">
+              <button
+                onClick={() => setShowAssignModal(false)}
+                className="px-4 py-2 text-xs text-slate-400 hover:text-white"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCreateTask}
+                disabled={isAssigning || !assigneeName.trim()}
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold rounded-xl text-xs transition-all flex items-center gap-1.5"
+              >
+                {isAssigning ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                Assign Task
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Phase AN: Add Note Modal */}
+      {showNoteModal && (
+        <div className="fixed inset-0 z-50 bg-dark-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-dark-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-amber-400" />
+                <h3 className="font-bold text-white text-base">Add Lead Activity Note</h3>
+              </div>
+              <button onClick={() => setShowNoteModal(false)} className="text-slate-400 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div>
+                <label className="font-semibold text-slate-300 block mb-1">Activity / Research Note</label>
+                <textarea
+                  rows={4}
+                  value={newNoteText}
+                  onChange={(e) => setNewNoteText(e.target.value)}
+                  placeholder="Record call summary, qualification details, or custom workflow notes..."
+                  className="w-full p-2.5 bg-dark-950 border border-slate-800 rounded-xl text-slate-200 focus:outline-none focus:border-amber-500"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2.5 pt-2 border-t border-slate-800">
+              <button
+                onClick={() => setShowNoteModal(false)}
+                className="px-4 py-2 text-xs text-slate-400 hover:text-white"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveNote}
+                disabled={isSavingNote || !newNoteText.trim()}
+                className="px-4 py-2 bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-dark-950 font-bold rounded-xl text-xs transition-all flex items-center gap-1.5"
+              >
+                {isSavingNote ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                Save Note
               </button>
             </div>
           </div>

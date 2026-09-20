@@ -132,17 +132,35 @@ class KnowledgeService:
         scored_chunks = []
         for c in chunks:
             sim = cosine_similarity(query_vec, c.embedding)
+            doc_title = (c.metadata_json or {}).get("title", "Business Knowledge Document")
             scored_chunks.append({
                 "chunk_id": c.id,
                 "document_id": c.document_id,
                 "content": c.content,
                 "similarity": round(sim, 4),
-                "metadata": c.metadata_json
+                "metadata": c.metadata_json,
+                "provenance": {
+                    "origin": "BUSINESS_KNOWLEDGE_BASE",
+                    "title": doc_title,
+                    "statement": "This came directly from the verified business knowledge base.",
+                    "is_inference": False
+                }
             })
 
         # Sort by similarity score descending
         scored_chunks.sort(key=lambda x: x["similarity"], reverse=True)
         return scored_chunks[:top_k]
+
+    def format_grounded_context(self, retrieved_chunks: List[Dict[str, Any]]) -> str:
+        """Formats retrieved chunks with strict provenance labels for prompt injection."""
+        if not retrieved_chunks:
+            return "No verified business knowledge documents matched this query."
+        lines = ["=== VERIFIED BUSINESS KNOWLEDGE BASE (NOT AI INFERENCE) ==="]
+        for i, chunk in enumerate(retrieved_chunks, start=1):
+            title = chunk.get("provenance", {}).get("title", "Document")
+            lines.append(f"[{i}] SOURCE: '{title}' (Verified Business Fact):\n{chunk.get('content')}\n")
+        lines.append("=== END OF VERIFIED BUSINESS KNOWLEDGE ===")
+        return "\n".join(lines)
 
     async def delete_document(
         self,

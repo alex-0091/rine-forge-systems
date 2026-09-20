@@ -20,6 +20,13 @@ from .analytics import router as analytics_router
 from .admin import router as admin_router
 from .health import router as health_router
 from .lead_engine import router as lead_engine_router
+from .ai import router as ai_router
+from backend.app.handoffs.router import router as handoffs_router
+from backend.app.channels.voice.router import router as voice_router
+from backend.app.webhooks.router import router as webhooks_router
+from .agent_generator import router as agent_generator_router
+from backend.app.workbench.router import router as workbench_router
+from .intelligence import router as intelligence_router
 
 api_v1_router = APIRouter(prefix="/api/v1")
 
@@ -39,6 +46,14 @@ api_v1_router.include_router(analytics_router)
 api_v1_router.include_router(admin_router)
 api_v1_router.include_router(health_router)
 api_v1_router.include_router(lead_engine_router)
+api_v1_router.include_router(ai_router)
+api_v1_router.include_router(handoffs_router)
+api_v1_router.include_router(voice_router)
+api_v1_router.include_router(webhooks_router)
+api_v1_router.include_router(agent_generator_router)
+api_v1_router.include_router(workbench_router)
+api_v1_router.include_router(intelligence_router)
 
 __all__ = ["api_v1_router"]
+
 

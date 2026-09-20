@@ -189,6 +189,7 @@ async def get_demo_business_info(session: AsyncSession = Depends(get_db)):
         }
 
 @router.post("/message")
+@router.post("/chat")
 async def send_receptionist_message(
     req: ReceptionistMessageRequest,
     session: AsyncSession = Depends(get_db)

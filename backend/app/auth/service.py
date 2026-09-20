@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException, status
 
-from backend.app.models.v5 import User, Business, BusinessUser, AIEmployee
+from backend.app.models.v5 import User, Business, BusinessUser, AIEmployee, Workspace
 from backend.app.auth.security import hash_password, verify_password, create_access_token
 
 logger = logging.getLogger("rine_forge_systems.auth.service")
@@ -79,6 +79,15 @@ class AuthService:
                 permissions=["ALL"]
             )
             session.add(biz_user)
+
+            # Provision default Workspace for the business
+            default_ws = Workspace(
+                business_id=new_biz.id,
+                name="Default Workspace",
+                slug="default",
+                status="ACTIVE"
+            )
+            session.add(default_ws)
 
             # Provision default Elena AI Employee for the business
             default_ai = AIEmployee(

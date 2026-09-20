@@ -30,14 +30,44 @@ async def list_integrations(
     res = await session.execute(stmt)
     integrations = res.scalars().all()
 
-    # If tenant has no custom integrations yet, provide standard platform matrix
+    # If tenant has no custom integrations yet, check real platform configuration status
+    from backend.app.channels.whatsapp.service import whatsapp_service
+    from backend.app.channels.voice.service import voice_service
+
     if not integrations:
         return [
-            {"provider": "meta_whatsapp", "type": "messaging", "status": "CONNECTED", "notes": "Meta Cloud WhatsApp Gateway"},
-            {"provider": "google_calendar", "type": "calendar", "status": "CONNECTED", "notes": "Internal Sync Engine"},
-            {"provider": "stripe", "type": "payments", "status": "NOT_CONNECTED", "notes": "Payment Processing"},
-            {"provider": "hubspot", "type": "crm", "status": "NOT_CONNECTED", "notes": "CRM Bi-directional Sync"}
+            {
+                "provider": "meta_whatsapp",
+                "type": "messaging",
+                "status": "CONNECTED" if whatsapp_service.is_configured else "NOT_CONFIGURED",
+                "notes": "Meta Cloud WhatsApp Gateway"
+            },
+            {
+                "provider": "voice_telephony",
+                "type": "voice",
+                "status": "CONNECTED" if voice_service.is_configured else "NOT_CONFIGURED",
+                "notes": "Twilio / LiveKit SIP Gateway"
+            },
+            {
+                "provider": "google_calendar",
+                "type": "calendar",
+                "status": "NOT_CONFIGURED",
+                "notes": "Internal Booking Engine Active; Google OAuth sync requires setup"
+            },
+            {
+                "provider": "stripe",
+                "type": "payments",
+                "status": "NOT_CONFIGURED",
+                "notes": "Payment Processing"
+            },
+            {
+                "provider": "hubspot",
+                "type": "crm",
+                "status": "NOT_CONFIGURED",
+                "notes": "CRM Bi-directional Sync"
+            }
         ]
+
 
     return [
         {

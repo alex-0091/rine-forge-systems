@@ -2,18 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, Users, Megaphone, Send, MessageSquare, 
   Kanban, BarChart3, Shield, Globe, ShieldAlert, ShieldCheck, 
-  Sparkles, RefreshCw
+  Sparkles, RefreshCw, Bot, PhoneCall, Briefcase
 } from 'lucide-react';
 
-import { DashboardView } from './components/DashboardView';
-import { LeadsView } from './components/LeadsView';
-import { CampaignsView } from './components/CampaignsView';
-import { OutreachQueueView } from './components/OutreachQueueView';
-import { InboxView } from './components/InboxView';
-import { PipelineView } from './components/PipelineView';
-import { AnalyticsView } from './components/AnalyticsView';
-import { ComplianceView } from './components/ComplianceView';
 import { PublicPortfolioView } from './components/PublicPortfolioView';
+
+const DashboardView = React.lazy(() => import('./components/DashboardView').then(m => ({ default: m.DashboardView })));
+const LeadsView = React.lazy(() => import('./components/LeadsView').then(m => ({ default: m.LeadsView })));
+const AgentGeneratorView = React.lazy(() => import('./components/AgentGeneratorView').then(m => ({ default: m.AgentGeneratorView })));
+const CampaignsView = React.lazy(() => import('./components/CampaignsView').then(m => ({ default: m.CampaignsView })));
+const OutreachQueueView = React.lazy(() => import('./components/OutreachQueueView').then(m => ({ default: m.OutreachQueueView })));
+const InboxView = React.lazy(() => import('./components/InboxView').then(m => ({ default: m.InboxView })));
+const PipelineView = React.lazy(() => import('./components/PipelineView').then(m => ({ default: m.PipelineView })));
+const AnalyticsView = React.lazy(() => import('./components/AnalyticsView').then(m => ({ default: m.AnalyticsView })));
+const ComplianceView = React.lazy(() => import('./components/ComplianceView').then(m => ({ default: m.ComplianceView })));
+const VoiceAnalyticsView = React.lazy(() => import('./components/voice/VoiceAnalyticsView').then(m => ({ default: m.VoiceAnalyticsView })));
+const WorkbenchView = React.lazy(() => import('./components/workbench/WorkbenchView').then(m => ({ default: m.WorkbenchView })));
 
 export function App() {
   const [activeTab, setActiveTab] = useState('public_website');
@@ -32,6 +36,9 @@ export function App() {
 
   useEffect(() => {
     fetchKillSwitchStatus();
+    if (typeof window !== 'undefined' && !window.location.hash) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
   }, []);
 
   const handleToggleKillSwitch = async () => {
@@ -63,7 +70,10 @@ export function App() {
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'workbench', label: 'AI Workbench', icon: Briefcase },
     { id: 'leads', label: 'Leads & Intel', icon: Users },
+    { id: 'agent_generator', label: 'Bot Generator', icon: Bot },
+    { id: 'voice_analytics', label: 'Voice Intel', icon: PhoneCall },
     { id: 'campaigns', label: 'Campaigns', icon: Megaphone },
     { id: 'outreach', label: 'Outreach Queue', icon: Send },
     { id: 'inbox', label: 'Inbox & Replies', icon: MessageSquare },
@@ -168,22 +178,27 @@ export function App() {
           <PublicPortfolioView onOpenOperatorConsole={() => setActiveTab('dashboard')} />
         </div>
       ) : (
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {activeTab === 'dashboard' && (
-            <DashboardView
-              onNavigate={(tab) => setActiveTab(tab)}
-              onTriggerKillSwitch={handleToggleKillSwitch}
-              killSwitchStatus={killSwitchStatus}
-            />
-          )}
-          {activeTab === 'leads' && <LeadsView />}
-          {activeTab === 'campaigns' && <CampaignsView onNavigate={(tab) => setActiveTab(tab)} />}
-          {activeTab === 'outreach' && <OutreachQueueView />}
-          {activeTab === 'inbox' && <InboxView />}
-          {activeTab === 'pipeline' && <PipelineView />}
-          {activeTab === 'analytics' && <AnalyticsView />}
-          {activeTab === 'compliance' && <ComplianceView />}
-        </main>
+        <React.Suspense fallback={<div className="p-12 text-center text-teal-400 font-mono text-sm animate-pulse">Loading Module...</div>}>
+          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {activeTab === 'dashboard' && (
+              <DashboardView
+                onNavigate={(tab) => setActiveTab(tab)}
+                onTriggerKillSwitch={handleToggleKillSwitch}
+                killSwitchStatus={killSwitchStatus}
+              />
+            )}
+            {activeTab === 'workbench' && <WorkbenchView />}
+            {activeTab === 'leads' && <LeadsView />}
+            {activeTab === 'agent_generator' && <AgentGeneratorView />}
+            {activeTab === 'voice_analytics' && <VoiceAnalyticsView />}
+            {activeTab === 'campaigns' && <CampaignsView onNavigate={(tab) => setActiveTab(tab)} />}
+            {activeTab === 'outreach' && <OutreachQueueView />}
+            {activeTab === 'inbox' && <InboxView />}
+            {activeTab === 'pipeline' && <PipelineView />}
+            {activeTab === 'analytics' && <AnalyticsView />}
+            {activeTab === 'compliance' && <ComplianceView />}
+          </main>
+        </React.Suspense>
       )}
     </div>
   );

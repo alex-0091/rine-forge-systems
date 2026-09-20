@@ -241,7 +241,7 @@ export function WatchItWorkSection({ onOpenAuditModal }) {
                   </div>
                   <div>
                     <div className="text-sm font-bold text-white">{currentStep.uiPreview.sender}</div>
-                    <div className="text-[10px] text-teal-400 font-mono">Rine Dental & Aesthetics</div>
+                    <div className="text-[10px] text-teal-400 font-mono">Istanbul Maltepe Dental Clinic</div>
                   </div>
                 </div>
                 <div className="bg-[#14233a] border border-teal-500/40 text-slate-100 p-4 rounded-2xl rounded-tr-none text-sm shadow-md">
