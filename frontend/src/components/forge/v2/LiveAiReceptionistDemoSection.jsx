@@ -114,10 +114,13 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
   });
 
   const chatContainerRef = useRef(null);
+  const chatEndRef = useRef(null);
   const hasMountedRef = useRef(false);
 
   const scrollToBottom = () => {
-    if (chatContainerRef.current) {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else if (chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
         top: chatContainerRef.current.scrollHeight,
         behavior: 'smooth'
