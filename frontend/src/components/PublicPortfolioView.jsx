@@ -196,7 +196,7 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
       return;
     }
 
-    if (target === 'receptionist' || target === 'try-receptionist' || target === 'ai-receptionist' || target === 'live-receptionist') {
+    if (target === 'receptionist' || target === 'try-receptionist' || target === 'ai-receptionist' || target === 'receptionist-chat') {
       handleOpenReceptionistChat();
       return;
     }
@@ -207,12 +207,22 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
     }
 
     if (target === 'app-dashboard' || target === 'operator-console' || target === 'launch-app') {
-      setIsAppLaunchingModalOpen(true);
+      if (onOpenOperatorConsole) {
+        onOpenOperatorConsole();
+        return;
+      }
+      setCurrentView('workbench');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
     if (target.startsWith('app-')) {
-      setIsAppLaunchingModalOpen(true);
+      if (onOpenOperatorConsole) {
+        onOpenOperatorConsole();
+        return;
+      }
+      setCurrentView('workbench');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     } else if (target === 'workbench' || target === 'lab' || target === 'tools' || target === 'toolkit' || target === 'experience' || target === 'audit' || target === 'home' || target.startsWith('system-') || target.startsWith('for-') || target.startsWith('industry-') || target.startsWith('solution-')) {
       setCurrentView(target === 'toolkit' ? 'tools' : target);
@@ -419,6 +429,7 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
             {/* 15. PROOF OF ENGINEERING: Production AI Projects & Live Systems */}
             <OracleShowcaseSection 
               onNavigate={handleNavigate}
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
 
             {/* 16. HOW IT WORKS: 4-stage clear deployment timeline (Discover, Design, Build, Operate) */}
@@ -641,36 +652,43 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
                 V5 Core Update
               </div>
               <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                Operator Console Launching Soon
+                Rine Forge Operator Console [V5]
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-md mx-auto">
-                The internal Rine Forge Operator Console is currently receiving multi-tenant scaling updates. Dedicated access is reserved for verified client deployments.
+                Explore the multi-tenant autonomous operations platform — inspect lead discovery, monitor AI voice call logs, build custom agent suites, and supervise workflow dispatch.
               </p>
             </div>
 
             <div className="p-4 bg-white/[0.03] border border-white/[0.08] rounded-2xl text-xs text-slate-300 space-y-1.5 text-left font-mono">
               <div className="text-emerald-400 font-bold flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4" /> Live Client Production Active
+                <CheckCircle2 className="w-4 h-4" /> Live Production Engine Ready
               </div>
-              <div className="text-[11px] text-slate-400">All 4 autonomous agents (Elena, Marcus, Aria, Kael) are actively serving clients. Deploy your system below to get instant private staging.</div>
+              <div className="text-[11px] text-slate-400">All 4 autonomous workers (Elena, Marcus, Aria, Kael) and background dispatch pipelines are operational in the console sandbox.</div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <button
                 onClick={() => {
                   setIsAppLaunchingModalOpen(false);
+                  if (onOpenOperatorConsole) {
+                    onOpenOperatorConsole();
+                  } else {
+                    setCurrentView('workbench');
+                  }
+                }}
+                className="flex-1 py-3 px-4 bg-gradient-to-r from-emerald-600 via-teal-500 to-indigo-600 hover:from-emerald-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all flex items-center justify-center gap-2"
+              >
+                <span>Launch Live Console →</span>
+              </button>
+              <button
+                onClick={() => {
+                  setIsAppLaunchingModalOpen(false);
                   setSelectedPackageForModal('speed-to-lead');
                   setIsPaymentModalOpen(true);
                 }}
-                className="flex-1 py-3 px-4 bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.4)] transition-all"
+                className="py-3 px-4 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 rounded-xl text-xs font-semibold"
               >
-                Deploy System ($99 Deposit) →
-              </button>
-              <button
-                onClick={() => setIsAppLaunchingModalOpen(false)}
-                className="py-3 px-5 bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 border border-white/[0.08] rounded-xl text-xs font-semibold"
-              >
-                Close
+                Deploy System ($99 Deposit)
               </button>
             </div>
           </div>
