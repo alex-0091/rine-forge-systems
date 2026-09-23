@@ -19,6 +19,13 @@ import { CinematicWorkflowSection } from './forge/v2/CinematicWorkflowSection';
 import { ProductShowcasePanels } from './forge/v2/ProductShowcasePanels';
 import { HowItWorksTimeline } from './forge/v2/HowItWorksTimeline';
 import { WhyRineSection } from './forge/v2/WhyRineSection';
+import { SeeItInActionSection } from './forge/v2/SeeItInActionSection';
+import { LiveAutomationVisualizer } from './forge/v2/LiveAutomationVisualizer';
+import { OneCallToWorkflowSection } from './forge/v2/OneCallToWorkflowSection';
+import { InteractiveOpportunityCalculator } from './forge/v2/InteractiveOpportunityCalculator';
+import { WhatCanWeAutomateConfigurator } from './forge/v2/WhatCanWeAutomateConfigurator';
+import { HumanHandoffSection } from './forge/v2/HumanHandoffSection';
+import { ExampleWorkflowsSection } from './forge/v2/ExampleWorkflowsSection';
 import { ForgeHero } from './forge/ForgeHero';
 import { LiveActivityStream } from './forge/LiveActivityStream';
 import { LiveSystemsShowcase } from './forge/LiveSystemsShowcase';
@@ -333,10 +340,10 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
       <main>
         {currentView === 'home' && (
           <>
-            {/* 1. HERO: Above-the-fold value pitch with realistic business automation product visual */}
+            {/* 1. HERO: Above-the-fold value pitch with realistic business automation preview */}
             <ForgeHeroExecutive
               onOpenAuditModal={() => handleOpenSimpleAudit()}
-              onScrollToDemo={() => handleNavigate('cinematic-workflow')}
+              onScrollToDemo={() => handleNavigate('see-it-in-action')}
             />
 
             {/* 2. THE PROBLEM: "Your customers don't wait" / 4 friction moments */}
@@ -344,46 +351,76 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
 
-            {/* 3. FOUR CORE SERVICES: Problem -> Solution -> Concrete Example -> CTA */}
+            {/* 3. MAJOR INTERACTIVE EXPERIENCE: "Don't take our word for it" (5 Module Tabs + 8-Industry Switcher) */}
+            <SeeItInActionSection 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            />
+
+            {/* 4. LIVE AUTOMATION VISUALIZER: Interactive 7-Node Sequential Pipeline */}
+            <LiveAutomationVisualizer 
+              onOpenAuditModal={() => handleOpenSimpleAudit()}
+            />
+
+            {/* 5. FOUR CORE SERVICES: Problem -> Solution -> Concrete Example -> CTA */}
             <CoreServicesSection 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
               onSelectService={(svcId) => handleOpenSimpleAudit({ whatToAutomate: svcId })}
             />
 
-            {/* 4. THE "WOW" SECTION: Cinematic workflow from customer call to booked business action */}
-            <CinematicWorkflowSection 
+            {/* 6. FROM ONE CALL TO A COMPLETE WORKFLOW: 8-Stage Automated Machine */}
+            <OneCallToWorkflowSection 
               onOpenAuditModal={() => handleOpenSimpleAudit()}
             />
 
-            {/* 5. PRODUCT SHOWCASE: 5 realistic UI panels (AI Call, Lead, Appointment, Automation, Analytics) */}
+            {/* 7. WHAT CAN WE AUTOMATE: Interactive 12-Card Time-Waste Configurator */}
+            <WhatCanWeAutomateConfigurator 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            />
+
+            {/* 8. PRODUCT SHOWCASE: 5 realistic enterprise UI panels */}
             <ProductShowcasePanels 
               onOpenAuditModal={() => handleOpenSimpleAudit()}
             />
 
-            {/* 6. LIVE INTERACTIVE AI RECEPTIONIST DEMO: Hands-on conversation with Elena/Marcus/Aria */}
+            {/* 9. LIVE INTERACTIVE AI RECEPTIONIST DEMO: Hands-on conversation with Elena/Marcus/Aria */}
             <section id="live-receptionist">
               <LiveAiReceptionistDemoSection 
                 onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
               />
             </section>
 
-            {/* 7. TARGET INDUSTRIES: Built for businesses where missed opportunities matter */}
+            {/* 10. SAFE HUMAN HANDOFF: "When AI Doesn't Know" & Deterministic Guardrails */}
+            <HumanHandoffSection 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            />
+
+            {/* 11. INTERACTIVE OPPORTUNITY CALCULATOR: 5 Dynamic Sliders & Revenue Opportunity */}
+            <InteractiveOpportunityCalculator 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            />
+
+            {/* 12. TARGET INDUSTRIES: Built for businesses where missed opportunities matter */}
             <IndustriesSection 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
               onNavigate={handleNavigate}
             />
 
-            {/* 8. HOW IT WORKS: 4-stage clear deployment timeline (Discover, Design, Build, Operate) */}
+            {/* 13. CONCRETE ARCHITECTURAL CASE STUDIES: Dental, Trades, Boutique Law */}
+            <ExampleWorkflowsSection 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            />
+
+            {/* 14. HOW IT WORKS: 4-stage clear deployment timeline (Discover, Design, Build, Operate) */}
             <HowItWorksTimeline 
               onOpenAuditModal={() => handleOpenSimpleAudit()}
             />
 
-            {/* 9. WHY RINE FORGE: Comparison matrix + 4 core pillars */}
+            {/* 15. WHY RINE FORGE: Comparison matrix + 4 core pillars */}
             <WhyRineSection 
               onOpenAuditModal={() => handleOpenSimpleAudit()}
             />
 
-            {/* 10. TRANSPARENT PRICING & 50% MILESTONE SETTLEMENT */}
+            {/* 16. TRANSPARENT PRICING & 50% MILESTONE SETTLEMENT */}
             <PricingSection 
               onNavigate={handleNavigate}
               onOpenPaymentModal={(pkgId) => {
@@ -392,16 +429,16 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
               }}
             />
 
-            {/* 11. FREQUENTLY ASKED QUESTIONS */}
+            {/* 17. FREQUENTLY ASKED QUESTIONS */}
             <FaqSection 
               onNavigate={handleNavigate} 
               onOpenAuditModal={() => handleOpenSimpleAudit()}
             />
 
-            {/* 12. HIGH-CONVERTING FINAL CTA */}
+            {/* 18. HIGH-CONVERTING FINAL CTA */}
             <FinalCtaSection 
               onOpenAuditModal={() => handleOpenSimpleAudit()}
-              onScrollToDemo={() => handleNavigate('live-receptionist')}
+              onScrollToDemo={() => handleNavigate('see-it-in-action')}
             />
           </>
         )}

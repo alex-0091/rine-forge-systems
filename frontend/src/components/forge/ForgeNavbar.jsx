@@ -46,29 +46,42 @@ export function ForgeNavbar({ onNavigate, onOpenAuditModal, currentView = 'home'
         {/* Desktop Navigation Links */}
         <nav className="hidden lg:flex items-center gap-1 text-xs font-semibold text-slate-300">
           <button
+            onClick={() => handleNav('see-it-in-action')}
+            className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors flex items-center gap-1.5 text-indigo-300 font-bold"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
+            <span>Interactive Demo</span>
+          </button>
+          <button
             onClick={() => handleNav('services')}
             className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors"
           >
             Services
           </button>
           <button
-            onClick={() => handleNav('cinematic-workflow')}
+            onClick={() => handleNav('automation-visualizer')}
             className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors"
           >
-            How It Works
+            Workflow Engine
           </button>
           <button
             onClick={() => handleNav('live-receptionist')}
-            className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors flex items-center gap-1.5 text-indigo-300 font-bold"
+            className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors flex items-center gap-1.5 text-slate-300 hover:text-white font-medium"
           >
-            <Bot className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Live Demo</span>
+            <Bot className="w-3.5 h-3.5 text-slate-400" />
+            <span>Voice Receptionist</span>
           </button>
           <button
-            onClick={() => handleNav('industries')}
+            onClick={() => handleNav('roi-calculator')}
             className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors"
           >
-            Industries
+            ROI Calculator
+          </button>
+          <button
+            onClick={() => handleNav('how-it-works')}
+            className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors"
+          >
+            How It Works
           </button>
           <button
             onClick={() => handleNav('why-rine')}
@@ -144,29 +157,42 @@ export function ForgeNavbar({ onNavigate, onOpenAuditModal, currentView = 'home'
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-white/[0.08] bg-[#0c101a] px-4 pt-3 pb-6 space-y-2 text-xs font-medium text-slate-200">
           <button
+            onClick={() => handleNav('see-it-in-action')}
+            className="block w-full text-left py-2.5 px-3 rounded-lg text-indigo-300 font-bold hover:bg-white/[0.05] flex items-center gap-2"
+          >
+            <Sparkles className="w-4 h-4 text-indigo-400" />
+            <span>Interactive Demo</span>
+          </button>
+          <button
             onClick={() => handleNav('services')}
             className="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-white/[0.05]"
           >
             Services
           </button>
           <button
-            onClick={() => handleNav('cinematic-workflow')}
+            onClick={() => handleNav('automation-visualizer')}
             className="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-white/[0.05]"
           >
-            How It Works
+            Workflow Engine
           </button>
           <button
             onClick={() => handleNav('live-receptionist')}
-            className="block w-full text-left py-2.5 px-3 rounded-lg text-indigo-300 font-bold hover:bg-white/[0.05] flex items-center gap-2"
+            className="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-white/[0.05] flex items-center gap-2 text-slate-300"
           >
-            <Bot className="w-4 h-4 text-indigo-400" />
-            <span>Live Receptionist Demo</span>
+            <Bot className="w-4 h-4 text-slate-400" />
+            <span>Voice Receptionist</span>
           </button>
           <button
-            onClick={() => handleNav('industries')}
+            onClick={() => handleNav('roi-calculator')}
             className="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-white/[0.05]"
           >
-            Industries
+            ROI Calculator
+          </button>
+          <button
+            onClick={() => handleNav('how-it-works')}
+            className="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-white/[0.05]"
+          >
+            How It Works
           </button>
           <button
             onClick={() => handleNav('why-rine')}
