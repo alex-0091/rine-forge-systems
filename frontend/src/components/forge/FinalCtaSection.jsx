@@ -50,17 +50,17 @@ export function FinalCtaSection({ onOpenAuditModal, onScrollToDemo }) {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
           <button
             onClick={handleAudit}
-            className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-600 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold text-sm rounded-xl transition-all shadow-[0_0_25px_rgba(99,102,241,0.35)] hover:shadow-[0_0_35px_rgba(99,102,241,0.5)] flex items-center justify-center gap-2 transform hover:-translate-y-0.5"
+            className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-600 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold text-sm rounded-xl transition-all shadow-[0_0_25px_rgba(99,102,241,0.35)] hover:shadow-[0_0_35px_rgba(99,102,241,0.5)] flex items-center justify-center gap-2 transform hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:ring-offset-[#060a12]"
           >
-            <span>GET YOUR FREE AI AUDIT</span>
+            <span>GET FREE AI AUDIT</span>
             <ArrowRight className="w-4 h-4" />
           </button>
 
           <button
             onClick={handleDemo}
-            className="w-full sm:w-auto px-8 py-4 bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 hover:text-white border border-white/[0.12] hover:border-white/[0.2] font-semibold text-sm rounded-xl transition-all flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-8 py-4 bg-white/[0.04] hover:bg-white/[0.08] active:bg-white/[0.12] text-slate-200 hover:text-white border border-white/[0.12] hover:border-white/[0.2] font-semibold text-sm rounded-xl transition-all flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-[#060a12]"
           >
-            <span>SEE A DEMO</span>
+            <span>SEE THE DEMO</span>
             <ArrowUpRight className="w-4 h-4 text-slate-400" />
           </button>
         </div>

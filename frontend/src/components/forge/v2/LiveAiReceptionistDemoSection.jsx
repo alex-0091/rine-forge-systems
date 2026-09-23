@@ -16,7 +16,7 @@ const WORKERS = [
     role: 'AI RECEPTIONIST',
     specialty: 'Clinical Triage & Appointments',
     avatarKey: 'receptionist',
-    businessContext: 'Istanbul Maltepe Dental Clinic • 24/7 Multilingual Intake',
+    businessContext: 'Premier Dental Practice Demo • 24/7 Intake Sandbox',
     badge: '24/7 CLINICAL TRIAGE',
     activeTabClass: 'bg-teal-500/20 text-teal-300 border-teal-400 shadow-teal-500/10',
     avatarInitialBg: 'bg-teal-900/60 border-teal-500/40 text-teal-300',
@@ -25,9 +25,9 @@ const WORKERS = [
       'How much do full dental implants cost?',
       'I have severe tooth pain, can I come in today?',
       'Do you have appointments available this Friday?',
-      'Do you provide international patient consultation?'
+      'Do you accept out-of-network PPO insurance?'
     ],
-    greeting: "Hello! I am Elena, 24/7 Front Desk AI Receptionist for Istanbul Maltepe Dental Clinic. I can provide treatment details, verify doctor availability, explain implantology & cosmetic procedures, and lock in appointments. How may I assist you today?"
+    greeting: "Hello! I am Elena, 24/7 Front Desk AI Receptionist for our dental practice demonstration sandbox. I can provide treatment pricing ranges, check live doctor availability, explain preparation procedures, and book appointments directly. How may I assist you today?"
   },
   {
     id: 'sales',
@@ -238,15 +238,15 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
 
       if (selectedWorkerId === 'receptionist') {
         if (lower.includes('hour') || lower.includes('open') || lower.includes('time')) {
-          fallbackContent = "Istanbul Maltepe Dental Clinic is open Monday to Friday 08:30 – 19:00, and Saturday 09:00 – 15:00. We also maintain emergency on-call coverage for trauma and severe toothaches. Would you like to schedule an appointment?";
+          fallbackContent = "Our dental clinic demonstration sandbox is open Monday to Friday 08:30 – 19:00, and Saturday 09:00 – 15:00. We also maintain emergency on-call coverage for trauma and severe toothaches. Would you like to schedule an appointment?";
           fallbackIntent = "HOURS_INQUIRY";
           fallbackAction = "Operating Hours Verified";
         } else if (lower.includes('cost') || lower.includes('price') || lower.includes('implant') || lower.includes('fee')) {
-          fallbackContent = "Our premium titanium dental implant procedures start from $850, which includes 3D diagnostic scans, surgical placement by Dr. Aris, and post-op checkups. We offer flexible zero-interest installment plans as well. May I check availability for a free consultation?";
+          fallbackContent = "Single dental implant procedures typically start from $1,200, which includes 3D diagnostic scans, surgical placement by our lead dentist, and post-op checkups. We offer flexible payment plans as well. May I check availability for a consultation?";
           fallbackIntent = "PRICING_INQUIRY";
           fallbackAction = "Implant Catalog Checked";
         } else if (lower.includes('pain') || lower.includes('emergency') || lower.includes('today') || lower.includes('urgent')) {
-          fallbackContent = "I understand tooth pain is urgent. We have 2 emergency priority slots reserved today at 11:30 AM and 14:15 PM with Dr. Aris. Could you share your full name and phone number so I can secure this slot for you immediately?";
+          fallbackContent = "I understand tooth pain is urgent. We have 2 emergency priority slots reserved today at 11:30 AM and 14:15 PM with Dr. Miller. Could you share your full name and phone number so I can secure this slot for you immediately?";
           fallbackIntent = "EMERGENCY_TRIAGE";
           fallbackAction = "Urgent Slot Reserved";
         } else if (lower.includes('book') || lower.includes('appointment') || lower.includes('friday') || lower.includes('schedule')) {
@@ -254,7 +254,7 @@ export function LiveAiReceptionistDemoSection({ onOpenAuditModal }) {
           fallbackIntent = "CALENDAR_BOOKING";
           fallbackAction = "Calendar Slot Checked";
         } else {
-          fallbackContent = "Thank you for reaching out to Istanbul Maltepe Dental Clinic! I can help you book clinical appointments, explain cosmetic veneers & dental implants, verify insurance, and provide post-op care guidance. What procedure can I assist you with today?";
+          fallbackContent = "Thank you for reaching out to our Dental Practice Demo! I can help you book clinical appointments, explain cosmetic veneers & dental implants, verify insurance, and provide pre-care guidance. What procedure can I assist you with today?";
           fallbackIntent = "GENERAL_CONCIERGE";
           fallbackAction = "Reception Concierge Ready";
         }

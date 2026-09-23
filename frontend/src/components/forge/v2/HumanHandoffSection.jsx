@@ -29,11 +29,14 @@ export function HumanHandoffSection({ onOpenAuditModal }) {
           </div>
 
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            AI shouldn't mean losing control.
+            AI handles routine work. <br className="hidden sm:inline" />
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-sky-200 to-white">
+              You stay in control.
+            </span>
           </h2>
 
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
-            Our systems never guess or make up answers. When a question falls outside approved documentation, the AI politely collects caller details and immediately escalates to your team with full context.
+            Our systems never guess or hallucinate answers. When an inquiry falls outside approved documentation, the system safely records caller details, pauses autonomous actions, and immediately alerts your team with the full transcript.
           </p>
         </div>
 

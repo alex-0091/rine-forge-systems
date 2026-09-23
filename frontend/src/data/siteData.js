@@ -468,43 +468,43 @@ export const FORGE_CASE_STUDIES = [
 
 export const FORGE_FAQS = [
   {
-    q: 'What exactly does FORGE automate?',
-    a: 'We automate repetitive, expensive business workflows where information moves between people and software. This includes responding to and qualifying inbound leads, answering customer support inquiries 24/7, extracting data from invoices and documents, scheduling appointments, syncing data across disconnected CRMs, and drafting recurring reports.'
+    q: 'How does the AI learn our business?',
+    a: 'You provide your existing service list, pricing guidelines, hours, and common customer questions through a simple 10-minute questionnaire or document upload. We convert this into a verified, bounded knowledge base that the system adheres to strictly.'
   },
   {
-    q: 'Do I need to replace my existing software or CRM?',
-    a: 'No. We build systems that integrate directly with the software you already use — including HubSpot, Salesforce, GoHighLevel, Jobber, Slack, Google Workspace, Microsoft 365, QuickBooks, Shopify, and custom databases. We enhance your existing stack rather than forcing you onto a new one.'
+    q: 'Can it answer our FAQs?',
+    a: 'Yes. It accurately answers common questions about services, pricing ranges, operating hours, directions, parking, accepted insurance/payment, and preparation instructions. It is instructed never to guess beyond approved documentation.'
   },
   {
-    q: 'Can AI agents take actions automatically, or do humans stay in the loop?',
-    a: 'Both. For low-risk, deterministic actions (like answering a routine FAQ or checking a calendar slot), agents act immediately. For sensitive actions (like sending contracts, issuing refunds, or updating core financial records), we configure human-in-the-loop approval gates where a team member must click "Approve" before execution.'
+    q: 'Can it book appointments directly?',
+    a: 'Yes. It checks your live availability in Google Calendar, Outlook, Calendly, or your industry CRM (such as GoHighLevel, Jobber, or Dentrix) and books directly into your schedule with double-booking prevention.'
   },
   {
-    q: 'How long does a typical implementation take?',
-    a: 'A focused single-workflow pilot (such as a 24/7 AI Receptionist or Speed-to-Lead pipeline) typically takes 7 to 14 days from design to production. Larger multi-system enterprise integrations generally take 3 to 5 weeks.'
+    q: 'Can it transfer calls to humans?',
+    a: 'Yes. If a caller requests a team member or has an urgent inquiry requiring human judgement, the system can instantly forward the live call to your office desk, mobile number, or on-call staff.'
   },
   {
-    q: 'How much does AI automation cost?',
-    a: 'Every business has different systems and workflow complexity, so projects are scoped specifically around the required integrations and logic. Single-workflow pilots typically start in the low four figures, while multi-system operational infrastructure is custom-scoped. We provide clear, fixed project milestones with zero surprise fees.'
+    q: 'What happens if it doesn’t know something?',
+    a: 'It never guesses or makes things up. If a question falls outside its approved knowledge, it politely informs the caller, records their details and question, and sends an urgent notification to your team with the full transcript.'
   },
   {
-    q: 'What happens if the AI model makes a mistake or encounters an unknown query?',
-    a: 'We implement strict guardrails, temperature controls, and fallback logic. When an AI encounters a query that is not covered by approved documentation or falls below confidence thresholds, it gracefully escalates to a designated team member with the full conversation history and an alert.'
+    q: 'Can it work after hours and on weekends?',
+    a: 'Yes. It operates 24/7/365. When your team is off the clock on evenings, weekends, or holidays, the AI answers immediately, captures customer details, and books appointments so you never lose callers to competitors.'
   },
   {
-    q: 'How is our business and customer data protected?',
-    a: 'Data privacy and security are foundational to our engineering. We use enterprise API endpoints with zero-data-retention policies (meaning your data is never used to train public models), end-to-end TLS 1.3 encryption, least-privilege API credential storage, and immutable audit logs.'
+    q: 'Can it work with our existing tools?',
+    a: 'Yes. You do not need to replace your software. We connect directly with your existing phone number, CRM (HubSpot, GoHighLevel, Salesforce), Google/Outlook calendar, email, and messaging platforms.'
   },
   {
-    q: 'Can you automate a complex custom workflow that isn’t listed on this site?',
-    a: 'Yes. If a workflow has identifiable inputs, logical decision steps, and clear outputs, we can engineer a custom system for it. Request our Free AI Automation Audit and describe your bottleneck; we will assess technical feasibility in our review.'
+    q: 'How long does setup take?',
+    a: 'A standard AI Receptionist or Speed-to-Lead deployment takes 3 to 5 business days from intake to live staging. You test the system thoroughly in a private staging sandbox before anything goes live.'
   },
   {
-    q: 'Do you maintain and monitor the system after launch?',
-    a: 'Yes. Every production deployment includes a post-launch warranty period with proactive error monitoring, uptime tracking, and periodic model optimization. We also offer ongoing SLA support packages for evolving workflows.'
+    q: 'What does ongoing support look like?',
+    a: 'Every deployment includes 30 days of active post-launch monitoring and adjustment to tune responses to real caller interactions. Ongoing support is available to maintain prompts as your services evolve.'
   },
   {
-    q: 'How do we get started?',
-    a: 'The easiest first step is to submit a Free AI Automation Audit. We will analyze your current workflow, identify the highest-ROI automation opportunities, and deliver a clear architecture plan showing what can be automated and what business impact to expect.'
+    q: 'What does it cost?',
+    a: 'Our deployments are flat-rate packages starting at $199 with a 50% milestone deposit ($99) to begin engineering. The remaining 50% is settled only after you test and approve your live system. Zero hidden hourly consulting fees.'
   }
 ];

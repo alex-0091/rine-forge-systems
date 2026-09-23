@@ -15,7 +15,7 @@ export function CoreServicesSection({ onOpenAuditModal, onSelectService }) {
       tagline: '24/7 Phone & Call Answering That Books Appointments',
       problem: 'Front desks get overwhelmed during rush hours, and after 5 PM calls go straight to voicemail. Callers hang up and hire someone else.',
       solution: 'An intelligent AI voice receptionist that picks up on the 1st ring, answers questions about your services, qualifies callers, checks your calendar, and books appointments.',
-      concreteExample: 'Istanbul Dental Clinic answers 140+ calls after 6 PM every week, automatically triaging tooth pain emergencies and scheduling cleanings into Google Calendar.',
+      concreteExample: 'A busy dental practice routes after-hours emergency calls, answering questions about accepted insurance and booking acute tooth pain appointments directly into the calendar.',
       features: [
         'Answers 24/7 on the first ring',
         'Accurate answers from your verified catalog & policies',
@@ -33,7 +33,7 @@ export function CoreServicesSection({ onOpenAuditModal, onSelectService }) {
       tagline: 'Turn Missed Calls and Inquiries into Conversations in Seconds',
       problem: 'Leads buy from whoever responds first. If a contact form sits unread for 2 hours while you are in a meeting, that customer is gone.',
       solution: 'Automated 60-second follow-up sequences across SMS and email that engage inbound inquiries, answer their questions, and drive them to book an appointment.',
-      concreteExample: 'A home services company automatically texts missed callers: "Hi, sorry we missed your call! What service do you need help with?" and secures the job before competitors reply.',
+      concreteExample: 'When a customer calls while your team is assisting another client, the system instantly texts: "Hi, sorry we missed your call! What can we help you with?" and captures the job.',
       features: [
         'Instant 60-second response via SMS & email',
         'Missed-call recovery text sequences',
@@ -51,7 +51,7 @@ export function CoreServicesSection({ onOpenAuditModal, onSelectService }) {
       tagline: 'Automate Routine Communication Without Sounding Robotic',
       problem: 'Your team spends hours sending manual appointment reminders, answering directions/hours questions, and chasing past clients for Google reviews.',
       solution: 'Thoughtful automated workflows that manage pre-appointment reminders, intake paperwork, post-service check-ins, and 5-star review requests in your brand voice.',
-      concreteExample: 'A medical spa automatically delivers pre-treatment instructions 24h prior, texts a satisfaction check-in 2 hours post-visit, and captures 35+ verified Google reviews monthly.',
+      concreteExample: 'A medical clinic delivers pre-treatment instructions 24h prior, texts a satisfaction check-in post-visit, and directs happy patients to your public Google review page.',
       features: [
         'Automated appointment confirmations & reminders',
         'Pre-appointment intake questionnaire delivery',

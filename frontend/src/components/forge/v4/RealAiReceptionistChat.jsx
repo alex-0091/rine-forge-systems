@@ -27,7 +27,7 @@ const WORKERS = [
       'Do you have any openings this Friday afternoon?',
       'Do you accept Delta Dental insurance or CareCredit?'
     ],
-    greeting: "Hello! I am Elena, 24/7 Front Desk AI Receptionist for Istanbul Maltepe Dental Clinic. I can provide treatment details, verify doctor availability, explain implantology & cosmetic procedures, and lock in appointments. How may I assist you today?"
+    greeting: "Hello! I am Elena, 24/7 Front Desk AI Receptionist for our dental practice demonstration sandbox. I can provide treatment details, verify doctor availability, explain procedures, and lock in appointments. How may I assist you today?"
   },
   {
     id: 'sales',
@@ -93,9 +93,9 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null, 
 
   const [businessInfo, setBusinessInfo] = useState({
     business_id: '00000000-0000-0000-0000-000000000001',
-    business_name: 'Istanbul Maltepe Dental Clinic',
+    business_name: 'Premier Dental Practice Demo',
     industry: 'Dental & Healthcare',
-    city: 'Istanbul',
+    city: 'Austin, TX',
   });
 
   const [conversationId, setConversationId] = useState(null);
@@ -425,15 +425,15 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null, 
 
       if (selectedWorkerId === 'receptionist') {
         if (lower.includes('hour') || lower.includes('open') || lower.includes('time')) {
-          fallbackContent = "Istanbul Maltepe Dental Clinic is open Monday to Friday 08:30 – 19:00, and Saturday 09:00 – 15:00. We also maintain emergency on-call coverage. Would you like to schedule a visit?";
+          fallbackContent = "Our dental practice demonstration sandbox is open Monday to Friday 08:30 – 19:00, and Saturday 09:00 – 15:00. We also maintain emergency on-call coverage. Would you like to schedule a visit?";
         } else if (lower.includes('cost') || lower.includes('price') || lower.includes('implant') || lower.includes('fee')) {
-          fallbackContent = "Our premium titanium dental implant procedures start from $850, including 3D diagnostic scans, surgical placement by Dr. Aris, and post-op care. We offer flexible installment plans as well. May I check availability for your consultation?";
+          fallbackContent = "Dental implant procedures typically start from $1,200, including 3D diagnostic scans, surgical placement by our lead dentist, and post-op care. We offer flexible installment plans as well. May I check availability for your consultation?";
         } else if (lower.includes('pain') || lower.includes('emergency') || lower.includes('today') || lower.includes('urgent')) {
-          fallbackContent = "I understand tooth pain is urgent. We have 2 emergency priority slots reserved today at 11:30 AM and 14:15 PM with Dr. Aris. Could you share your full name and phone number so I can secure this slot for you immediately?";
+          fallbackContent = "I understand tooth pain is urgent. We have 2 emergency priority slots reserved today at 11:30 AM and 14:15 PM with Dr. Miller. Could you share your full name and phone number so I can secure this slot for you immediately?";
         } else if (lower.includes('book') || lower.includes('appointment') || lower.includes('friday') || lower.includes('schedule')) {
           fallbackContent = "We have open appointments this week, including Friday at 10:00 AM and 15:30 PM. Would either of those times work for your consultation?";
         } else {
-          fallbackContent = "Thank you for reaching out to Istanbul Maltepe Dental Clinic! I can help you book clinical appointments, explain cosmetic veneers & dental implants, verify insurance, and provide post-op care guidance. What procedure can I assist you with today?";
+          fallbackContent = "Thank you for reaching out to our Dental Practice Demo! I can help you book clinical appointments, explain cosmetic veneers & dental implants, verify insurance, and provide post-op care guidance. What procedure can I assist you with today?";
         }
       } else if (selectedWorkerId === 'sales') {
         if (lower.includes('cost') || lower.includes('price') || lower.includes('plan') || lower.includes('quote') || lower.includes('package')) {

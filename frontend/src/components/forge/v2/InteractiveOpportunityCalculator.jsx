@@ -229,9 +229,9 @@ export function InteractiveOpportunityCalculator({ onOpenAuditModal }) {
                     });
                   }
                 }}
-                className="w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-dark-950 font-black text-xs sm:text-sm rounded-xl transition-all shadow-[0_0_25px_rgba(16,185,129,0.35)] flex items-center justify-center gap-2"
+                className="w-full py-3.5 px-4 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 hover:from-emerald-400 hover:to-teal-300 text-slate-950 font-bold text-xs sm:text-sm rounded-xl transition-all shadow-[0_0_25px_rgba(16,185,129,0.35)] flex items-center justify-center gap-2 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-emerald-400"
               >
-                <span>CLAIM THIS OPPORTUNITY AUDIT</span>
+                <span>GET FREE AI AUDIT FOR YOUR NUMBERS</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
