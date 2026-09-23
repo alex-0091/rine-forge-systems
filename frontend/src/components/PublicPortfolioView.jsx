@@ -26,6 +26,7 @@ import { InteractiveOpportunityCalculator } from './forge/v2/InteractiveOpportun
 import { WhatCanWeAutomateConfigurator } from './forge/v2/WhatCanWeAutomateConfigurator';
 import { HumanHandoffSection } from './forge/v2/HumanHandoffSection';
 import { ExampleWorkflowsSection } from './forge/v2/ExampleWorkflowsSection';
+import { FreeBusinessAIToolsSection } from './forge/v2/FreeBusinessAIToolsSection';
 import { ForgeHero } from './forge/ForgeHero';
 import { LiveActivityStream } from './forge/LiveActivityStream';
 import { LiveSystemsShowcase } from './forge/LiveSystemsShowcase';
@@ -351,66 +352,76 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
 
-            {/* 3. MAJOR INTERACTIVE EXPERIENCE: "Don't take our word for it" (5 Module Tabs + 8-Industry Switcher) */}
+            {/* 3. FREE AI BUSINESS TOOLS: Live Voice Tester, Speed-to-Lead SMS, Google Review AI, Blueprint Scanner */}
+            <FreeBusinessAIToolsSection 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            />
+
+            {/* 4. MAJOR INTERACTIVE EXPERIENCE: "Don't take our word for it" (5 Module Tabs + 8-Industry Switcher) */}
             <SeeItInActionSection 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
 
-            {/* 4. LIVE AUTOMATION VISUALIZER: Interactive 7-Node Sequential Pipeline */}
+            {/* 5. LIVE AUTOMATION VISUALIZER: Interactive 7-Node Sequential Pipeline */}
             <LiveAutomationVisualizer 
               onOpenAuditModal={() => handleOpenSimpleAudit()}
             />
 
-            {/* 5. FOUR CORE SERVICES: Problem -> Solution -> Concrete Example -> CTA */}
+            {/* 6. FOUR CORE SERVICES: Problem -> Solution -> Concrete Example -> CTA */}
             <CoreServicesSection 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
               onSelectService={(svcId) => handleOpenSimpleAudit({ whatToAutomate: svcId })}
             />
 
-            {/* 6. FROM ONE CALL TO A COMPLETE WORKFLOW: 8-Stage Automated Machine */}
+            {/* 7. FROM ONE CALL TO A COMPLETE WORKFLOW: 9-Stage Cinematic Centerpiece */}
             <OneCallToWorkflowSection 
               onOpenAuditModal={() => handleOpenSimpleAudit()}
             />
 
-            {/* 7. WHAT CAN WE AUTOMATE: Interactive 12-Card Time-Waste Configurator */}
+            {/* 8. WHAT CAN WE AUTOMATE: Interactive 12-Card Time-Waste Configurator */}
             <WhatCanWeAutomateConfigurator 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
 
-            {/* 8. PRODUCT SHOWCASE: 5 realistic enterprise UI panels */}
+            {/* 9. PRODUCT SHOWCASE: 5 realistic enterprise UI panels */}
             <ProductShowcasePanels 
               onOpenAuditModal={() => handleOpenSimpleAudit()}
             />
 
-            {/* 9. LIVE INTERACTIVE AI RECEPTIONIST DEMO: Hands-on conversation with Elena/Marcus/Aria */}
+            {/* 10. LIVE INTERACTIVE AI RECEPTIONIST DEMO: Hands-on conversation with Elena/Marcus/Aria */}
             <section id="live-receptionist">
               <LiveAiReceptionistDemoSection 
                 onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
               />
             </section>
 
-            {/* 10. SAFE HUMAN HANDOFF: "When AI Doesn't Know" & Deterministic Guardrails */}
+            {/* 11. SAFE HUMAN HANDOFF: "When AI Doesn't Know" & Deterministic Guardrails */}
             <HumanHandoffSection 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
 
-            {/* 11. INTERACTIVE OPPORTUNITY CALCULATOR: 5 Dynamic Sliders & Revenue Opportunity */}
+            {/* 12. INTERACTIVE OPPORTUNITY CALCULATOR: 5 Dynamic Sliders & Revenue Opportunity */}
             <InteractiveOpportunityCalculator 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
 
-            {/* 12. TARGET INDUSTRIES: Built for businesses where missed opportunities matter */}
+            {/* 13. TARGET INDUSTRIES: Built for businesses where missed opportunities matter */}
             <IndustriesSection 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
               onNavigate={handleNavigate}
             />
 
-            {/* 13. CONCRETE ARCHITECTURAL CASE STUDIES: Dental, Trades, Boutique Law */}
+            {/* 14. CONCRETE ARCHITECTURAL CASE STUDIES: Dental, Trades, Boutique Law */}
             <ExampleWorkflowsSection 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
             />
 
-            {/* 14. HOW IT WORKS: 4-stage clear deployment timeline (Discover, Design, Build, Operate) */}
+            {/* 15. PROOF OF ENGINEERING: Production AI Projects & Live Systems */}
+            <OracleShowcaseSection 
+              onNavigate={handleNavigate}
+            />
+
+            {/* 16. HOW IT WORKS: 4-stage clear deployment timeline (Discover, Design, Build, Operate) */}
             <HowItWorksTimeline 
               onOpenAuditModal={() => handleOpenSimpleAudit()}
             />
