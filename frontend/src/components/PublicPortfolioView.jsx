@@ -7,11 +7,18 @@ import {
   Activity, Play, Flame, BarChart3, Database, Globe,
   Briefcase, DollarSign, School, CheckCircle, AlertTriangle,
   CreditCard, Wallet, Lock, Landmark, CheckCheck, FlaskConical,
-  LayoutDashboard, Video 
+  LayoutDashboard, Video, X
 } from 'lucide-react';
 
-// Forge Marketing & Discovery Components (Experience A)
+// Core Executive B2B Platform Components
 import { ForgeNavbar } from './forge/ForgeNavbar';
+import { ForgeHeroExecutive } from './forge/v2/ForgeHeroExecutive';
+import { CustomerPainSection } from './forge/v2/CustomerPainSection';
+import { CoreServicesSection } from './forge/v2/CoreServicesSection';
+import { CinematicWorkflowSection } from './forge/v2/CinematicWorkflowSection';
+import { ProductShowcasePanels } from './forge/v2/ProductShowcasePanels';
+import { HowItWorksTimeline } from './forge/v2/HowItWorksTimeline';
+import { WhyRineSection } from './forge/v2/WhyRineSection';
 import { ForgeHero } from './forge/ForgeHero';
 import { LiveActivityStream } from './forge/LiveActivityStream';
 import { LiveSystemsShowcase } from './forge/LiveSystemsShowcase';
@@ -313,97 +320,70 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
 
   // EXPERIENCE A: MARKETING & DISCOVERY PLATFORM
   return (
-    <div className="min-h-screen bg-canvas-light text-ink-primary font-sans selection:bg-accent-blue selection:text-white">
+    <div className="min-h-screen bg-[#070b12] text-slate-100 font-sans selection:bg-indigo-500 selection:text-white">
       
       {/* Top Universal Navbar */}
-      <ForgeNavbar onNavigate={handleNavigate} currentView={currentView} />
+      <ForgeNavbar 
+        onNavigate={handleNavigate} 
+        onOpenAuditModal={() => handleOpenSimpleAudit()}
+        currentView={currentView} 
+      />
 
       {/* Main Experience Router */}
       <main>
         {currentView === 'home' && (
           <>
-            {/* 1. HERO: Above-the-fold value pitch (10-second comprehension) */}
-            <ForgeV2HeroScene 
-              onNavigate={(target) => target === 'audit' ? handleOpenSimpleAudit() : handleNavigate(target)} 
-              onLaunchSystemDemo={handleLaunchSystemSandbox}
-              onWatchTenSecDemo={(sysId) => setActiveTenSecDemoSysId(sysId)}
+            {/* 1. HERO: Above-the-fold value pitch with realistic business automation product visual */}
+            <ForgeHeroExecutive
+              onOpenAuditModal={() => handleOpenSimpleAudit()}
+              onScrollToDemo={() => handleNavigate('cinematic-workflow')}
             />
 
-            {/* 1.5 INTERACTIVE AI EMPLOYEE BLUEPRINT BUILDER */}
-            <section id="ai-builder-mini" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#090d16] border-y border-white/[0.08]">
-              <div className="max-w-5xl mx-auto">
-                <AiEmployeeBuilderMini 
-                  onConnectToGenerator={() => handleOpenSimpleAudit({ service: 'AI Employee Configuration' })} 
-                />
-              </div>
+            {/* 2. THE PROBLEM: "Your customers don't wait" / 4 friction moments */}
+            <CustomerPainSection 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            />
+
+            {/* 3. FOUR CORE SERVICES: Problem -> Solution -> Concrete Example -> CTA */}
+            <CoreServicesSection 
+              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+              onSelectService={(svcId) => handleOpenSimpleAudit({ whatToAutomate: svcId })}
+            />
+
+            {/* 4. THE "WOW" SECTION: Cinematic workflow from customer call to booked business action */}
+            <CinematicWorkflowSection 
+              onOpenAuditModal={() => handleOpenSimpleAudit()}
+            />
+
+            {/* 5. PRODUCT SHOWCASE: 5 realistic UI panels (AI Call, Lead, Appointment, Automation, Analytics) */}
+            <ProductShowcasePanels 
+              onOpenAuditModal={() => handleOpenSimpleAudit()}
+            />
+
+            {/* 6. LIVE INTERACTIVE AI RECEPTIONIST DEMO: Hands-on conversation with Elena/Marcus/Aria */}
+            <section id="live-receptionist">
+              <LiveAiReceptionistDemoSection 
+                onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+              />
             </section>
 
-            {/* 1.8 REAL LIVE VOICE ENGINE INTERACTION */}
-            <section id="voice-live-demo" className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#080b11] border-b border-white/[0.08]">
-              <div className="max-w-5xl mx-auto space-y-8">
-                <div className="text-center space-y-3 max-w-2xl mx-auto">
-                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/25 text-indigo-300 text-xs font-mono font-bold tracking-wider uppercase">
-                    <PhoneCall className="w-3.5 h-3.5 text-indigo-400" /> Real Voice Engine Live
-                  </div>
-                  <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
-                    Experience Real-Time Voice Intelligence
-                  </h2>
-                  <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
-                    Provider-independent neural voice architecture. Connect directly from your browser microphone, inquire about clinic hours, lock appointments, and observe verified tool execution.
-                  </p>
-                </div>
-                <VoiceLiveInterface />
-              </div>
-            </section>
-
-            {/* 2. LIVE INTERACTIVE AI RECEPTIONIST DEMO (30-second hands-on experience) */}
-            <LiveAiReceptionistDemoSection 
+            {/* 7. TARGET INDUSTRIES: Built for businesses where missed opportunities matter */}
+            <IndustriesSection 
               onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+              onNavigate={handleNavigate}
             />
 
-            {/* 2.5 MEET YOUR SPECIALIZED AI EMPLOYEES (ELENA, MARCUS, ARIA, KAEL) */}
-            <MeetAiEmployeesSection
-              onTalkToReceptionist={(workerId) => handleOpenReceptionistChat(null, workerId)}
-              onWatchEmployeeDemo={(emp) => setActiveWatchItHappenData(emp.demoData)}
-              onBuildAiEmployee={() => handleOpenSimpleAudit({ service: 'Custom AI Employee Platform' })}
+            {/* 8. HOW IT WORKS: 4-stage clear deployment timeline (Discover, Design, Build, Operate) */}
+            <HowItWorksTimeline 
+              onOpenAuditModal={() => handleOpenSimpleAudit()}
             />
 
-            {/* 3. THE TRANSFORMATION: BEFORE vs. AFTER */}
-            <TransformationSection 
-              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            {/* 9. WHY RINE FORGE: Comparison matrix + 4 core pillars */}
+            <WhyRineSection 
+              onOpenAuditModal={() => handleOpenSimpleAudit()}
             />
 
-            {/* 4. THE SOLUTION: ONE AI EMPLOYEE, MULTIPLE CHANNELS */}
-            <OmnichannelSection 
-              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
-            />
-
-            {/* 5. WATCH IT WORK: 5-STAGE PRODUCT JOURNEY SIMULATION */}
-            <WatchItWorkSection 
-              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
-            />
-
-            {/* 6. SPECIFIC BUSINESS USE CASES (7 CLICKABLE INDUSTRIES) */}
-            <IndustrySolutionsSection 
-              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
-            />
-
-            {/* 7. HOW IT WORKS (5 SIMPLE STEPS TO LAUNCH IN 7 DAYS) */}
-            <HowItWorksFlowSection 
-              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
-            />
-
-            {/* 8. ROI / REVENUE SECTION: WHAT DOES ONE MISSED LEAD COST YOU? */}
-            <RoiRevenueCalculatorSection 
-              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
-            />
-
-            {/* 9. TRUST, REAL CASE STUDIES & PRODUCTION ARCHITECTURE */}
-            <TrustAndProofSection 
-              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
-            />
-
-            {/* 9.5 TRANSPARENT PRICING & 50% MILESTONE SETTLEMENT */}
+            {/* 10. TRANSPARENT PRICING & 50% MILESTONE SETTLEMENT */}
             <PricingSection 
               onNavigate={handleNavigate}
               onOpenPaymentModal={(pkgId) => {
@@ -412,36 +392,16 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
               }}
             />
 
-            {/* 10. FREQUENTLY ASKED QUESTIONS */}
-            <FaqSection onNavigate={handleNavigate} />
-
-            {/* 11. SECONDARY DEVELOPER TOOLKIT SANDBOX BANNER */}
-            <section id="tools-forge" className="py-12 border-t border-slate-900 bg-[#060a14]">
-              <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-400 text-xs font-mono font-bold tracking-wider uppercase">
-                  <Sparkles className="w-3.5 h-3.5 text-teal-400" /> EXPERIMENTAL UTILITY PLAYGROUND
-                </div>
-                <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                  Looking for our developer tools and generative sandbox?
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-400 max-w-2xl mx-auto leading-relaxed">
-                  Our client-side AI utilities—including video script writers, prompt enhancers, regex parsers, and copy tools—are available in the Forge AI Toolkit sandbox.
-                </p>
-                <div>
-                  <button
-                    onClick={() => handleNavigate('tools')}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-850 border border-slate-700 text-teal-300 hover:text-teal-200 font-mono text-xs font-bold transition-all shadow-md"
-                  >
-                    <span>EXPLORE FORGE AI TOOLKIT (SANDBOX)</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            </section>
+            {/* 11. FREQUENTLY ASKED QUESTIONS */}
+            <FaqSection 
+              onNavigate={handleNavigate} 
+              onOpenAuditModal={() => handleOpenSimpleAudit()}
+            />
 
             {/* 12. HIGH-CONVERTING FINAL CTA */}
-            <StrongCtaSection 
-              onOpenAuditModal={(data) => handleOpenSimpleAudit(data)}
+            <FinalCtaSection 
+              onOpenAuditModal={() => handleOpenSimpleAudit()}
+              onScrollToDemo={() => handleNavigate('live-receptionist')}
             />
           </>
         )}
@@ -521,7 +481,11 @@ export function PublicPortfolioView({ onOpenOperatorConsole }) {
       </main>
 
       {/* Global Footer */}
-      <ForgeFooter onNavigate={handleNavigate} onOpenOperatorConsole={onOpenOperatorConsole} />
+      <ForgeFooter 
+        onNavigate={handleNavigate} 
+        onOpenOperatorConsole={onOpenOperatorConsole} 
+        onOpenAuditModal={() => handleOpenSimpleAudit()} 
+      />
 
       {/* Persistent Human Interface (FORGE CONTROL) */}
       <ForgeHumanControl 

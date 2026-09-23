@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Menu, X, ArrowRight, Sparkles, Layers, 
-  Cpu, Building2, ShieldCheck, CheckCircle2, ChevronDown, 
-  FlaskConical, LayoutDashboard, Volume2, VolumeX, Briefcase, Bot
+  Menu, X, ArrowRight, Sparkles, 
+  Volume2, VolumeX, Bot, LayoutDashboard, PhoneCall, CheckCircle2
 } from 'lucide-react';
 import { forgeAudioSynth } from '../../utils/forgeAudioSynth';
 
-export function ForgeNavbar({ onNavigate, currentView = 'home' }) {
+export function ForgeNavbar({ onNavigate, onOpenAuditModal, currentView = 'home' }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(forgeAudioSynth.isMuted);
 
@@ -16,11 +15,16 @@ export function ForgeNavbar({ onNavigate, currentView = 'home' }) {
 
   const handleNav = (target) => {
     setMobileMenuOpen(false);
+    forgeAudioSynth.playClick();
+    if (target === 'audit' && onOpenAuditModal) {
+      onOpenAuditModal();
+      return;
+    }
     if (onNavigate) onNavigate(target);
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#080b11]/85 backdrop-blur-xl border-b border-white/[0.08] transition-all shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
+    <header className="sticky top-0 z-40 bg-[#070b12]/90 backdrop-blur-xl border-b border-white/[0.08] transition-all shadow-[0_4px_24px_rgba(0,0,0,0.5)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between gap-4">
         
         {/* Brand Identity */}
@@ -28,76 +32,61 @@ export function ForgeNavbar({ onNavigate, currentView = 'home' }) {
           onClick={() => handleNav('home')}
           className="flex items-center gap-3 text-left focus:outline-none group"
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-600 to-sky-500 flex items-center justify-center text-white font-black text-base shadow-[0_0_20px_rgba(99,102,241,0.35)] transition-transform group-hover:scale-105">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-sky-400 flex items-center justify-center text-white font-black text-base shadow-[0_0_20px_rgba(99,102,241,0.35)] transition-transform group-hover:scale-105">
             R
           </div>
           <div>
             <div className="font-extrabold text-base tracking-tight text-white flex items-center gap-2">
-              RINE FORGE <span className="text-[9px] font-mono px-2 py-0.5 bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 rounded-full font-bold tracking-wider">ENTERPRISE AI</span>
+              RINE FORGE <span className="text-[10px] font-mono px-2 py-0.5 bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 rounded-full font-bold tracking-wider">SYSTEMS</span>
             </div>
-            <div className="text-[10px] text-slate-400 font-medium tracking-wide">Autonomous Voice & Operations Infrastructure</div>
+            <div className="text-[11px] text-slate-400 font-medium tracking-wide">AI Systems for Business</div>
           </div>
         </button>
 
         {/* Desktop Navigation Links */}
         <nav className="hidden lg:flex items-center gap-1 text-xs font-semibold text-slate-300">
           <button
-            onClick={() => handleNav('receptionist')}
-            className={`px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors flex items-center gap-1.5 ${
-              currentView === 'receptionist' ? 'text-indigo-400 bg-indigo-500/10 font-bold' : ''
-            }`}
+            onClick={() => handleNav('services')}
+            className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors"
+          >
+            Services
+          </button>
+          <button
+            onClick={() => handleNav('cinematic-workflow')}
+            className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors"
+          >
+            How It Works
+          </button>
+          <button
+            onClick={() => handleNav('live-receptionist')}
+            className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors flex items-center gap-1.5 text-indigo-300 font-bold"
           >
             <Bot className="w-3.5 h-3.5 text-indigo-400" />
-            <span>AI Concierge</span>
-          </button>
-          <button
-            onClick={() => handleNav('systems')}
-            className={`px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors ${
-              currentView === 'systems' || currentView.startsWith('system-') ? 'text-indigo-400 bg-indigo-500/10 font-bold' : ''
-            }`}
-          >
-            Systems
-          </button>
-          <button
-            onClick={() => handleNav('solutions')}
-            className={`px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors ${
-              currentView.startsWith('solution') ? 'text-indigo-400 bg-indigo-500/10 font-bold' : ''
-            }`}
-          >
-            Solutions
+            <span>Live Demo</span>
           </button>
           <button
             onClick={() => handleNav('industries')}
-            className={`px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors ${
-              currentView.startsWith('industry') || currentView.startsWith('for-') ? 'text-indigo-400 bg-indigo-500/10 font-bold' : ''
-            }`}
+            className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors"
           >
             Industries
           </button>
           <button
-            onClick={() => handleNav('workbench')}
-            className={`px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors flex items-center gap-1.5 ${
-              currentView === 'workbench' ? 'text-indigo-400 bg-indigo-500/10 font-bold' : ''
-            }`}
+            onClick={() => handleNav('why-rine')}
+            className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors"
           >
-            <Briefcase className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Workbench</span>
+            Why Rine
           </button>
           <button
             onClick={() => handleNav('pricing')}
-            className={`px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors ${
-              currentView === 'pricing' ? 'text-indigo-400 bg-indigo-500/10 font-bold' : ''
-            }`}
+            className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors"
           >
             Pricing
           </button>
           <button
-            onClick={() => handleNav('about')}
-            className={`px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors ${
-              currentView === 'about' ? 'text-indigo-400 bg-indigo-500/10 font-bold' : ''
-            }`}
+            onClick={() => handleNav('faq')}
+            className="px-3 py-2 rounded-lg hover:text-white hover:bg-white/[0.05] transition-colors"
           >
-            About
+            FAQ
           </button>
         </nav>
 
@@ -122,19 +111,19 @@ export function ForgeNavbar({ onNavigate, currentView = 'home' }) {
             <span className="hidden xl:inline text-[10px] font-bold uppercase">{isMuted ? 'Muted' : 'Sound On'}</span>
           </button>
 
-          {/* Launch App / Sandbox */}
+          {/* Launch Console */}
           <button
             onClick={() => handleNav('app-dashboard')}
             className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 hover:text-white border border-white/[0.09] font-medium text-xs transition-all shadow-sm"
           >
             <LayoutDashboard className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Launch Console</span>
+            <span>Console</span>
           </button>
 
           {/* Primary High-Conversion Audit CTA */}
           <button
             onClick={() => handleNav('audit')}
-            className="px-4 py-2 bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold text-xs rounded-xl transition-all shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_25px_rgba(99,102,241,0.5)] flex items-center gap-1.5 shrink-0"
+            className="px-4 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-600 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold text-xs rounded-xl transition-all shadow-[0_0_20px_rgba(99,102,241,0.3)] hover:shadow-[0_0_25px_rgba(99,102,241,0.5)] flex items-center gap-1.5 shrink-0 transform hover:-translate-y-0.5"
           >
             <span>FREE AI AUDIT</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -155,71 +144,55 @@ export function ForgeNavbar({ onNavigate, currentView = 'home' }) {
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-white/[0.08] bg-[#0c101a] px-4 pt-3 pb-6 space-y-2 text-xs font-medium text-slate-200">
           <button
-            onClick={() => handleNav('receptionist')}
-            className="block w-full text-left py-2.5 px-3 rounded-lg text-indigo-300 hover:bg-white/[0.05] flex items-center gap-2 font-bold"
+            onClick={() => handleNav('services')}
+            className="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-white/[0.05]"
           >
-            <Bot className="w-4 h-4 text-indigo-400" /> Live AI Concierge
+            Services
           </button>
           <button
-            onClick={() => handleNav('systems')}
-            className="block w-full text-left py-2.5 px-3 rounded-lg text-slate-200 hover:bg-white/[0.05]"
+            onClick={() => handleNav('cinematic-workflow')}
+            className="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-white/[0.05]"
           >
-            Systems Library
+            How It Works
           </button>
           <button
-            onClick={() => handleNav('solutions')}
-            className="block w-full text-left py-2.5 px-3 rounded-lg text-slate-200 hover:bg-white/[0.05]"
+            onClick={() => handleNav('live-receptionist')}
+            className="block w-full text-left py-2.5 px-3 rounded-lg text-indigo-300 font-bold hover:bg-white/[0.05] flex items-center gap-2"
           >
-            Solutions
+            <Bot className="w-4 h-4 text-indigo-400" />
+            <span>Live Receptionist Demo</span>
           </button>
           <button
             onClick={() => handleNav('industries')}
-            className="block w-full text-left py-2.5 px-3 rounded-lg text-slate-200 hover:bg-white/[0.05]"
+            className="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-white/[0.05]"
           >
             Industries
           </button>
           <button
-            onClick={() => handleNav('workbench')}
-            className="block w-full text-left py-2.5 px-3 rounded-lg text-indigo-400 hover:bg-white/[0.05] flex items-center gap-2"
+            onClick={() => handleNav('why-rine')}
+            className="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-white/[0.05]"
           >
-            <Briefcase className="w-4 h-4" /> AI Workbench
+            Why Rine
           </button>
           <button
             onClick={() => handleNav('pricing')}
-            className="block w-full text-left py-2.5 px-3 rounded-lg text-slate-200 hover:bg-white/[0.05]"
+            className="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-white/[0.05]"
           >
             Pricing
           </button>
           <button
-            onClick={() => handleNav('about')}
-            className="block w-full text-left py-2.5 px-3 rounded-lg text-slate-200 hover:bg-white/[0.05]"
+            onClick={() => handleNav('faq')}
+            className="block w-full text-left py-2.5 px-3 rounded-lg hover:bg-white/[0.05]"
           >
-            About
+            FAQ
           </button>
-          <div className="pt-3 border-t border-white/[0.08] space-y-2">
-            <button
-              onClick={() => {
-                const nextMuted = forgeAudioSynth.toggleMute();
-                if (!nextMuted) forgeAudioSynth.playClick();
-              }}
-              className="w-full py-2.5 px-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-slate-300 text-xs flex items-center justify-center gap-2"
-            >
-              {isMuted ? <VolumeX className="w-4 h-4 text-slate-500" /> : <Volume2 className="w-4 h-4 text-emerald-400" />}
-              <span>{isMuted ? 'UI Audio: MUTED (Click to Unmute)' : 'UI Audio: ACTIVE (Click to Mute)'}</span>
-            </button>
-            <button
-              onClick={() => handleNav('app-dashboard')}
-              className="w-full py-3 bg-white/[0.05] border border-white/[0.1] text-white font-bold rounded-xl text-center flex items-center justify-center gap-1.5"
-            >
-              <LayoutDashboard className="w-4 h-4 text-indigo-400" />
-              <span>LAUNCH OPERATOR CONSOLE</span>
-            </button>
+          <div className="pt-2 border-t border-white/[0.08]">
             <button
               onClick={() => handleNav('audit')}
-              className="w-full py-3 bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 text-white font-bold rounded-xl text-center flex items-center justify-center gap-1.5 shadow-[0_0_20px_rgba(99,102,241,0.3)]"
+              className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 shadow-md"
             >
-              <span>GET YOUR FREE AI ARCHITECTURE AUDIT</span>
-              <ArrowRight className="w-4 h-4" />
+              <span>Get Your Free AI Audit</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
