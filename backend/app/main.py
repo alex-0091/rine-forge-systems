@@ -38,6 +38,7 @@ from backend.app.api.kill_switch import router as kill_switch_router
 from backend.app.api.public import router as public_router
 from backend.app.api.receptionist import router as receptionist_router
 from backend.app.channels.whatsapp.router import router as whatsapp_router
+from backend.app.channels.voice.router import router as voice_router, voice_api_alias_router
 
 # Production V5 Router
 from backend.app.api.v1 import api_v1_router
@@ -97,6 +98,8 @@ app.include_router(kill_switch_router)
 app.include_router(public_router)
 app.include_router(receptionist_router)
 app.include_router(whatsapp_router)
+app.include_router(voice_router, prefix="/api")
+app.include_router(voice_api_alias_router, prefix="/api")
 app.include_router(api_v1_router)
 
 # 6. Deep Health Check Endpoint

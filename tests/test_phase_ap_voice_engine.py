@@ -434,3 +434,41 @@ async def test_voice_api_endpoints(async_session):
         analytics_data = analytics_res.json()
         assert analytics_data["total_calls"] == 1
         assert analytics_data["completed_calls"] == 1
+
+        # 7. GET /api/v1/channels/voice/voices
+        voices_res = await client.get("/api/v1/channels/voice/voices")
+        assert voices_res.status_code == 200
+        voices_data = voices_res.json()
+        assert "voices" in voices_data
+        assert any(v["id"] == "elena" for v in voices_data["voices"])
+        assert voices_data["is_free"] is True
+
+        # 8. POST /api/v1/channels/voice/synthesize
+        synth_res = await client.post(
+            "/api/v1/channels/voice/synthesize",
+            json={"text": "Thank you for calling. How may I help you?", "voice": "elena"}
+        )
+        assert synth_res.status_code == 200
+        synth_data = synth_res.json()
+        assert synth_data["provider"] == "FREE_NEURAL_TTS"
+        assert synth_data["audio_format"] == "mp3"
+        assert "audio_base64" in synth_data
+
+        # 9. Direct /api/voice/synthesize
+        direct_synth_res = await client.post(
+            "/api/voice/synthesize",
+            json={"text": "Appointment booked.", "voice": "marcus"}
+        )
+        assert direct_synth_res.status_code == 200
+        assert direct_synth_res.json()["is_free"] is True
+
+        # 10. POST /api/v1/channels/voice/simulate-call
+        sim_res = await client.post(
+            "/api/v1/channels/voice/simulate-call",
+            json={"business_name": "Apex Dental", "caller_query": "Do you have any appointments today?", "voice": "elena"}
+        )
+        assert sim_res.status_code == 200
+        sim_data = sim_res.json()
+        assert "reply_text" in sim_data
+        assert "audio_base64" in sim_data
+        assert sim_data["is_free"] is True

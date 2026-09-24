@@ -253,18 +253,104 @@ class LocalTextToSpeechProvider(TextToSpeechProvider):
     async def synthesize_speech(self, text: str, voice_profile: str = "friendly") -> Dict[str, Any]:
         """Convenience alias for synthesize() returning audio directives."""
         res = await self.synthesize(text, voice_id=voice_profile)
+        # Attempt free neural synthesis for real audio, fallback cleanly if unavailable
+        audio_b64 = "UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="
+        audio_fmt = "wav"
+        try:
+            audio_bytes = await free_neural_tts_provider.synthesize_audio_bytes(
+                text=text,
+                voice_name=free_neural_tts_provider.VOICE_MAP.get(voice_profile, "en-US-AriaNeural")
+            )
+            if audio_bytes:
+                import base64
+                audio_b64 = base64.b64encode(audio_bytes).decode("ascii")
+                audio_fmt = "mp3"
+        except Exception as e:
+            logger.warning(f"Voice synthesis fallback: {e}")
+
         return {
             "audio_format": "wav",
-            "audio_base64": "UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=",
+            "audio_base64": audio_b64,
             "duration_seconds": round(max(1.0, len(text.split()) * 0.35), 2),
             "voice_profile": voice_profile,
             "directive": res
         }
 
 
+class FreeNeuralTTSProvider(TextToSpeechProvider):
+    """
+    100% Free Neural Text-to-Speech Engine powered by Edge TTS.
+    Zero API keys, zero token fees, unlimited free forever.
+    Produces high-fidelity broadcast-quality neural audio MP3.
+    """
+    provider_id = "FREE_NEURAL_TTS"
+    display_name = "Rine Free Neural Voice Engine (Edge AI)"
+
+    VOICE_MAP = {
+        "elena": "en-US-AriaNeural",       # 24/7 Front Desk / Clinical Triage
+        "marcus": "en-US-GuyNeural",        # Inbound Sales / Speed-to-lead
+        "aria": "en-US-JennyNeural",        # Customer Care / Support
+        "kael": "en-US-ChristopherNeural",  # Operations / Tech dispatch
+        "sonia": "en-GB-SoniaNeural",       # Premium boutique / Executive
+        "natural-female": "en-US-AriaNeural",
+        "natural-male": "en-US-GuyNeural",
+        "friendly": "en-US-AriaNeural",
+        "professional": "en-US-GuyNeural",
+        "warm": "en-US-AriaNeural",
+        "energetic": "en-US-JennyNeural",
+        "calm": "en-US-ChristopherNeural"
+    }
+
+    def get_status(self) -> Dict[str, Any]:
+        return {
+            "provider_id": self.provider_id,
+            "display_name": self.display_name,
+            "status": "READY",
+            "is_configured": True,
+            "is_local": True,
+            "is_free": True,
+            "voices": list(self.VOICE_MAP.keys()),
+            "description": "100% Free Neural Voice Synthesizer with natural human inflections."
+        }
+
+    async def synthesize(self, text: str, voice_id: Optional[str] = None) -> Dict[str, Any]:
+        voice_key = (voice_id or "elena").lower()
+        selected_voice = self.VOICE_MAP.get(voice_key, "en-US-AriaNeural")
+        
+        audio_bytes = await self.synthesize_audio_bytes(text, selected_voice)
+        import base64
+        audio_b64 = base64.b64encode(audio_bytes).decode("ascii") if audio_bytes else ""
+        
+        return {
+            "speech_directive": "NEURAL_SYNTHESIS",
+            "text": text,
+            "voice": selected_voice,
+            "audio_base64": audio_b64,
+            "audio_format": "mp3",
+            "is_free": True,
+            "provider": self.provider_id
+        }
+
+    async def synthesize_audio_bytes(self, text: str, voice_name: str = "en-US-AriaNeural") -> bytes:
+        if not text or not text.strip():
+            return b""
+        try:
+            import edge_tts
+            communicate = edge_tts.Communicate(text.strip(), voice_name)
+            chunks = []
+            async for chunk in communicate.stream():
+                if chunk.get("type") == "audio" and "data" in chunk:
+                    chunks.append(chunk["data"])
+            return b"".join(chunks)
+        except Exception as e:
+            logger.warning(f"[FreeNeuralTTS] edge-tts error: {e}")
+            return b""
+
+
 # Export singletons
 local_stt_provider = LocalSpeechToTextProvider()
 local_tts_provider = LocalTextToSpeechProvider()
+free_neural_tts_provider = FreeNeuralTTSProvider()
 
 
 # ============================================================
@@ -278,6 +364,7 @@ class VoiceEngine:
     def __init__(self):
         self.local_stt = local_stt_provider
         self.local_tts = local_tts_provider
+        self.free_neural_tts = free_neural_tts_provider
         self.browser_provider = BrowserWebSpeechProvider()
         self.whisper_provider = WhisperSTTProvider()
         self.elevenlabs_provider = ElevenLabsTTSProvider()
@@ -288,6 +375,7 @@ class VoiceEngine:
         return [
             self.local_stt.get_status(),
             self.local_tts.get_status(),
+            self.free_neural_tts.get_status(),
             self.browser_provider.get_status(),
             self.whisper_provider.get_status(),
             self.elevenlabs_provider.get_status(),

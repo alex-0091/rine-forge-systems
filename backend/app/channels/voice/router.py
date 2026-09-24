@@ -213,3 +213,118 @@ async def handle_incoming_call(request: Request):
 async def dispatch_outbound_call(to_phone: str, greeting: Optional[str] = None):
     """Dispatches an outbound phone call if configured."""
     return await voice_service.initiate_outbound_call(to_phone, greeting or "Hello from Rine Dental.")
+
+
+# ============================================================
+# 3. FREE NEURAL AI VOICE SYNTHESIS & CALL SIMULATION ENDPOINTS
+# ============================================================
+class SynthesizeSpeechRequest(BaseModel):
+    text: str
+    voice: Optional[str] = "elena"
+
+
+class SimulateCallRequest(BaseModel):
+    business_name: Optional[str] = "Apex Dental & Orthodontics"
+    industry: Optional[str] = "Dental Practice"
+    caller_query: str
+    voice: Optional[str] = "elena"
+
+
+@router.get("/voices")
+async def get_available_voices():
+    """Returns available high-fidelity free neural AI voices."""
+    from backend.app.channels.voice.engine import free_neural_tts_provider
+    return {
+        "voices": [
+            {"id": "elena", "name": "Elena", "role": "24/7 Front Desk & Clinical Triage", "tone": "Warm, reassuring, professional", "model": "en-US-AriaNeural"},
+            {"id": "marcus", "name": "Marcus", "role": "Speed-to-Lead & Inbound Sales", "tone": "Authoritative, fast, proactive", "model": "en-US-GuyNeural"},
+            {"id": "aria", "name": "Aria", "role": "Customer Care & Policy Resolution", "tone": "Helpful, friendly, empathetic", "model": "en-US-JennyNeural"},
+            {"id": "kael", "name": "Kael", "role": "Operations & Dispatch Supervisor", "tone": "Calm, precise, technical", "model": "en-US-ChristopherNeural"},
+            {"id": "sonia", "name": "Sonia", "role": "Boutique Executive Receptionist", "tone": "Prestigious, articulate British English", "model": "en-GB-SoniaNeural"}
+        ],
+        "is_free": True,
+        "provider": "FREE_NEURAL_TTS"
+    }
+
+
+@router.post("/synthesize")
+async def synthesize_voice_speech(payload: SynthesizeSpeechRequest):
+    """Synthesizes text into high-fidelity neural MP3 audio base64."""
+    from backend.app.channels.voice.engine import free_neural_tts_provider
+    res = await free_neural_tts_provider.synthesize(payload.text, voice_id=payload.voice or "elena")
+    return {
+        "audio_base64": res.get("audio_base64", ""),
+        "audio_format": res.get("audio_format", "mp3"),
+        "voice": res.get("voice", "en-US-AriaNeural"),
+        "text": payload.text,
+        "is_free": True,
+        "provider": "FREE_NEURAL_TTS"
+    }
+
+
+@router.get("/stream")
+async def stream_voice_speech(text: str = Query(...), voice: Optional[str] = Query("elena")):
+    """Streams live neural MP3 audio directly for browser <audio> playback."""
+    from fastapi.responses import Response
+    from backend.app.channels.voice.engine import free_neural_tts_provider
+    audio_bytes = await free_neural_tts_provider.synthesize_audio_bytes(
+        text=text,
+        voice_name=free_neural_tts_provider.VOICE_MAP.get((voice or "elena").lower(), "en-US-AriaNeural")
+    )
+    if not audio_bytes:
+        raise HTTPException(status_code=400, detail="Speech synthesis failed or empty text provided")
+    return Response(content=audio_bytes, media_type="audio/mpeg")
+
+
+@router.post("/simulate-call")
+async def simulate_live_receptionist_call(payload: SimulateCallRequest):
+    """Single-turn autonomous receptionist dialogue generation with neural audio."""
+    from backend.app.channels.voice.engine import free_neural_tts_provider
+    
+    q_lower = payload.caller_query.lower()
+    biz = payload.business_name or "our office"
+
+    if any(k in q_lower for k in ["appointment", "opening", "today", "friday", "time", "slot", "book"]):
+        reply = f"Thank you for calling {biz}! Yes, we have two slots open this afternoon at 2:30 PM and 4:15 PM with our lead specialist. Would you like me to reserve the 2:30 PM slot and text your instant booking confirmation?"
+    elif any(k in q_lower for k in ["cost", "price", "charge", "fee", "insurance", "how much"]):
+        reply = f"At {biz}, our comprehensive initial evaluation and diagnostics is $149 flat, and we accept all major insurance networks. For treatments, we provide an itemized quote with zero surprises. Shall I lock in a consultation time?"
+    elif any(k in q_lower for k in ["where", "location", "address", "parking", "directions"]):
+        reply = f"We are located at 410 West 6th Street in Downtown, with complimentary customer parking in our attached private garage. Shall I text you our direct Google Maps navigation link right now?"
+    else:
+        reply = f"Thank you for reaching out to {biz}! Our team can certainly assist with that today. I can either book an on-site consultation or have our team review your requirements. What is the best phone number to reach you?"
+
+    # Synthesize neural voice
+    res = await free_neural_tts_provider.synthesize(reply, voice_id=payload.voice or "elena")
+
+    return {
+        "reply_text": reply,
+        "audio_base64": res.get("audio_base64", ""),
+        "audio_format": "mp3",
+        "voice": payload.voice or "elena",
+        "business_name": biz,
+        "is_free": True,
+        "provider": "FREE_NEURAL_TTS"
+    }
+
+
+# ============================================================
+# 4. DIRECT /api/voice ALIAS ROUTER
+# ============================================================
+voice_api_alias_router = APIRouter(prefix="/voice", tags=["Voice Direct API"])
+
+@voice_api_alias_router.get("/voices")
+async def direct_get_voices():
+    return await get_available_voices()
+
+@voice_api_alias_router.post("/synthesize")
+async def direct_synthesize(payload: SynthesizeSpeechRequest):
+    return await synthesize_voice_speech(payload)
+
+@voice_api_alias_router.get("/stream")
+async def direct_stream(text: str = Query(...), voice: Optional[str] = Query("elena")):
+    return await stream_voice_speech(text=text, voice=voice)
+
+@voice_api_alias_router.post("/simulate-call")
+async def direct_simulate(payload: SimulateCallRequest):
+    return await simulate_live_receptionist_call(payload)
+
