@@ -1,13 +1,17 @@
 services:
   - type: web
     name: rine-forge-api
-    env: python
+    env: docker
     plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port 
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
+      - key: NODE_VERSION
+        value: 20.11.0
+      - key: DATABASE_URL
+        sync: false
+      - key: REPLICATE_API_TOKEN
+        sync: false
       - key: SENDER_NAME
         value: Alex Rine
       - key: SENDER_EMAIL
@@ -15,4 +19,4 @@ services:
       - key: SENDER_COMPANY
         value: Rine Forge Systems
       - key: DRY_RUN
-        value: 'True'
+        value: 'False'

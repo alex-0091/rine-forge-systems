@@ -62,18 +62,13 @@ class Settings(BaseSettings):
     # 3. OPTIONAL INTEGRATIONS (AI, Email, Channels)
     # ============================================================
     # AI / LLM
-    OPENAI_API_KEY: Optional[str] = None
-    OPENAI_MODEL: str = "gpt-4o-mini"
-    OPENAI_REASONING_MODEL: str = "gpt-4o"
-    GEMINI_API_KEY: Optional[str] = None
-    GEMINI_MODEL: str = "gemini-3.6-flash"
-    GROQ_API_KEY: Optional[str] = None
-    GROQ_MODEL: str = "llama-3.3-70b-versatile"
+    REPLICATE_API_TOKEN: str
+    REPLICATE_MODEL: str = "meta/meta-llama-3-70b-instruct"
     OLLAMA_BASE_URL: str = "http://localhost:11434"
     OLLAMA_MODEL: str = "llama3"
-    LLM_PROVIDER: str = "auto"  # "auto", "openai", "gemini", "groq", "mock"
-    DEFAULT_MODEL: str = "gemini-3.6-flash"
-    REASONING_MODEL: str = "gemini-3.6-flash"
+    LLM_PROVIDER: str = "replicate"  # "auto", "replicate", "mock"
+    DEFAULT_MODEL: str = "meta/meta-llama-3-70b-instruct"
+    REASONING_MODEL: str = "meta/meta-llama-3-70b-instruct"
 
     # Email Infrastructure
     EMAIL_PROVIDER: str = "dry_run"  # "dry_run", "smtp", "resend"

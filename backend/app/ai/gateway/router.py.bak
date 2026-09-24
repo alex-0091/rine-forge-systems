@@ -9,7 +9,7 @@ from typing import Dict, Any, Optional, Tuple, List
 from backend.app.config import settings
 from backend.app.ai.gateway.interface import BaseAIProvider, AIOptions, ProviderHealth
 from backend.app.ai.gateway.providers import (
-    MockProvider, OllamaProvider, ReplicateProvider
+    OpenAIProvider, GeminiProvider, OllamaProvider, MockProvider, GroqProvider
 )
 from backend.app.ai.gateway.errors import AIProviderUnavailableError
 
@@ -87,15 +87,31 @@ class ModelRouter:
         # 1. Mock provider (always available for fallback/testing)
         self.providers["mock"] = MockProvider()
 
-        # 2. Replicate
-        replicate_p = ReplicateProvider()
-        if replicate_p.is_configured():
-            self.providers["replicate"] = replicate_p
-            logger.info("Replicate provider initialized and registered in router.")
+        # 2. OpenAI
+        openai_p = OpenAIProvider()
+        if openai_p.is_configured():
+            self.providers["openai"] = openai_p
+            logger.info("OpenAI provider initialized and registered in router.")
         else:
-            logger.info("Replicate provider not configured (missing REPLICATE_API_TOKEN).")
+            logger.info("OpenAI provider not configured (missing OPENAI_API_KEY).")
 
-        # 3. Ollama
+        # 3. Gemini
+        gemini_p = GeminiProvider()
+        if gemini_p.is_configured():
+            self.providers["gemini"] = gemini_p
+            logger.info("Gemini provider initialized and registered in router.")
+        else:
+            logger.info("Gemini provider not configured (missing GEMINI_API_KEY).")
+
+        # 4. Groq (free, ultra-fast LPU inference — Llama 3.3 70B free tier)
+        groq_p = GroqProvider()
+        if groq_p.is_configured():
+            self.providers["groq"] = groq_p
+            logger.info("Groq provider initialized and registered in router (FREE tier - Llama 3.3 70B).")
+        else:
+            logger.info("Groq provider not configured (missing GROQ_API_KEY).")
+
+        # 5. Ollama
         ollama_p = OllamaProvider()
         self.providers["ollama"] = ollama_p
 
@@ -127,8 +143,14 @@ class ModelRouter:
 
         # 1. Explicit model name override
         if model_override:
-            if "replicate" in self.providers and self.providers["replicate"].is_configured():
-                return self.providers["replicate"], model_override
+            if "gpt" in model_override.lower() and "openai" in self.providers:
+                return self.providers["openai"], model_override
+            elif "gemini" in model_override.lower() and "gemini" in self.providers:
+                return self.providers["gemini"], model_override
+            elif "groq" in model_override.lower() and "groq" in self.providers:
+                return self.providers["groq"], model_override
+            elif ("llama" in model_override.lower() or "mistral" in model_override.lower()) and "groq" in self.providers and self.providers["groq"].is_configured():
+                return self.providers["groq"], model_override
             elif ("llama" in model_override.lower() or "mistral" in model_override.lower()) and "ollama" in self.providers:
                 return self.providers["ollama"], model_override
 
@@ -139,16 +161,28 @@ class ModelRouter:
 
         # 3. Quality tier (complex reasoning, negotiations)
         if tier == TIER_QUALITY:
-            if "replicate" in self.providers and self.providers["replicate"].is_configured():
-                return self.providers["replicate"], "meta/meta-llama-3-70b-instruct"
+            if "openai" in self.providers and self.providers["openai"].is_configured():
+                return self.providers["openai"], "gpt-4o"
+            elif "gemini" in self.providers and self.providers["gemini"].is_configured():
+                return self.providers["gemini"], "gemini-1.5-pro"
+            elif "groq" in self.providers and self.providers["groq"].is_configured():
+                return self.providers["groq"], "llama-3.3-70b-versatile"
 
         # 4. Fast & Cheap tiers (classification, triage, speed-to-lead)
         # Check primary configured provider in settings
         preferred = settings.LLM_PROVIDER.lower()
-        if preferred == "replicate" and "replicate" in self.providers and self.providers["replicate"].is_configured():
-            return self.providers["replicate"], "meta/meta-llama-3-8b-instruct"
-        elif "replicate" in self.providers and self.providers["replicate"].is_configured():
-            return self.providers["replicate"], "meta/meta-llama-3-8b-instruct"
+        if preferred == "groq" and "groq" in self.providers and self.providers["groq"].is_configured():
+            return self.providers["groq"], "llama-3.1-8b-instant"
+        elif preferred == "gemini" and "gemini" in self.providers and self.providers["gemini"].is_configured():
+            return self.providers["gemini"], "gemini-1.5-flash"
+        elif preferred == "openai" and "openai" in self.providers and self.providers["openai"].is_configured():
+            return self.providers["openai"], "gpt-4o-mini"
+        elif "openai" in self.providers and self.providers["openai"].is_configured():
+            return self.providers["openai"], "gpt-4o-mini"
+        elif "gemini" in self.providers and self.providers["gemini"].is_configured():
+            return self.providers["gemini"], "gemini-1.5-flash"
+        elif "groq" in self.providers and self.providers["groq"].is_configured():
+            return self.providers["groq"], "llama-3.3-70b-versatile"
 
         # 5. Safe Fallback: If no commercial API is configured, use deterministic mock
         if "mock" in self.providers:
