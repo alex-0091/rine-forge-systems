@@ -131,6 +131,16 @@ export function RealAiReceptionistChat({ isOpen, onClose, initialPrompt = null, 
     scrollToBottom();
   }, [messages, isSending, aiState]);
 
+  // Handle ESC key to close modal
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   // Handle switching workers
   const handleSwitchWorker = (workerId) => {
     forgeAudioSynth.playClick();

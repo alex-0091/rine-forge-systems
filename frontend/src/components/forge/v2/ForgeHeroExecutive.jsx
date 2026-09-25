@@ -2,12 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { 
   ArrowRight, PhoneCall, CheckCircle2, Calendar, 
   MessageSquare, Clock, ShieldCheck, UserCheck, 
-  Zap, ArrowUpRight, Play, Check, Sparkles, Bell
+  Zap, ArrowUpRight, Play, Pause, Check, Sparkles, Bell,
+  Volume2, VolumeX, User, Headphones, Activity, Radio
 } from 'lucide-react';
 import { forgeAudioSynth } from '../../../utils/forgeAudioSynth';
+import { speechEngine } from '../../../utils/speechEngine';
+import { ForgeCharacterAvatar } from '../v4/ForgeCharacterAvatar';
 
 export function ForgeHeroExecutive({ onOpenAuditModal, onScrollToDemo }) {
   const [activeStep, setActiveStep] = useState(0);
+  const [isHeroSpeaking, setIsHeroSpeaking] = useState(false);
 
   // Live progressive simulation of customer inquiry -> booking -> notification
   useEffect(() => {
@@ -16,6 +20,33 @@ export function ForgeHeroExecutive({ onOpenAuditModal, onScrollToDemo }) {
     }, 3800);
     return () => clearInterval(timer);
   }, []);
+
+  // Stop speech when component unmounts
+  useEffect(() => {
+    return () => {
+      speechEngine.stopSpeaking();
+    };
+  }, []);
+
+  const handlePlayHeroSpeech = () => {
+    forgeAudioSynth.playClick();
+    if (isHeroSpeaking) {
+      speechEngine.stopSpeaking();
+      setIsHeroSpeaking(false);
+      return;
+    }
+
+    setIsHeroSpeaking(true);
+    const heroSpokenLine = "I'm sorry to hear about the pain. We can certainly get you examined. I have Tuesday at 2:00 PM or Thursday at 11:00 AM open with Dr. Scott. Which works best for you?";
+    speechEngine.speak(heroSpokenLine, {
+      voice: 'elena',
+      rate: 1.0,
+      pitch: 1.02,
+      onStart: () => setIsHeroSpeaking(true),
+      onEnd: () => setIsHeroSpeaking(false),
+      onError: () => setIsHeroSpeaking(false)
+    });
+  };
 
   const handleAuditClick = () => {
     forgeAudioSynth.playClick();
@@ -96,7 +127,32 @@ export function ForgeHeroExecutive({ onOpenAuditModal, onScrollToDemo }) {
         </div>
 
         {/* HERO PRODUCT VISUAL: Realistic Business Automation Dashboard */}
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-5xl mx-auto space-y-4">
+          
+          {/* Elite Spec Indicators Strip */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center font-mono">
+            <div className="px-3 py-2 rounded-xl bg-white/[0.02] border border-white/[0.06] text-[11px] flex items-center justify-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-slate-400">Response Speed:</span>
+              <span className="text-emerald-400 font-bold">180ms</span>
+            </div>
+            <div className="px-3 py-2 rounded-xl bg-white/[0.02] border border-white/[0.06] text-[11px] flex items-center justify-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
+              <span className="text-slate-400">Carrier Trunk:</span>
+              <span className="text-sky-400 font-bold">99.98% SLA</span>
+            </div>
+            <div className="px-3 py-2 rounded-xl bg-white/[0.02] border border-white/[0.06] text-[11px] flex items-center justify-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+              <span className="text-slate-400">Grounded:</span>
+              <span className="text-indigo-400 font-bold">0% Hallucination</span>
+            </div>
+            <div className="px-3 py-2 rounded-xl bg-white/[0.02] border border-white/[0.06] text-[11px] flex items-center justify-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-teal-400" />
+              <span className="text-slate-400">Oversight:</span>
+              <span className="text-teal-400 font-bold">Human Escrow</span>
+            </div>
+          </div>
+
           <div className="rounded-2xl sm:rounded-3xl bg-[#0c101a] border border-white/[0.12] shadow-[0_25px_70px_rgba(0,0,0,0.6)] overflow-hidden">
             
             {/* Window Top Bar */}
@@ -123,8 +179,8 @@ export function ForgeHeroExecutive({ onOpenAuditModal, onScrollToDemo }) {
               {/* Left Column: Live Call & Conversation Feed (7 cols) */}
               <div className="lg:col-span-7 space-y-4">
                 
-                {/* Live Activity Header */}
-                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-between">
+                {/* Live Activity Header with One-Click Neural Audio Preview */}
+                <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
                       <PhoneCall className="w-4 h-4 animate-bounce" />
@@ -137,59 +193,101 @@ export function ForgeHeroExecutive({ onOpenAuditModal, onScrollToDemo }) {
                       <div className="text-[11px] text-slate-400">Caller: (415) 892-4410 • San Francisco, CA</div>
                     </div>
                   </div>
-                  <span className="px-2.5 py-1 rounded-md bg-indigo-500/15 text-indigo-300 text-[10px] font-mono font-bold">
-                    AI RECEPTIONIST ACTIVE
-                  </span>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={handlePlayHeroSpeech}
+                      className={`px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 text-xs font-bold font-mono ${
+                        isHeroSpeaking 
+                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse'
+                          : 'bg-teal-500/15 text-teal-300 border-teal-500/35 hover:bg-teal-500/25 shadow-[0_0_15px_rgba(20,184,166,0.3)]'
+                      }`}
+                      title={isHeroSpeaking ? "Stop live audio" : "Hear Elena speak this call in broadcast neural audio"}
+                    >
+                      {isHeroSpeaking ? <VolumeX className="w-3.5 h-3.5 text-rose-400" /> : <Volume2 className="w-3.5 h-3.5 text-teal-400" />}
+                      <span>{isHeroSpeaking ? 'STOP AUDIO' : 'HEAR ELENA (AI VOICE)'}</span>
+                    </button>
+                    <span className="hidden sm:inline-block px-2.5 py-1 rounded-md bg-indigo-500/15 text-indigo-300 text-[10px] font-mono font-bold">
+                      LIVE SIP TRUNK
+                    </span>
+                  </div>
                 </div>
 
                 {/* Dialog Stream */}
-                <div className="p-4 rounded-xl bg-black/40 border border-white/[0.06] space-y-3 font-sans text-xs">
+                <div className="p-4 rounded-xl bg-black/40 border border-white/[0.06] space-y-3.5 font-sans text-xs">
                   
                   {/* Message 1: Customer */}
-                  <div className="flex items-start gap-2.5">
-                    <div className="w-6 h-6 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-[10px] font-bold shrink-0">
-                      C
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 text-slate-300 flex items-center justify-center shrink-0 shadow-sm">
+                      <User className="w-4 h-4 text-slate-300" />
                     </div>
-                    <div className="p-3 rounded-2xl rounded-tl-sm bg-white/[0.06] text-slate-200 leading-relaxed border border-white/[0.06] max-w-sm">
-                      "Hi there, I saw your clinic online. I have severe tooth pain and want to book a consultation for next week."
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-bold text-slate-200">Sarah Johnson (Patient)</span>
+                        <span className="text-[10px] font-mono text-slate-500">09:42 AM</span>
+                      </div>
+                      <div className="p-3 rounded-2xl rounded-tl-sm bg-white/[0.06] text-slate-200 leading-relaxed border border-white/[0.06] max-w-sm">
+                        "Hi there, I saw your clinic online. I have severe tooth pain and want to book a consultation for next week."
+                      </div>
                     </div>
                   </div>
 
-                  {/* Message 2: AI Receptionist */}
-                  <div className="flex items-start gap-2.5 justify-end">
-                    <div className="p-3 rounded-2xl rounded-tr-sm bg-indigo-600/30 border border-indigo-500/40 text-slate-100 leading-relaxed max-w-sm text-right">
-                      "I'm sorry to hear about the pain. We can certainly get you examined. I have Tuesday at 2:00 PM or Thursday at 11:00 AM open. Which works best?"
+                  {/* Message 2: AI Receptionist Elena */}
+                  <div className="flex items-start gap-3 justify-end">
+                    <div className="space-y-1 flex flex-col items-end">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-mono text-slate-500">09:42 AM</span>
+                        <span className="text-[11px] font-bold text-teal-300">Elena</span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-teal-500/10 text-teal-400 border border-teal-500/25">AI FRONT DESK</span>
+                      </div>
+                      <div className={`p-3 rounded-2xl rounded-tr-sm bg-gradient-to-r from-indigo-900/40 to-teal-950/40 border border-teal-500/40 text-slate-100 leading-relaxed max-w-sm text-right transition-all ${
+                        isHeroSpeaking ? 'shadow-[0_0_20px_rgba(20,184,166,0.3)] ring-1 ring-teal-400' : ''
+                      }`}>
+                        "I'm sorry to hear about the pain. We can certainly get you examined. I have Tuesday at 2:00 PM or Thursday at 11:00 AM open with Dr. Scott. Which works best for you?"
+                      </div>
                     </div>
-                    <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0">
-                      R
-                    </div>
+                    <ForgeCharacterAvatar characterKey="receptionist" size="sm" state={isHeroSpeaking ? 'speaking' : 'idle'} />
                   </div>
 
                   {/* Message 3: Customer */}
-                  <div className="flex items-start gap-2.5">
-                    <div className="w-6 h-6 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-[10px] font-bold shrink-0">
-                      C
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 text-slate-300 flex items-center justify-center shrink-0 shadow-sm">
+                      <User className="w-4 h-4 text-slate-300" />
                     </div>
-                    <div className="p-3 rounded-2xl rounded-tl-sm bg-white/[0.06] text-slate-200 leading-relaxed border border-white/[0.06]">
-                      "Thursday at 11:00 AM is perfect."
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] font-bold text-slate-200">Sarah Johnson (Patient)</span>
+                        <span className="text-[10px] font-mono text-slate-500">09:42 AM</span>
+                      </div>
+                      <div className="p-3 rounded-2xl rounded-tl-sm bg-white/[0.06] text-slate-200 leading-relaxed border border-white/[0.06]">
+                        "Thursday at 11:00 AM is perfect."
+                      </div>
                     </div>
                   </div>
 
                   {/* Message 4: AI Confirmation */}
-                  <div className="flex items-start gap-2.5 justify-end">
-                    <div className="p-3 rounded-2xl rounded-tr-sm bg-indigo-600/30 border border-indigo-500/40 text-slate-100 leading-relaxed max-w-sm text-right">
-                      "You're confirmed for Thursday at 11:00 AM with Dr. Scott. I've sent your appointment confirmation SMS and intake link."
+                  <div className="flex items-start gap-3 justify-end">
+                    <div className="space-y-1 flex flex-col items-end">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-mono text-slate-500">09:43 AM</span>
+                        <span className="text-[11px] font-bold text-teal-300">Elena</span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-teal-500/10 text-teal-400 border border-teal-500/25">CONFIRMED</span>
+                      </div>
+                      <div className="p-3 rounded-2xl rounded-tr-sm bg-gradient-to-r from-indigo-900/40 to-teal-950/40 border border-teal-500/40 text-slate-100 leading-relaxed max-w-sm text-right">
+                        "You're confirmed for Thursday at 11:00 AM with Dr. Scott. I've sent your appointment confirmation SMS and intake link."
+                      </div>
                     </div>
-                    <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0">
-                      R
-                    </div>
+                    <ForgeCharacterAvatar characterKey="receptionist" size="sm" state="success" />
                   </div>
                 </div>
 
                 {/* Subtext */}
                 <div className="text-[11px] text-slate-400 flex items-center justify-between px-1">
-                  <span>Call handled in 48 seconds with zero human delay.</span>
-                  <span className="text-emerald-400 font-mono font-medium">100% Verified Accuracy</span>
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Call handled in 48 seconds with zero human delay.</span>
+                  </span>
+                  <span className="text-emerald-400 font-mono font-medium">100% Grounded Accuracy</span>
                 </div>
               </div>
 

@@ -1,11 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, ArrowRight, CheckCircle2, ShieldAlert, Cpu, Terminal, Zap, ShieldCheck } from 'lucide-react';
 
 export function WorkflowModal({ agent, onClose, onNavigateAudit }) {
+  useEffect(() => {
+    if (!agent) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [agent, onClose]);
+
   if (!agent) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-950/85 backdrop-blur-md">
+    <div 
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-950/85 backdrop-blur-md"
+    >
       <div className="bg-dark-900 border border-slate-700/80 rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 shadow-2xl relative text-slate-100">
         
         {/* Modal Header */}

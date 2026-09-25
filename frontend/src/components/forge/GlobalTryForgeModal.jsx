@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
   X, MessageSquare, Zap, FileText, Mail, 
   Calendar, Workflow, ArrowRight, Sparkles 
 } from 'lucide-react';
 
 export function GlobalTryForgeModal({ isOpen, onClose, onSelectDemo }) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const demoOptions = [
@@ -59,7 +68,10 @@ export function GlobalTryForgeModal({ isOpen, onClose, onSelectDemo }) {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 font-sans animate-fadeIn">
+    <div 
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 font-sans animate-fadeIn"
+    >
       <div className="w-full max-w-2xl bg-[#080d16] border border-teal-500/40 rounded-3xl shadow-2xl p-6 sm:p-8 space-y-6 text-slate-100 relative">
         
         {/* Header */}

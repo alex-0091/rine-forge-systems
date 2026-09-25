@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   X, Check, Copy, ShieldCheck, CreditCard, Landmark, 
   Wallet, FileText, ArrowRight, CheckCircle2, Lock, 
@@ -89,6 +89,15 @@ export function PaymentPortalModal({ isOpen, onClose, defaultPackageId = 'speed-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef(null);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const currentPkg = PRICING_PACKAGES.find(p => p.id === selectedPkgId) || PRICING_PACKAGES[1];
@@ -147,7 +156,10 @@ export function PaymentPortalModal({ isOpen, onClose, defaultPackageId = 'speed-
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-xl overflow-y-auto">
+    <div 
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-xl overflow-y-auto"
+    >
       <div className="bg-[#0b0f19] border border-white/[0.12] rounded-3xl max-w-4xl w-full p-5 sm:p-8 space-y-6 shadow-[0_20px_60px_rgba(0,0,0,0.7)] relative my-8 text-slate-100">
         
         {/* Top Header */}

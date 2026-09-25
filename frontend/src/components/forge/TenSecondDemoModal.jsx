@@ -113,10 +113,22 @@ export function TenSecondDemoModal({ systemId, onClose, onTryLive }) {
     stageColor = 'border-emerald-500/50 bg-emerald-950/40 text-emerald-300';
   }
 
+  // Handle ESC key to close
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   const progressPercent = Math.min((currentTime / 5.5) * 100, 100);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 font-sans animate-fadeIn">
+    <div 
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 font-sans animate-fadeIn"
+    >
       <div className="w-full max-w-2xl bg-[#090e18] border-2 border-teal-500/40 rounded-3xl shadow-2xl overflow-hidden text-slate-100 flex flex-col font-mono text-xs">
         
         {/* Top Header */}
