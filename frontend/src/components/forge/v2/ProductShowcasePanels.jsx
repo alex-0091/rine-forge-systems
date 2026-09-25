@@ -258,6 +258,19 @@ export function ProductShowcasePanels({ onOpenAuditModal }) {
                   <span className="text-emerald-400 text-[11px]">Completed ✓</span>
                 </div>
               </div>
+
+              {/* Embedded Visual Architecture Blueprint */}
+              <div className="pt-2">
+                <div className="text-[11px] font-mono text-slate-400 uppercase font-bold mb-2">Live Architectural Blueprint</div>
+                <div className="rounded-2xl overflow-hidden border border-white/[0.08] shadow-lg">
+                  <img 
+                    src="/images/architecture-flow.svg" 
+                    alt="Rine Forge Systems Autonomous Architecture Flow" 
+                    className="w-full h-auto" 
+                    loading="lazy"
+                  />
+                </div>
+              </div>
             </div>
           )}
 
@@ -303,6 +316,19 @@ export function ProductShowcasePanels({ onOpenAuditModal }) {
               <div className="p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] text-center space-y-1">
                 <div className="text-xs font-bold text-white">Concrete business ROI, measured in hours saved and revenue protected.</div>
                 <div className="text-[11px] text-slate-400">No theoretical vanity metrics. Only appointments, recovered calls, and verified time savings.</div>
+              </div>
+
+              {/* Embedded Speed-to-Lead Decay Curve Graph */}
+              <div className="pt-2">
+                <div className="text-[11px] font-mono text-slate-400 uppercase font-bold mb-2">Sub-45s Inbound Speed vs. Lead Decay Benchmark</div>
+                <div className="rounded-2xl overflow-hidden border border-white/[0.08] shadow-lg">
+                  <img 
+                    src="/images/speed-to-lead-graph.svg" 
+                    alt="Speed-to-lead conversion decay chart" 
+                    className="w-full h-auto" 
+                    loading="lazy"
+                  />
+                </div>
               </div>
             </div>
           )}

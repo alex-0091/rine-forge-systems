@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" width="100%" height="100%" fill="none">
+  <defs>
+    <linearGradient id="shieldBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090d16" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="240" rx="20" fill="url(#shieldBg)" stroke="#334155" stroke-width="1.5"/>
+
+  <!-- Left Icon Emblem -->
+  <g transform="translate(40, 45)">
+    <circle cx="45" cy="45" r="45" fill="#4f46e5" fill-opacity="0.1" stroke="#6366f1" stroke-width="2"/>
+    <!-- Shield Outline -->
+    <path d="M 45 20 C 65 20, 75 30, 75 48 C 75 70, 45 80, 45 80 C 45 80, 15 70, 15 48 C 15 30, 25 20, 45 20 Z" fill="#1e1b4b" stroke="#818cf8" stroke-width="2.5"/>
+    <path d="M 33 46 L 41 54 L 57 38" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Right Spec Text & Badges -->
+  <g transform="translate(160, 40)">
+    <text x="0" y="24" fill="#ffffff" font-size="16" font-weight="800" font-family="system-ui, sans-serif">Institutional Privacy &amp; Escrow Guarantee</text>
+    <text x="0" y="44" fill="#94a3b8" font-size="11" font-family="system-ui, sans-serif">Enterprise-grade data isolation designed for regulated medical &amp; commercial practices.</text>
+
+    <!-- 4 Security Feature Grid -->
+    <g transform="translate(0, 65)">
+      <g transform="translate(0, 0)">
+        <circle cx="6" cy="6" r="4" fill="#10b981"/>
+        <text x="16" y="9" fill="#f8fafc" font-size="11" font-weight="700" font-family="monospace">Zero Model Training</text>
+        <text x="16" y="22" fill="#64748b" font-size="9" font-family="system-ui, sans-serif">Client data never leaks to public LLMs</text>
+      </g>
+      <g transform="translate(220, 0)">
+        <circle cx="6" cy="6" r="4" fill="#06b6d4"/>
+        <text x="16" y="9" fill="#f8fafc" font-size="11" font-weight="700" font-family="monospace">256-Bit TLS &amp; AES</text>
+        <text x="16" y="22" fill="#64748b" font-size="9" font-family="system-ui, sans-serif">Full encryption in transit and rest</text>
+      </g>
+      <g transform="translate(0, 45)">
+        <circle cx="6" cy="6" r="4" fill="#818cf8"/>
+        <text x="16" y="9" fill="#f8fafc" font-size="11" font-weight="700" font-family="monospace">Deterministic Escrow</text>
+        <text x="16" y="22" fill="#64748b" font-size="9" font-family="system-ui, sans-serif">50% milestone settlement release</text>
+      </g>
+      <g transform="translate(220, 45)">
+        <circle cx="6" cy="6" r="4" fill="#fbbf24"/>
+        <text x="16" y="9" fill="#f8fafc" font-size="11" font-weight="700" font-family="monospace">Human Fail-Safe</text>
+        <text x="16" y="22" fill="#64748b" font-size="9" font-family="system-ui, sans-serif">Instant manager fallback SMS alerts</text>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -136,6 +136,18 @@ export function WhyRineSection({ onOpenAuditModal }) {
             ))}
           </div>
 
+          {/* Institutional Guarantee Banner */}
+          <div className="pt-6 max-w-4xl mx-auto">
+            <div className="rounded-2xl overflow-hidden border border-white/[0.08] shadow-2xl">
+              <img 
+                src="/images/enterprise-security-shield.svg" 
+                alt="Institutional privacy and escrow guarantee seal" 
+                className="w-full h-auto" 
+                loading="lazy"
+              />
+            </div>
+          </div>
+
           <div className="pt-4 text-center">
             <button
               onClick={() => {

@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" width="100%" height="100%" fill="none">
+  <defs>
+    <linearGradient id="leadGradBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070b12" />
+      <stop offset="100%" stop-color="#0b101c" />
+    </linearGradient>
+    <linearGradient id="forgeLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+    <linearGradient id="forgeAreaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.0" />
+    </linearGradient>
+  </defs>
+
+  <!-- Container Box -->
+  <rect width="800" height="360" rx="20" fill="url(#leadGradBg)" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Title & Legend -->
+  <text x="40" y="45" fill="#ffffff" font-size="16" font-weight="800" font-family="system-ui, sans-serif">Speed-to-Lead Lead Conversion Decay Curve</text>
+  <text x="40" y="66" fill="#94a3b8" font-size="11" font-family="system-ui, sans-serif">Harvard Business Review &amp; InsideSales benchmark vs. Rine Forge sub-45s AI triage</text>
+
+  <!-- Chart Grid -->
+  <g transform="translate(60, 100)">
+    <!-- Y-Axis Labels -->
+    <text x="-15" y="10" fill="#64748b" font-size="10" font-family="monospace" text-anchor="end">100%</text>
+    <text x="-15" y="60" fill="#64748b" font-size="10" font-family="monospace" text-anchor="end">75%</text>
+    <text x="-15" y="110" fill="#64748b" font-size="10" font-family="monospace" text-anchor="end">50%</text>
+    <text x="-15" y="160" fill="#64748b" font-size="10" font-family="monospace" text-anchor="end">25%</text>
+    <text x="-15" y="205" fill="#64748b" font-size="10" font-family="monospace" text-anchor="end">0%</text>
+
+    <!-- Grid lines -->
+    <line x1="0" y1="5" x2="680" y2="5" stroke="#1e293b" stroke-dasharray="3 6"/>
+    <line x1="0" y1="55" x2="680" y2="55" stroke="#1e293b" stroke-dasharray="3 6"/>
+    <line x1="0" y1="105" x2="680" y2="105" stroke="#1e293b" stroke-dasharray="3 6"/>
+    <line x1="0" y1="155" x2="680" y2="155" stroke="#1e293b" stroke-dasharray="3 6"/>
+    <line x1="0" y1="205" x2="680" y2="205" stroke="#334155" stroke-width="1.5"/>
+
+    <!-- Fill Area Under Curve -->
+    <path d="M 0 25 C 50 25, 120 70, 200 130 C 350 170, 500 190, 680 195 L 680 205 L 0 205 Z" fill="url(#forgeAreaGrad)"/>
+
+    <!-- Industry Standard Decay Line -->
+    <path d="M 0 25 C 50 25, 120 70, 200 130 C 350 170, 500 190, 680 195" stroke="#f43f5e" stroke-width="3" fill="none"/>
+
+    <!-- High-Impact Key Markers -->
+    <!-- Marker 1: Rine Forge (< 45s) -->
+    <circle cx="20" cy="26" r="6" fill="#10b981" stroke="#ffffff" stroke-width="2"/>
+    <rect x="35" y="10" width="165" height="34" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="1"/>
+    <text x="45" y="25" fill="#34d399" font-size="10" font-family="monospace" font-weight="800">RINE FORGE (&lt;45s): 89%</text>
+    <text x="45" y="37" fill="#a7f3d0" font-size="9" font-family="system-ui, sans-serif">Instant appointment locked</text>
+
+    <!-- Marker 2: 5 Minutes (Decay Start) -->
+    <circle cx="160" cy="100" r="4" fill="#fbbf24"/>
+    <text x="160" y="85" fill="#fbbf24" font-size="10" font-family="monospace" font-weight="700" text-anchor="middle">5 Min: 45%</text>
+
+    <!-- Marker 3: 30 Minutes -->
+    <circle cx="340" cy="165" r="4" fill="#f87171"/>
+    <text x="340" y="150" fill="#f87171" font-size="10" font-family="monospace" text-anchor="middle">30 Min: 18%</text>
+
+    <!-- Marker 4: 2+ Hours (Traditional Delay) -->
+    <circle cx="600" cy="193" r="5" fill="#f43f5e"/>
+    <rect x="520" y="215" width="160" height="24" rx="6" fill="#4c0519" stroke="#f43f5e" stroke-width="0.8"/>
+    <text x="600" y="231" fill="#fecdd3" font-size="9" font-family="monospace" text-anchor="middle">2+ Hours: 4% (Lost Lead)</text>
+
+    <!-- X-Axis Labels -->
+    <text x="20" y="222" fill="#64748b" font-size="10" font-family="monospace" text-anchor="middle">0 - 45s</text>
+    <text x="160" y="222" fill="#64748b" font-size="10" font-family="monospace" text-anchor="middle">5 Mins</text>
+    <text x="340" y="222" fill="#64748b" font-size="10" font-family="monospace" text-anchor="middle">30 Mins</text>
+    <text x="500" y="222" fill="#64748b" font-size="10" font-family="monospace" text-anchor="middle">1 Hour</text>
+    <text x="650" y="222" fill="#64748b" font-size="10" font-family="monospace" text-anchor="middle">4+ Hours</text>
+  </g>
+</svg>
